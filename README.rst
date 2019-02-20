@@ -22,7 +22,4 @@ License
 `pinnwand` is distributed under a 3-clause BSD-style license. See `LICENSE`
 for details.
 
-`pinnwand` is a `buffer.io`_ project.
-
-.. _buffer.io: http://buffer.io/
-.. _project page: https://github.com/bufferio/pinnwand
+.. _project page: https://github.com/supakeen/pinnwand
