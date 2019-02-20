@@ -34,8 +34,7 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
 
     expiries = {"1day": timedelta(days=1),
                 "1week": timedelta(days=7),
-                "1month": timedelta(days=30),
-                "never": None}
+                "1month": timedelta(days=30)}
 
     if not expiry in expiries:
         errors.append("expiry")
