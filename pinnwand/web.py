@@ -14,13 +14,16 @@ from pinnwand.helpers import list_languages
 app = Flask(__name__)
 app.config.from_object("pinnwand.settings")
 
+
 @app.teardown_appcontext
 def teardown_session(response):
     session.remove()
 
+
 class ValidationException(ValueError):
     def __init__(self, fields):
         self.fields = fields
+
 
 def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
     lexers = list_languages()
@@ -32,9 +35,11 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
     if not raw:
         errors.append("raw")
 
-    expiries = {"1day": timedelta(days=1),
-                "1week": timedelta(days=7),
-                "1month": timedelta(days=30)}
+    expiries = {
+        "1day": timedelta(days=1),
+        "1week": timedelta(days=7),
+        "1month": timedelta(days=30),
+    }
 
     if not expiry in expiries:
         errors.append("expiry")
@@ -47,20 +52,28 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
     else:
         return Paste(raw, lexer=lexer, expiry=expiry, src=src)
 
+
 @app.route("/", methods=["GET"])
 @app.route("/+<lexer>")
 def index(lexer=""):
-    return render_template("new.html", lexer=lexer,
-               lexers=list_languages(), pagetitle="new")
+    return render_template(
+        "new.html", lexer=lexer, lexers=list_languages(), pagetitle="new"
+    )
+
 
 @app.route("/", methods=["POST"])
 def paste():
-    lexer  = request.form["lexer"]
-    raw    = request.form["code"]
+    lexer = request.form["lexer"]
+    raw = request.form["code"]
     expiry = request.form["expiry"]
 
-    template = partial(render_template, "new.html", lexer=lexer,
-            lexers=list_languages(), pagetitle="new")
+    template = partial(
+        render_template,
+        "new.html",
+        lexer=lexer,
+        lexers=list_languages(),
+        pagetitle="new",
+    )
 
     try:
         paste = do_paste(raw, lexer, expiry)
@@ -70,8 +83,14 @@ def paste():
     session.add(paste)
     session.commit()
 
-    response = redirect(url_for("show", paste_id=paste.paste_id, _external=True))
-    response.set_cookie("removal", str(paste.removal_id), path=url_for("show", paste_id=paste.paste_id, _external=False))
+    response = redirect(
+        url_for("show", paste_id=paste.paste_id, _external=True)
+    )
+    response.set_cookie(
+        "removal",
+        str(paste.removal_id),
+        path=url_for("show", paste_id=paste.paste_id, _external=False),
+    )
 
     return response
 
@@ -85,8 +104,10 @@ def show(paste_id):
 
     can_delete = request.cookies.get("removal") == str(paste.removal_id)
 
-    return render_template("show.html", paste=paste, pagetitle="show",
-            can_delete=can_delete)
+    return render_template(
+        "show.html", paste=paste, pagetitle="show", can_delete=can_delete
+    )
+
 
 @app.route("/raw/<paste_id>")
 def raw(paste_id):
@@ -100,6 +121,7 @@ def raw(paste_id):
 
     return response
 
+
 @app.route("/remove/<removal_id>")
 def remove(removal_id):
     paste = session.query(Paste).filter(Paste.removal_id == removal_id).first()
@@ -112,10 +134,10 @@ def remove(removal_id):
 
     return redirect(url_for("index", _external=True))
 
+
 @app.route("/removal")
 def removal():
     return render_template("removal.html", pagetitle="removal")
-
 
 
 @app.route("/json/show/<paste_id>")
@@ -125,19 +147,26 @@ def show_json(paste_id):
     if not paste:
         return "not found", 404
 
-    response = make_response(json.dumps({"paste_id": paste.paste_id,
-                                         "raw": paste.raw,
-                                         "fmt": paste.fmt,
-                                         "lexer": paste.lexer,
-                                         "expiry": paste.exp_date.isoformat()}))
+    response = make_response(
+        json.dumps(
+            {
+                "paste_id": paste.paste_id,
+                "raw": paste.raw,
+                "fmt": paste.fmt,
+                "lexer": paste.lexer,
+                "expiry": paste.exp_date.isoformat(),
+            }
+        )
+    )
     response.headers["content-type"] = "application/json"
 
     return response
 
+
 @app.route("/json/new", methods=["POST"])
 def paste_json():
-    lexer  = request.form["lexer"]
-    raw    = request.form["code"]
+    lexer = request.form["lexer"]
+    raw = request.form["code"]
     expiry = request.form["expiry"]
 
     try:
@@ -148,15 +177,21 @@ def paste_json():
     session.add(paste)
     session.commit()
 
-    response = make_response(json.dumps({"paste_id": paste.paste_id,
-                                         "removal_id": paste.removal_id}))
+    response = make_response(
+        json.dumps({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
+    )
     response.headers["content-type"] = "application/json"
 
     return response
 
+
 @app.route("/json/remove", methods=["POST"])
 def remove_json():
-    paste = session.query(Paste).filter(Paste.removal_id == request.form["removal_id"]).first()
+    paste = (
+        session.query(Paste)
+        .filter(Paste.removal_id == request.form["removal_id"])
+        .first()
+    )
 
     if not paste:
         return "not found", 404
@@ -164,17 +199,20 @@ def remove_json():
     session.delete(paste)
     session.commit()
 
-    response = make_response(json.dumps([{"paste_id": paste.paste_id, "status": "removed"}]))
+    response = make_response(
+        json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
+    )
     response.headers["content-type"] = "application/json"
 
-
     return response
+
 
 @app.route("/robots.txt")
 def robots():
     resp = make_response(open("robots.txt").read())
     resp.headers["Content-Type"] = "text/plain"
     return resp
+
 
 if __name__ == "__main__":
     app.run("0.0.0.0", 8000)
