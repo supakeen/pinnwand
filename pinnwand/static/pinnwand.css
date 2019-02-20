@@ -1,0 +1,93 @@
+html {
+    background: #eee;
+    color: #000;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 2em;
+}
+
+a {
+    color: #39c;
+}
+
+aside {
+    background: #fff;
+    text-align: center;
+    padding: 3em;
+    position: absolute;
+    top: 2em;
+    right: 2em;
+}
+
+aside img {
+    margin-bottom: 1em;
+    width: 100px;
+}
+
+article {
+    margin-right: 300px;
+}
+
+textarea, #paste {
+    background: #fff;
+    border: none;
+    color: #000;
+    font-family: monospace;
+    resize: none;
+    padding: 2em;
+    min-height: 500px;
+    width: 100%;
+}
+
+#paste {
+    overflow-x: scroll;
+}
+
+#page {
+    background: #fff;
+    font-family: sans-serif;
+    min-height: auto;
+    padding: 2em;
+    width: 50%;
+}
+
+#page h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#page p {
+    font-size: .85em;
+    line-height: 1.5em;
+}
+
+#page p, #page h2 {
+    margin: 0 0 1em 0;
+}
+
+.linenos {
+    background: #eee;
+    color: #aaa;
+    padding: 0 5px;
+}
+
+.source {
+    padding: 0 0 0 10px;
+}
+
+.extra {
+    background: #fff;
+    padding: 1em 2em;
+    margin-top: 2em;
+    font-size: .75em;
+    display: inline-block;
+}
+
+.notice {
+	margin-top: 1em;
+	background: #d00;
+	color: #fff;
+	padding: 15px;
+}

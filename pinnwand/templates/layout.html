@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ pagetitle }} at bpaste</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bpaste-min.css') }}" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename=config.FAVI) }}" type="image/x-icon">
+  </head>
+  <body>
+    <aside>
+      <h1>
+          <a href="{{ url_for('index') }}"><img width="100" height="100" src="{{ url_for('static', filename=config.LOGO) }}"></a>
+          <br>
+          <a href="{{ url_for('index') }}">new paste</a>
+          <br><br>
+          <a href="{{ url_for('removal') }}">removals</a>
+      </h1>
+    </aside>
+    <article id="content-area">
+       {% block body %}{% endblock -%}
+    </article>
+  </body>
+</html>
+

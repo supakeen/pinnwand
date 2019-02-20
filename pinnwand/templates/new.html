@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% if message %}
+<div class="quick"><p>{{ message }}</p></div>
+{% else %}
+{% endif %}
+
+<form action="{{ url_for('index') }}" method="post" class="submitform">
+    <textarea name="code"></textarea>
+
+    <div class="extra">
+        <button type="submit">Paste!</button>
+        <select name="lexer">
+            <option value="text">Text</option>
+            {% for key, caption in lexers|dictsort(true, 'value') %}
+            <option value="{{ key }}"{% if lexer == key
+            %} selected="selected"{% endif %}>{{ caption }}</option>
+        {% endfor %}
+        </select>
+        <select name="expiry">
+            <option value="1day">Expiry (1 day)</option>
+            <option value="1week">1 week</option>
+        </select>
+    </div>
+  </form>
+{% endblock %}
