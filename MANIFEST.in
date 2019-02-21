@@ -1,0 +1,2 @@
+include pinnwand/templates/*
+include pinnwand/static/*
