@@ -1,5 +1,3 @@
-from urllib.parse import quote_plus as urlquote
-
 DEBUG = True
 
 ABUSE_EMAIL = "your@email"
