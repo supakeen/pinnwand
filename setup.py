@@ -10,7 +10,8 @@ setup(
     packages=find_packages(),
     setup_requires=["pytest-runner", "pytest-cov"],
     install_requires=[
-        "flask",
+        "tornado",
+        "pytoml",
         "pygments",
         "sqlalchemy",
     ],
