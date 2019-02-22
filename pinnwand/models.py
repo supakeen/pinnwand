@@ -1,18 +1,16 @@
 #!/usr/bin/env python
-import werkzeug
 import datetime
 import hashlib
 import uuid
-import sys
 import pygments.lexers
 import pygments.formatters
 
 from sqlalchemy import Integer, Column, String, DateTime
 from sqlalchemy import create_engine, Text
-from sqlalchemy.orm import backref, sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
-from pinnwand.settings import *
+from pinnwand.settings import DATABASE_URI
 
 engine = create_engine(DATABASE_URI, pool_recycle=3600)
 

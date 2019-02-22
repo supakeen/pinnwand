@@ -29,7 +29,7 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
     lexers = list_languages()
     errors = []
 
-    if not lexer in lexers:
+    if lexer not in lexers:
         errors.append("lexer")
 
     if not raw:
@@ -41,9 +41,8 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
         "1month": timedelta(days=30),
     }
 
-    if not expiry in expiries:
+    if expiry not in expiries:
         errors.append("expiry")
-        return template(message="Please don't make up expiry dates.")
     else:
         expiry = expiries[expiry]
 
@@ -172,13 +171,15 @@ def paste_json():
     try:
         paste = do_paste(raw, lexer, expiry, "json")
     except ValidationException:
-        return template(message="It didn't validate!")
+        data = {"err": "It didn't validate!"}
+    else:
+        data = {"paste_id": paste.paste_id, "removal_id": paste.removal_id}
 
-    session.add(paste)
-    session.commit()
+        session.add(paste)
+        session.commit()
 
     response = make_response(
-        json.dumps({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
+        json.dumps(data)
     )
     response.headers["content-type"] = "application/json"
 
