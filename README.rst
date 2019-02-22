@@ -5,6 +5,7 @@ pinnwand
 
 Prerequisites
 =============
+* Python >= 3.6
 * flask
 * sqlalchemy
 * pygments
