@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from pinnwand.models import Base, engine, session, Paste
 
 
-def main():
+def main() -> None:
     args = sys.argv[1:]
 
     if args:

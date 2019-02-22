@@ -19,18 +19,18 @@ session = scoped_session(
 )
 
 
-class Base(object):
+class _Base(object):
     """Base class which provides automated table names
     and a primary key column."""
 
     @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
+    def __tablename__(cls) -> str:
+        return str(cls.__name__.lower())  # type: ignore
 
     id = Column(Integer, primary_key=True)
 
 
-Base = declarative_base(cls=Base)
+Base = declarative_base(cls=_Base)
 
 
 class HasDates(object):
@@ -52,7 +52,7 @@ class Paste(HasDates, Base):
 
     exp_date = Column(DateTime)
 
-    def create_hash(self):
+    def create_hash(self) -> str:
         # XXX This should organically grow as more is used, probably depending
         # on how often collissions occur.
         # Aside from that we should never repeat hashes which have been used before
@@ -62,8 +62,12 @@ class Paste(HasDates, Base):
         ]
 
     def __init__(
-        self, raw, lexer="text", expiry=datetime.timedelta(days=7), src="web"
-    ):
+        self,
+        raw: str,
+        lexer: str = "text",
+        expiry: datetime.timedelta = datetime.timedelta(days=7),
+        src: str = "web",
+    ) -> None:
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
 
@@ -92,5 +96,5 @@ class Paste(HasDates, Base):
         else:
             self.exp_date = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<Paste(paste_id=%s)>" % (self.paste_id,)

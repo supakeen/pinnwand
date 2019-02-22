@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 import json
 
+from typing import List, Optional
+
 from datetime import timedelta
 from functools import partial
+
+import flask
 
 from flask import Flask
 from flask import render_template, url_for, redirect, request, make_response
@@ -16,16 +20,18 @@ app.config.from_object("pinnwand.settings")
 
 
 @app.teardown_appcontext
-def teardown_session(response):
+def teardown_session(response: flask.Response) -> None:
     session.remove()
 
 
 class ValidationException(ValueError):
-    def __init__(self, fields):
+    def __init__(self, fields: List["str"]) -> None:
         self.fields = fields
 
 
-def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
+def do_paste(
+    raw: str = "", lexer: str = "text", expiry: str = "1week", src: str = "web"
+) -> Paste:
     lexers = list_languages()
     errors = []
 
@@ -54,14 +60,14 @@ def do_paste(raw=None, lexer="text", expiry="1week", src="web"):
 
 @app.route("/", methods=["GET"])
 @app.route("/+<lexer>")
-def index(lexer=""):
+def index(lexer: str = "") -> flask.Response:
     return render_template(
         "new.html", lexer=lexer, lexers=list_languages(), pagetitle="new"
     )
 
 
 @app.route("/", methods=["POST"])
-def paste():
+def paste() -> flask.Response:
     lexer = request.form["lexer"]
     raw = request.form["code"]
     expiry = request.form["expiry"]
@@ -95,7 +101,7 @@ def paste():
 
 
 @app.route("/show/<paste_id>")
-def show(paste_id):
+def show(paste_id: str) -> flask.Response:
     paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
 
     if not paste:
@@ -109,7 +115,7 @@ def show(paste_id):
 
 
 @app.route("/raw/<paste_id>")
-def raw(paste_id):
+def raw(paste_id: str) -> flask.Response:
     paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
 
     if not paste:
@@ -122,7 +128,7 @@ def raw(paste_id):
 
 
 @app.route("/remove/<removal_id>")
-def remove(removal_id):
+def remove(removal_id: str) -> flask.Response:
     paste = session.query(Paste).filter(Paste.removal_id == removal_id).first()
 
     if not paste:
@@ -135,12 +141,12 @@ def remove(removal_id):
 
 
 @app.route("/removal")
-def removal():
+def removal() -> flask.Response:
     return render_template("removal.html", pagetitle="removal")
 
 
 @app.route("/json/show/<paste_id>")
-def show_json(paste_id):
+def show_json(paste_id: str) -> flask.Response:
     paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
 
     if not paste:
@@ -163,7 +169,7 @@ def show_json(paste_id):
 
 
 @app.route("/json/new", methods=["POST"])
-def paste_json():
+def paste_json() -> flask.Response:
     lexer = request.form["lexer"]
     raw = request.form["code"]
     expiry = request.form["expiry"]
@@ -178,16 +184,14 @@ def paste_json():
         session.add(paste)
         session.commit()
 
-    response = make_response(
-        json.dumps(data)
-    )
+    response = make_response(json.dumps(data))
     response.headers["content-type"] = "application/json"
 
     return response
 
 
 @app.route("/json/remove", methods=["POST"])
-def remove_json():
+def remove_json() -> flask.Response:
     paste = (
         session.query(Paste)
         .filter(Paste.removal_id == request.form["removal_id"])
@@ -209,7 +213,7 @@ def remove_json():
 
 
 @app.route("/robots.txt")
-def robots():
+def robots() -> flask.Response:
     resp = make_response(open("robots.txt").read())
     resp.headers["Content-Type"] = "text/plain"
     return resp
