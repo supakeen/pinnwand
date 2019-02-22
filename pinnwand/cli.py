@@ -2,6 +2,7 @@ import sys
 
 from datetime import datetime, timedelta
 
+from pinnwand.web import app
 from pinnwand.models import Base, engine, session, Paste
 
 
@@ -48,6 +49,10 @@ def main() -> None:
                     datetime.now().isoformat(), len(pastes)
                 )
             )
+
+        if args[0] == "run":
+            app.run("0.0.0.0", 8000)
+
 
 
 if __name__ == "__main__":

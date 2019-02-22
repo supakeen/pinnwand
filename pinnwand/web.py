@@ -216,7 +216,3 @@ def robots() -> flask.Response:
     resp = make_response(open("robots.txt").read())
     resp.headers["Content-Type"] = "text/plain"
     return resp
-
-
-if __name__ == "__main__":
-    app.run("0.0.0.0", 8000)
