@@ -96,4 +96,4 @@ class Paste(HasDates, Base):
             self.exp_date = None
 
     def __repr__(self) -> str:
-        return "<Paste(paste_id=%s)>" % (self.paste_id,)
+        return f"<Paste(paste_id={self.paste.id})>"
