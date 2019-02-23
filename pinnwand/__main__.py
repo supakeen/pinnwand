@@ -1,3 +1,3 @@
-from pinnwand.cli import main
+from pinnwand.command import main
 
 main()
