@@ -10,9 +10,9 @@ import flask
 from flask import Flask
 from flask import render_template, url_for, redirect, request, make_response
 
-from pinnwand.models import Paste
-from pinnwand.models import session
-from pinnwand.helpers import list_languages
+from pinnwand.model import Paste
+from pinnwand.model import session
+from pinnwand.utility import list_languages
 
 app = Flask(__name__)
 app.config.from_object("pinnwand.settings")

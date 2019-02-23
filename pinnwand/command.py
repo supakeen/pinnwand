@@ -3,7 +3,7 @@ import sys
 from datetime import datetime, timedelta
 
 from pinnwand.web import app
-from pinnwand.models import Base, engine, session, Paste
+from pinnwand.model import Base, engine, session, Paste
 
 
 def main() -> None:
