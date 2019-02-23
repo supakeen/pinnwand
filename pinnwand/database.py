@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import logging
 import uuid
 import pygments.lexers
 import pygments.formatters
@@ -10,6 +11,9 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 from pinnwand.settings import DATABASE_URI
+
+
+log = logging.getLogger(__name__)
 
 engine = create_engine(DATABASE_URI, pool_recycle=3600)
 
@@ -32,14 +36,12 @@ class _Base(object):
 Base = declarative_base(cls=_Base)
 
 
-class HasDates(object):
-    """Define attributes present on all dated content."""
+class Paste(Base):  # type: ignore
+    """The Paste model represents a single Paste."""
 
     pub_date = Column(DateTime)
     chg_date = Column(DateTime)
 
-
-class Paste(HasDates, Base):
     paste_id = Column(String(250))
     removal_id = Column(String(250))
 

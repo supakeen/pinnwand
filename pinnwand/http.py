@@ -1,158 +1,173 @@
 import json
+import logging
 
-from typing import List, Optional
+from typing import List
 
 from datetime import timedelta
-from functools import partial
 
-import flask
+import tornado.web
 
-from flask import Flask
-from flask import render_template, url_for, redirect, request, make_response
+import tornado_sqlalchemy
 
-from pinnwand.model import Paste
-from pinnwand.model import session
-from pinnwand.utility import list_languages
-
-app = Flask(__name__)
-app.config.from_object("pinnwand.settings")
+from pinnwand import database
+from pinnwand import utility
 
 
-@app.teardown_appcontext
-def teardown_session(response: flask.Response) -> None:
-    session.remove()
+log = logging.getLogger(__name__)
 
 
-class ValidationException(ValueError):
-    def __init__(self, fields: List["str"]) -> None:
-        self.fields = fields
+class Base(tornado.web.RequestHandler, tornado_sqlalchemy.SessionMixin):
+    pass
 
 
-def do_paste(
-    raw: str = "", lexer: str = "text", expiry: str = "1week", src: str = "web"
-) -> Paste:
-    lexers = list_languages()
-    errors = []
+class PasteForm(Base):
+    """The index page shows the new paste page with a list of all available
+       lexers from Pygments."""
 
-    if lexer not in lexers:
-        errors.append("lexer")
+    async def get(self, lexer: str = "") -> None:
+        """Render the new paste form, optionally have a lexer preselected from
+           the URL."""
 
-    if not raw:
-        errors.append("raw")
+        lexers = utility.list_languages()
 
-    expiries = {
-        "1day": timedelta(days=1),
-        "1week": timedelta(days=7),
-        "1month": timedelta(days=30),
-    }
+        # Make sure a valid lexer is given
+        if lexer not in lexers:
+            raise tornado.web.HTTPError(404)
 
-    if expiry not in expiries:
-        errors.append("expiry")
-    else:
-        expiry = expiries[expiry]
-
-    if errors:
-        raise ValidationException(errors)
-    else:
-        return Paste(raw, lexer=lexer, expiry=expiry, src=src)
+        await self.render(
+            "new.html", lexer=lexer, lexers=lexers, pagetitle="new"
+        )
 
 
-@app.route("/", methods=["GET"])
-@app.route("/+<lexer>")
-def index(lexer: str = "") -> flask.Response:
-    return render_template(
-        "new.html", lexer=lexer, lexers=list_languages(), pagetitle="new"
-    )
+class About(Base):
+    async def get(self) -> None:
+        self.render("about.html", pagetitle="about")
 
 
-@app.route("/", methods=["POST"])
-def paste() -> flask.Response:
-    lexer = request.form["lexer"]
-    raw = request.form["code"]
-    expiry = request.form["expiry"]
+class CreatePaste(Base):
+    """..."""
 
-    template = partial(
-        render_template,
-        "new.html",
-        lexer=lexer,
-        lexers=list_languages(),
-        pagetitle="new",
-    )
+    async def post(self) -> None:
+        lexer = self.get_body_argument("lexer")
+        raw = self.get_body_argument("code")
+        expiry = self.get_body_argument("expiry")
 
-    try:
-        paste = do_paste(raw, lexer, expiry)
-    except ValidationException:
-        return template(message="It didn't validate!")
+        if lexer not in utility.list_languages():
+            log.info("Paste.post: a paste was submitted with an invalid lexer")
+            raise tornado.web.HTTPError(400)
 
-    session.add(paste)
-    session.commit()
+        if expiry not in utility.expiries:
+            log.info("Paste.post: a paste was submitted with an invalid expiry")
+            raise tornado.web.HTTPError(400)
 
-    response = redirect(
-        url_for("show", paste_id=paste.paste_id, _external=True)
-    )
-    response.set_cookie(
-        "removal",
-        str(paste.removal_id),
-        path=url_for("show", paste_id=paste.paste_id, _external=False),
-    )
+        paste = database.Paste(
+            raw,
+            lexer,
+            expiry
+        )
 
-    return response
+        with self.make_session() as session:
+            session.add(paste)
+            session.commit()
 
+        # The removal cookie is set for the specific path of the paste it is
+        # related to
+        self.set_cookie(
+            "removal", str(paste.removal_id), path=f"/show/{paste.paste_id}"
+        )
 
-@app.route("/show/<paste_id>")
-def show(paste_id: str) -> flask.Response:
-    paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
+        # Send the client to the paste
+        self.redirect(f"/show/{paste.paste_id}")
 
-    if not paste:
-        return render_template("404.html"), 404
-
-    can_delete = request.cookies.get("removal") == str(paste.removal_id)
-
-    return render_template(
-        "show.html", paste=paste, pagetitle="show", can_delete=can_delete
-    )
+    def check_xsrf_cookie(self) -> bool:
+        """The CSRF token check is disabled. While it would be better if it
+           was on the impact is both small (someone could make a paste in
+           a users name which could allow pinnwand to be used as a vector for
+           exfiltration from other XSS) and some command line utilities
+           POST directly to this endpoint without using the JSON endpoint."""
+        return True
 
 
-@app.route("/raw/<paste_id>")
-def raw(paste_id: str) -> flask.Response:
-    paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
+class ShowPaste(Base):
+    def get(self, paste_id: str) -> None:
+        with self.make_session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.paste_id == paste_id)
+                .first()
+            )
 
-    if not paste:
-        return render_template("404.html"), 404
+        if not paste:
+            self.set_status(404)
+            self.render("404.html")
+            return
 
-    response = make_response(paste.raw)
-    response.headers["content-type"] = "text/plain; charset=utf-8"
+        can_delete = self.get_cookie("removal") == str(paste.removal_id)
 
-    return response
-
-
-@app.route("/remove/<removal_id>")
-def remove(removal_id: str) -> flask.Response:
-    paste = session.query(Paste).filter(Paste.removal_id == removal_id).first()
-
-    if not paste:
-        return render_template("404.html"), 404
-
-    session.delete(paste)
-    session.commit()
-
-    return redirect(url_for("index", _external=True))
+        self.render(
+            "show.html", paste=paste, pagetitle="show", can_delete=can_delete
+        )
 
 
-@app.route("/removal")
-def removal() -> flask.Response:
-    return render_template("removal.html", pagetitle="removal")
+class RawPaste(Base):
+    async def get(self, paste_id: str) -> None:
+        with self.make_session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.paste_id == paste_id)
+                .first()
+            )
+
+        if not paste:
+            self.set_status(404)
+            self.render("404.html")
+            return
+
+        self.set_header("Content-Type", "text/plain; charset=utf-8")
+        self.write(paste.raw)
 
 
-@app.route("/json/show/<paste_id>")
-def show_json(paste_id: str) -> flask.Response:
-    paste = session.query(Paste).filter(Paste.paste_id == paste_id).first()
+class RemovePaste(Base):
+    """Remove a paste."""
 
-    if not paste:
-        return "not found", 404
+    async def get(self, removal_id: str) -> None:
+        """Look up if the user visiting this page has the removal id for a
+           certain paste. If they do they're authorized to remove the paste."""
 
-    response = make_response(
-        json.dumps(
+        # XXX maybe use one and catch error
+        with self.make_session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.removal_id == removal_id)
+                .first()
+            )
+
+            if not paste:
+                log.info("RemovePaste.get: someone visited with invalid id")
+                self.set_status(404)
+                self.render("404.html")
+                return
+
+            session.delete(paste)
+            session.commit()
+
+        self.redirect("/")
+
+
+class APIShow(Base):
+    def get(self, paste_id: str) -> None:
+        with self.make_session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.paste_id == paste_id)
+                .first()
+            )
+
+        if not paste:
+            self.set_status(404)
+            return
+
+        self.write(
             {
                 "paste_id": paste.paste_id,
                 "raw": paste.raw,
@@ -161,58 +176,67 @@ def show_json(paste_id: str) -> flask.Response:
                 "expiry": paste.exp_date.isoformat(),
             }
         )
-    )
-    response.headers["content-type"] = "application/json"
-
-    return response
 
 
-@app.route("/json/new", methods=["POST"])
-def paste_json() -> flask.Response:
-    lexer = request.form["lexer"]
-    raw = request.form["code"]
-    expiry = request.form["expiry"]
+class APINew(Base):
+    async def post(self) -> None:
+        lexer = self.get_body_argument("lexer")
+        raw = self.get_body_argument("code")
+        expiry = self.get_body_argument("expiry")
 
-    try:
-        paste = do_paste(raw, lexer, expiry, "json")
-    except ValidationException:
-        data = {"err": "It didn't validate!"}
-    else:
-        data = {"paste_id": paste.paste_id, "removal_id": paste.removal_id}
+        if lexer not in utility.list_languages():
+            log.info("APINew.post: a paste was submitted with an invalid lexer")
+            raise tornado.web.HTTPError(400)
 
-        session.add(paste)
-        session.commit()
+        if expiry not in utility.expiries:
+            log.info("APINew.post: a paste was submitted with an invalid expiry")
+            raise tornado.web.HTTPError(400)
 
-    response = make_response(json.dumps(data))
-    response.headers["content-type"] = "application/json"
+        paste = database.Paste(
+            raw,
+            lexer,
+            expiry
+        )
 
-    return response
+        with self.make_session() as session:
+            session.add(paste)
+            session.commit()
 
-
-@app.route("/json/remove", methods=["POST"])
-def remove_json() -> flask.Response:
-    paste = (
-        session.query(Paste)
-        .filter(Paste.removal_id == request.form["removal_id"])
-        .first()
-    )
-
-    if not paste:
-        return "not found", 404
-
-    session.delete(paste)
-    session.commit()
-
-    response = make_response(
-        json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
-    )
-    response.headers["content-type"] = "application/json"
-
-    return response
+        self.write({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
 
 
-@app.route("/robots.txt")
-def robots() -> flask.Response:
-    resp = make_response(open("robots.txt").read())
-    resp.headers["Content-Type"] = "text/plain"
-    return resp
+class APIRemove(Base):
+    async def post(self) -> None:
+        with self.make_session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(
+                    database.Paste.removal_id
+                    == self.get_body_argument("removal_id")
+                )
+                .first()
+            )
+
+            if not paste:
+                self.set_status(400)
+                return
+
+            session.delete(paste)
+            session.commit()
+
+        # XXX this is set this way because tornado tries to protect us
+        # XXX by not allowing lists to be returned, looking at this code
+        # XXX it really shouldn't be a list but we have to keep it for
+        # XXX backwards compatibility
+        self.set_header("Content-Type", "application/json")
+        self.write(
+            json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
+        )
+
+
+application = tornado.web.Application([
+    (r"/+<lexer>", PasteForm),
+    (r"/+<lexer>", CreatePaste),
+    (r"/show/<pasteid>", ShowPaste),
+    (r"/raw/<pasteid>", RawPaste),
+])
