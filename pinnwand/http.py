@@ -20,7 +20,12 @@ class Base(tornado.web.RequestHandler, tornado_sqlalchemy.SessionMixin):
     pass
 
 
-class PasteForm(Base):
+class About(Base):
+    async def get(self) -> None:
+        self.render("about.html", pagetitle="about")
+
+
+class CreatePaste(Base):
     """The index page shows the new paste page with a list of all available
        lexers from Pygments."""
 
@@ -37,15 +42,6 @@ class PasteForm(Base):
         await self.render(
             "new.html", lexer=lexer, lexers=lexers, pagetitle="new"
         )
-
-
-class About(Base):
-    async def get(self) -> None:
-        self.render("about.html", pagetitle="about")
-
-
-class CreatePaste(Base):
-    """..."""
 
     async def post(self) -> None:
         lexer = self.get_body_argument("lexer")
@@ -235,8 +231,7 @@ class APIRemove(Base):
 
 
 application = tornado.web.Application([
-    (r"/+<lexer>", PasteForm),
-    (r"/+<lexer>", CreatePaste),
+    (r"/<+lexer?>", CreatePaste),
     (r"/show/<pasteid>", ShowPaste),
     (r"/raw/<pasteid>", RawPaste),
 ])
