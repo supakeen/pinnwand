@@ -31,6 +31,11 @@ a {
     color: var(--color3);
 }
 
+a:hover {
+    background-color: var(--color3);
+    color: var(--color1);
+}
+
 header {
     background: var(--color1);
 }
