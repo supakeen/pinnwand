@@ -196,6 +196,10 @@ class APINew(Base):
         raw = self.get_body_argument("code")
         expiry = self.get_body_argument("expiry")
 
+        if not raw: 
+            log.info("APINew.post: a paste was submitted without content")
+            raise tornado.web.HTTPError(400)
+
         if lexer not in utility.list_languages():
             log.info("APINew.post: a paste was submitted with an invalid lexer")
             raise tornado.web.HTTPError(400)
@@ -206,7 +210,7 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(raw, lexer, expiry)
+        paste = database.Paste(raw, lexer, utility.expiries[expiry])
 
         with self.make_session() as session:
             session.add(paste)
