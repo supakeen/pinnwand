@@ -228,10 +228,10 @@ class APIRemove(Base):
             session.delete(paste)
             session.commit()
 
-        # XXX this is set this way because tornado tries to protect us
-        # XXX by not allowing lists to be returned, looking at this code
-        # XXX it really shouldn't be a list but we have to keep it for
-        # XXX backwards compatibility
+        # this is set this way because tornado tries to protect us
+        # by not allowing lists to be returned, looking at this code
+        # it really shouldn't be a list but we have to keep it for
+        # backwards compatibility
         self.set_header("Content-Type", "application/json")
         self.write(
             json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
