@@ -238,7 +238,7 @@ class APIRemove(Base):
 def make_application() -> tornado.web.Application:
     return tornado.web.Application([
         (r"/", CreatePaste),
-        (r"/<+lexer?>", CreatePaste),
-        (r"/show/<pasteid>", ShowPaste),
-        (r"/raw/<pasteid>", RawPaste),
+        (r"/\+(.*)", CreatePaste),
+        (r"/show/(.*)", ShowPaste),
+        (r"/raw/(.*)", RawPaste),
     ])
