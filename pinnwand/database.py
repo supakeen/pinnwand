@@ -2,6 +2,9 @@ import datetime
 import hashlib
 import logging
 import uuid
+import os
+import base64
+
 import pygments.lexers
 import pygments.formatters
 
@@ -56,9 +59,8 @@ class Paste(Base):  # type: ignore
         # on how often collissions occur.
         # Aside from that we should never repeat hashes which have been used before
         # without keeping the pastes in the database.
-        return hashlib.sha224(str(uuid.uuid4()).encode("ascii")).hexdigest()[
-            :12
-        ]
+        # XXX this does expose urandom directly ..., is that bad?
+        return base64.urlsafe_b64encode(os.urandom(3)).decode("ascii").replace("=", "")
 
     def __init__(
         self,
