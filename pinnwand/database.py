@@ -1,16 +1,12 @@
 import datetime
-import hashlib
 import logging
-import uuid
 import os
 import base64
 
 import pygments.lexers
 import pygments.formatters
 
-from sqlalchemy import Integer, Column, String, DateTime
-from sqlalchemy import create_engine, Text
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import Integer, Column, String, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 from tornado_sqlalchemy import make_session_factory

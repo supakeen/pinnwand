@@ -1,10 +1,6 @@
 import json
 import logging
 
-from typing import List
-
-from datetime import timedelta
-
 import tornado.web
 
 from tornado_sqlalchemy import as_future, SessionMixin
@@ -196,7 +192,7 @@ class APINew(Base):
         raw = self.get_body_argument("code")
         expiry = self.get_body_argument("expiry")
 
-        if not raw: 
+        if not raw:
             log.info("APINew.post: a paste was submitted without content")
             raise tornado.web.HTTPError(400)
 
