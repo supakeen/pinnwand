@@ -107,7 +107,7 @@ class ShowPaste(Base):
             can_delete = self.get_cookie("removal") == str(paste.removal_id)
 
             self.render(
-                "show.html", paste=paste, pagetitle="show", can_delete=can_delete
+                "show.html", paste=paste, pagetitle="show", can_delete=can_delete, linenos=False,
             )
 
 
@@ -242,6 +242,7 @@ def make_application() -> tornado.web.Application:
             (r"/\+(.*)", CreatePaste),
             (r"/show/(.*)", ShowPaste),
             (r"/raw/(.*)", RawPaste),
+            (r"/remove/(.*)", RemovePaste),
         ],
         template_path=path.template,
         session_factory=database.session_factory,

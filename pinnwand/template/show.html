@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-<div id="paste" class="lang-{{ paste.syntax }} code{% if not linenos %} nolinenos{% endif %}">
+<div id="paste" class="lang-{{ paste.lexer }} code{% if not linenos %} nolinenos{% end %}">
     <div class="code">
-        {{ paste.fmt|safe }}
+        {% raw paste.fmt %}
     </div>
 </div>
 <div class="extra">
@@ -10,13 +10,12 @@
     <p>This paste expires on <span>{{ paste.exp_date }}</span>.
     {% else %}
     <p>This paste <span>never</span> expires.
-    {% endif %}
-    View <a href="{{ url_for("raw", paste_id=paste.paste_id) }}">raw</a>.
-{% if can_delete %}
-        <a href="{{ url_for("remove", removal_id=paste.removal_id) }}">Remove now</a> (<a href="{{ url_for('removal') }}">Why am I seeing this?</a>)
-{% endif %}
+    {% end %}
+    View <a href="/raw/{{ paste.paste_id }}">raw</a>.
+    {% if can_delete %}
+    <a href="/remove/{{ paste.removal_id }}">Remove now</a>.
+    {% end %}
     Pasted through <em>{{ paste.src }}</em>.
-        </p>
+    </p>
 </div>
-
-{% endblock %}
+{% end %}
