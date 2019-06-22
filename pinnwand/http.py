@@ -65,7 +65,7 @@ class CreatePaste(Base):
         paste = database.Paste(
             raw,
             lexer,
-            expiry
+            utility.expiries[expiry],
         )
 
         with self.make_session() as session:
