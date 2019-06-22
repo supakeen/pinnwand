@@ -35,8 +35,13 @@ class CreatePaste(Base):
 
         lexers = utility.list_languages()
 
+        # Our default lexer is just that, text
+        if not lexer:
+            lexer = "text"
+
         # Make sure a valid lexer is given
         if lexer not in lexers:
+            log.debug("CreatePaste.get: non-existent logger requested")
             raise tornado.web.HTTPError(404)
 
         await self.render(
