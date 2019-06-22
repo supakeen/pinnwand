@@ -43,28 +43,28 @@ def add() -> None:
     """Add a paste to pinnwand's database from stdin."""
     paste = Paste(sys.stdin.read(), lexer="html", expiry=timedelta(days=1))
 
-    with session_factory() as session:
-        session.add(paste)
-        session.commit()
+    session = session_factory.make_session()
+    session.add(paste)
+    session.commit()
 
 
 @main.command()
 def delete() -> None:
     """Delete a paste from pinnwand's database."""
-    paste = session.query(Paste).filter(Paste.id == int(args[1])).first()
 
-    with session_factory() as session:
-        session.delete(paste)
-        session.commit()
+    session = session_factory.make_session()
+    paste = session.query(Paste).filter(Paste.id == int(args[1])).first()
+    session.delete(paste)
+    session.commit()
 
 
 @main.command()
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
        database."""
-    pastes = session.query(Paste).filter(Paste.exp_date < datetime.now()).all()
 
-    with session_factory() as session:
-        for paste in pastes:
-            session.delete(paste)
-        session.commit()
+    session = session_factory.make_session()
+    pastes = session.query(Paste).filter(Paste.exp_date < datetime.now()).all()
+    for paste in pastes:
+        session.delete(paste)
+    session.commit()
