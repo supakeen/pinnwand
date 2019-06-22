@@ -11,10 +11,11 @@ from datetime import datetime, timedelta
 import tornado.ioloop
 
 from pinnwand.database import Base, engine, session, Paste
-from pinnwand.http import application
+from pinnwand.http import make_application
 
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 
 @click.group()
@@ -32,6 +33,7 @@ def init() -> None:
 @main.command()
 def http() -> None:
     """Run pinnwand's HTTP server."""
+    application = make_application()
     application.listen(8000)
     tornado.ioloop.IOLoop.current().start()
 
