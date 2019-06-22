@@ -17,11 +17,6 @@ class Base(tornado.web.RequestHandler, SessionMixin):
     pass
 
 
-class About(Base):
-    async def get(self) -> None:
-        self.render("about.html", pagetitle="about")
-
-
 class CreatePaste(Base):
     """The index page shows the new paste page with a list of all available
        lexers from Pygments."""
