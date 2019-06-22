@@ -87,13 +87,13 @@ class CreatePaste(Base):
             # Send the client to the paste
             self.redirect(f"/show/{paste.paste_id}")
 
-    def check_xsrf_cookie(self) -> bool:
+    def check_xsrf_cookie(self) -> None:
         """The CSRF token check is disabled. While it would be better if it
            was on the impact is both small (someone could make a paste in
            a users name which could allow pinnwand to be used as a vector for
            exfiltration from other XSS) and some command line utilities
            POST directly to this endpoint without using the JSON endpoint."""
-        return True
+        pass
 
 
 class ShowPaste(Base):
