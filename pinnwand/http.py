@@ -137,7 +137,6 @@ class RemovePaste(Base):
         """Look up if the user visiting this page has the removal id for a
            certain paste. If they do they're authorized to remove the paste."""
 
-        # XXX maybe use one and catch error
         with self.make_session() as session:
             paste = await as_future(
                 session.query(database.Paste)
