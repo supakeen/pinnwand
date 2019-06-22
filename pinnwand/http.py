@@ -84,7 +84,7 @@ class CreatePaste(Base):
            a users name which could allow pinnwand to be used as a vector for
            exfiltration from other XSS) and some command line utilities
            POST directly to this endpoint without using the JSON endpoint."""
-        pass
+        return
 
 
 class ShowPaste(Base):
