@@ -6,9 +6,9 @@ pinnwand
 Prerequisites
 =============
 * Python >= 3.6
-* flask
+* Tornado
 * sqlalchemy
-* pygments
+* a database driver
 
 Usage
 =====
