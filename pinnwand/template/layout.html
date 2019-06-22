@@ -1,22 +1,29 @@
 <!doctype html>
 <html>
   <head>
-    <title>{{ pagetitle }} at bpaste</title>
+    <title>{{ pagetitle }}</title>
     <link rel="stylesheet" href="/static/bpaste.css" type="text/css">
+    <link rel="stylesheet" href="/static/pygments.css" type="text/css">
     <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
   </head>
   <body>
-    <aside>
-      <h1>
-          <a href="/"><img width="100" height="100" src="/static/logo.png"></a>
-          <br>
-          <a href="/">new paste</a>
-          <br><br>
-          <a href="//github.com/supakeen/pinnwand">source code</a>
-      </h1>
-    </aside>
-    <article id="content-area">
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="/"><img class="logo" src="/static/logo.png"></a>
+          </li>
+          <li>
+            <a href="/">new paste</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
        {% block body %}{% end %}
-    </article>
+    </main>
+    <footer>
+      <a href="//github.com/supakeen/pinnwand">source code</a>
+    </footer>
   </body>
 </html>
