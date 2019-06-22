@@ -7,7 +7,7 @@ from datetime import timedelta
 
 import tornado.web
 
-import tornado_sqlalchemy
+from tornado_sqlalchemy import as_future, SessionMixin
 
 from pinnwand import database
 from pinnwand import utility
@@ -17,7 +17,7 @@ from pinnwand import path
 log = logging.getLogger(__name__)
 
 
-class Base(tornado.web.RequestHandler, tornado_sqlalchemy.SessionMixin):
+class Base(tornado.web.RequestHandler, SessionMixin):
     pass
 
 
@@ -91,12 +91,12 @@ class CreatePaste(Base):
 
 
 class ShowPaste(Base):
-    def get(self, paste_id: str) -> None:
+    async def get(self, paste_id: str) -> None:
         with self.make_session() as session:
-            paste = (
+            paste = await as_future(
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first()
+                .first
             )
 
             if not paste:
@@ -114,10 +114,10 @@ class ShowPaste(Base):
 class RawPaste(Base):
     async def get(self, paste_id: str) -> None:
         with self.make_session() as session:
-            paste = (
+            paste = await as_future(
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first()
+                .first
             )
 
             if not paste:
@@ -138,10 +138,10 @@ class RemovePaste(Base):
 
         # XXX maybe use one and catch error
         with self.make_session() as session:
-            paste = (
+            paste = await as_future(
                 session.query(database.Paste)
                 .filter(database.Paste.removal_id == removal_id)
-                .first()
+                .first
             )
 
             if not paste:
@@ -157,12 +157,12 @@ class RemovePaste(Base):
 
 
 class APIShow(Base):
-    def get(self, paste_id: str) -> None:
+    async def get(self, paste_id: str) -> None:
         with self.make_session() as session:
-            paste = (
+            paste = await as_future(
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first()
+                .first
             )
 
         if not paste:
@@ -210,13 +210,13 @@ class APINew(Base):
 class APIRemove(Base):
     async def post(self) -> None:
         with self.make_session() as session:
-            paste = (
+            paste = await as_future(
                 session.query(database.Paste)
                 .filter(
                     database.Paste.removal_id
                     == self.get_body_argument("removal_id")
                 )
-                .first()
+                .first
             )
 
             if not paste:
