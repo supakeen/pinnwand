@@ -46,7 +46,7 @@ class CreatePaste(Base):
             raise tornado.web.HTTPError(404)
 
         await self.render(
-            "new.html", lexer=lexer, lexers=lexers, pagetitle="new"
+            "new.html", lexer=lexer, lexers=lexers, pagetitle="new", message=None,
         )
 
     async def post(self) -> None:

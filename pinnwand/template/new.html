@@ -4,19 +4,19 @@
 {% if message %}
 <div class="quick"><p>{{ message }}</p></div>
 {% else %}
-{% endif %}
+{% end %}
 
-<form action="{{ url_for('index') }}" method="post" class="submitform">
+<form action="/" method="post" class="submitform">
     <textarea name="code"></textarea>
 
     <div class="extra">
         <button type="submit">Paste!</button>
         <select name="lexer">
             <option value="text">Text</option>
-            {% for key, caption in lexers|dictsort(true, 'value') %}
+            {% for key, caption in lexers.items() %}
             <option value="{{ key }}"{% if lexer == key
-            %} selected="selected"{% endif %}>{{ caption }}</option>
-        {% endfor %}
+            %} selected="selected"{% end %}>{{ caption }}</option>
+        {% end %}
         </select>
         <select name="expiry">
             <option value="1day">Expiry (1 day)</option>
@@ -24,4 +24,4 @@
         </select>
     </div>
   </form>
-{% endblock %}
+{% end %}
