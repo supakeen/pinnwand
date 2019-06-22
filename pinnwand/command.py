@@ -51,7 +51,6 @@ def add() -> None:
 @main.command()
 def delete() -> None:
     """Delete a paste from pinnwand's database."""
-
     session = session_factory.make_session()
     paste = session.query(Paste).filter(Paste.id == int(args[1])).first()
     session.delete(paste)
@@ -62,7 +61,6 @@ def delete() -> None:
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
        database."""
-
     session = session_factory.make_session()
     pastes = session.query(Paste).filter(Paste.exp_date < datetime.now()).all()
     for paste in pastes:
