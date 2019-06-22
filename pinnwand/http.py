@@ -99,16 +99,16 @@ class ShowPaste(Base):
                 .first()
             )
 
-        if not paste:
-            self.set_status(404)
-            self.render("404.html")
-            return
+            if not paste:
+                self.set_status(404)
+                self.render("404.html")
+                return
 
-        can_delete = self.get_cookie("removal") == str(paste.removal_id)
+            can_delete = self.get_cookie("removal") == str(paste.removal_id)
 
-        self.render(
-            "show.html", paste=paste, pagetitle="show", can_delete=can_delete
-        )
+            self.render(
+                "show.html", paste=paste, pagetitle="show", can_delete=can_delete
+            )
 
 
 class RawPaste(Base):
