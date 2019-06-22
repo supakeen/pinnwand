@@ -48,7 +48,11 @@ class CreatePaste(Base):
             return
 
         await self.render(
-            "new.html", lexer=lexer, lexers=lexers, pagetitle="new", message=None,
+            "new.html",
+            lexer=lexer,
+            lexers=lexers,
+            pagetitle="new",
+            message=None,
         )
 
     async def post(self) -> None:
@@ -68,11 +72,7 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
-            raw,
-            lexer,
-            utility.expiries[expiry],
-        )
+        paste = database.Paste(raw, lexer, utility.expiries[expiry])
 
         with self.make_session() as session:
             session.add(paste)
@@ -113,7 +113,11 @@ class ShowPaste(Base):
             can_delete = self.get_cookie("removal") == str(paste.removal_id)
 
             self.render(
-                "show.html", paste=paste, pagetitle="show", can_delete=can_delete, linenos=False,
+                "show.html",
+                paste=paste,
+                pagetitle="show",
+                can_delete=can_delete,
+                linenos=False,
             )
 
 
@@ -197,14 +201,12 @@ class APINew(Base):
             raise tornado.web.HTTPError(400)
 
         if expiry not in utility.expiries:
-            log.info("APINew.post: a paste was submitted with an invalid expiry")
+            log.info(
+                "APINew.post: a paste was submitted with an invalid expiry"
+            )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
-            raw,
-            lexer,
-            expiry
-        )
+        paste = database.Paste(raw, lexer, expiry)
 
         with self.make_session() as session:
             session.add(paste)
@@ -243,13 +245,18 @@ class APIRemove(Base):
 
 
 def make_application() -> tornado.web.Application:
-    return tornado.web.Application([
+    return tornado.web.Application(
+        [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
             (r"/show/(.*)", ShowPaste),
             (r"/raw/(.*)", RawPaste),
             (r"/remove/(.*)", RemovePaste),
-            (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": path.static}),
+            (
+                r"/static/(.*)",
+                tornado.web.StaticFileHandler,
+                {"path": path.static},
+            ),
         ],
         template_path=path.template,
         session_factory=database.session_factory,

@@ -26,4 +26,3 @@ expiries = {
     "1week": timedelta(days=7),
     "1month": timedelta(days=30),
 }
-
