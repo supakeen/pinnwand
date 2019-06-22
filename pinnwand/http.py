@@ -43,7 +43,9 @@ class CreatePaste(Base):
         # Make sure a valid lexer is given
         if lexer not in lexers:
             log.debug("CreatePaste.get: non-existent logger requested")
-            raise tornado.web.HTTPError(404)
+            self.set_status(404)
+            self.render("404.html", pagetitle="404")
+            return
 
         await self.render(
             "new.html", lexer=lexer, lexers=lexers, pagetitle="new", message=None,
@@ -101,7 +103,7 @@ class ShowPaste(Base):
 
             if not paste:
                 self.set_status(404)
-                self.render("404.html")
+                self.render("404.html", pagetitle="404")
                 return
 
             can_delete = self.get_cookie("removal") == str(paste.removal_id)
@@ -122,7 +124,7 @@ class RawPaste(Base):
 
             if not paste:
                 self.set_status(404)
-                self.render("404.html")
+                self.render("404.html", pagetitle="404")
                 return
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
@@ -147,7 +149,7 @@ class RemovePaste(Base):
             if not paste:
                 log.info("RemovePaste.get: someone visited with invalid id")
                 self.set_status(404)
-                self.render("404.html")
+                self.render("404.html", pagetitle="404")
                 return
 
             session.delete(paste)
