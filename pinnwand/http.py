@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 
 
 class Base(tornado.web.RequestHandler, SessionMixin):
-    pass
+    def prepare(self) -> None:
+        self.set_header("Content-Security-Policy", "default-src: 'self'")
 
 
 class CreatePaste(Base):
