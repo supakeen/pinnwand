@@ -60,6 +60,10 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid lexer")
             raise tornado.web.HTTPError(400)
 
+        # Guard against empty strings
+        if not raw:
+            return self.redirect(f"/+{lexer}")
+
         if expiry not in utility.expiries:
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
