@@ -10,12 +10,12 @@ from datetime import datetime, timedelta
 
 import tornado.ioloop
 
-from pinnwand.database import Base, engine, session, Paste
+from pinnwand.database import Base, session_factory, Paste
 from pinnwand.http import make_application
 
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 @click.group()
@@ -27,7 +27,7 @@ def main() -> None:
 @main.command()
 def init() -> None:
     """Create pinnwand's database models."""
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(session_factory.engine)
 
 
 @main.command()
@@ -43,8 +43,9 @@ def add() -> None:
     """Add a paste to pinnwand's database from stdin."""
     paste = Paste(sys.stdin.read(), lexer="html", expiry=timedelta(days=1))
 
-    session.add(paste)
-    session.commit()
+    with session_factory() as session:
+        session.add(paste)
+        session.commit()
 
 
 @main.command()
@@ -52,8 +53,9 @@ def delete() -> None:
     """Delete a paste from pinnwand's database."""
     paste = session.query(Paste).filter(Paste.id == int(args[1])).first()
 
-    session.delete(paste)
-    session.commit()
+    with session_factory() as session:
+        session.delete(paste)
+        session.commit()
 
 
 @main.command()
@@ -62,6 +64,7 @@ def reap() -> None:
        database."""
     pastes = session.query(Paste).filter(Paste.exp_date < datetime.now()).all()
 
-    for paste in pastes:
-        session.delete(paste)
-    session.commit()
+    with session_factory() as session:
+        for paste in pastes:
+            session.delete(paste)
+        session.commit()

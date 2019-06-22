@@ -10,16 +10,14 @@ from sqlalchemy import create_engine, Text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
+from tornado_sqlalchemy import make_session_factory
+
 from pinnwand.settings import DATABASE_URI
 
 
 log = logging.getLogger(__name__)
 
-engine = create_engine(DATABASE_URI, pool_recycle=3600)
-
-session = scoped_session(
-    sessionmaker(autocommit=False, autoflush=False, bind=engine)
-)
+session_factory = make_session_factory(DATABASE_URI)
 
 
 class _Base(object):

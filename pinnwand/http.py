@@ -72,14 +72,14 @@ class CreatePaste(Base):
             session.add(paste)
             session.commit()
 
-        # The removal cookie is set for the specific path of the paste it is
-        # related to
-        self.set_cookie(
-            "removal", str(paste.removal_id), path=f"/show/{paste.paste_id}"
-        )
+            # The removal cookie is set for the specific path of the paste it is
+            # related to
+            self.set_cookie(
+                "removal", str(paste.removal_id), path=f"/show/{paste.paste_id}"
+            )
 
-        # Send the client to the paste
-        self.redirect(f"/show/{paste.paste_id}")
+            # Send the client to the paste
+            self.redirect(f"/show/{paste.paste_id}")
 
     def check_xsrf_cookie(self) -> bool:
         """The CSRF token check is disabled. While it would be better if it
@@ -244,4 +244,5 @@ def make_application() -> tornado.web.Application:
             (r"/raw/(.*)", RawPaste),
         ],
         template_path=path.template,
+        session_factory=database.session_factory,
     )
