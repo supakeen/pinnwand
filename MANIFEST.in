@@ -1,2 +1,2 @@
-include pinnwand/templates/*
+include pinnwand/template/*
 include pinnwand/static/*
