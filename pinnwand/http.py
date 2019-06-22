@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 class Base(tornado.web.RequestHandler, SessionMixin):
     pass
 
+
 class CreatePaste(Base):
     """The index page shows the new paste page with a list of all available
        lexers from Pygments."""
