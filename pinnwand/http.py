@@ -11,6 +11,7 @@ import tornado_sqlalchemy
 
 from pinnwand import database
 from pinnwand import utility
+from pinnwand import path
 
 
 log = logging.getLogger(__name__)
@@ -237,8 +238,10 @@ class APIRemove(Base):
 
 def make_application() -> tornado.web.Application:
     return tornado.web.Application([
-        (r"/", CreatePaste),
-        (r"/\+(.*)", CreatePaste),
-        (r"/show/(.*)", ShowPaste),
-        (r"/raw/(.*)", RawPaste),
-    ])
+            (r"/", CreatePaste),
+            (r"/\+(.*)", CreatePaste),
+            (r"/show/(.*)", ShowPaste),
+            (r"/raw/(.*)", RawPaste),
+        ],
+        template_path=path.template,
+    )
