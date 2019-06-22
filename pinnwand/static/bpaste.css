@@ -55,6 +55,11 @@ main {
     margin: 1rem 0;
 }
 
+main article {
+    background: var(--color1);
+    padding: .5rem;
+}
+
 main div#paste {
     background: var(--color1);
     padding: .5rem;

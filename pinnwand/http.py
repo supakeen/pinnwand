@@ -244,6 +244,21 @@ class APIRemove(Base):
         )
 
 
+class RemovalPage(Base):
+    def get(self) -> None:
+        self.render("removal.html", pagetitle="removal")
+
+
+class AboutPage(Base):
+    def get(self) -> None:
+        self.render("about.html", pagetitle="about")
+
+
+class ExpiryPage(Base):
+    def get(self) -> None:
+        self.render("expiry.html", pagetitle="expiry")
+
+
 def make_application() -> tornado.web.Application:
     return tornado.web.Application(
         [
@@ -252,6 +267,9 @@ def make_application() -> tornado.web.Application:
             (r"/show/(.*)", ShowPaste),
             (r"/raw/(.*)", RawPaste),
             (r"/remove/(.*)", RemovePaste),
+            (r"/about", AboutPage),
+            (r"/removal", RemovalPage),
+            (r"/expiry", ExpiryPage),
             (
                 r"/static/(.*)",
                 tornado.web.StaticFileHandler,
