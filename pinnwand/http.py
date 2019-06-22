@@ -120,13 +120,13 @@ class RawPaste(Base):
                 .first()
             )
 
-        if not paste:
-            self.set_status(404)
-            self.render("404.html")
-            return
+            if not paste:
+                self.set_status(404)
+                self.render("404.html")
+                return
 
-        self.set_header("Content-Type", "text/plain; charset=utf-8")
-        self.write(paste.raw)
+            self.set_header("Content-Type", "text/plain; charset=utf-8")
+            self.write(paste.raw)
 
 
 class RemovePaste(Base):
