@@ -27,15 +27,11 @@ def main() -> None:
 
 
 @main.command()
-def init() -> None:
-    """Create pinnwand's database models."""
-    Base.metadata.create_all(session_factory.engine)
-
-
-@main.command()
 @click.option("--port", default=8000, help="Port to listen to.")
 def http(port: int) -> None:
     """Run pinnwand's HTTP server."""
+    Base.metadata.create_all(session_factory.engine)
+
     application = make_application()
     application.listen(port)
     tornado.ioloop.IOLoop.current().start()
