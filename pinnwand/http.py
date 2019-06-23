@@ -240,18 +240,21 @@ class APIRemove(Base):
 
 class RemovalPage(Base):
     """Serve the removal page."""
+
     def get(self) -> None:
         self.render("removal.html", pagetitle="removal")
 
 
 class AboutPage(Base):
     """Serve the about page."""
+
     def get(self) -> None:
         self.render("about.html", pagetitle="about")
 
 
 class ExpiryPage(Base):
     """Serve the expiry page."""
+
     def get(self) -> None:
         self.render("expiry.html", pagetitle="expiry")
 
