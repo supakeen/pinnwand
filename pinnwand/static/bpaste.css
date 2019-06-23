@@ -33,8 +33,8 @@ a:hover {
     color: var(--color1);
 }
 
-header, footer, article, main div#paste, main div.extra, form textarea {
-    background: var(--color1);
+header, footer, article, main div#paste, main div.extra, form textarea, form select {
+    background-color: var(--color1);
 }
 
 header nav ul, main article, main div#paste, main div.extra, form textarea, footer {
@@ -77,7 +77,6 @@ form.create textarea {
 
 form select {
     color: var(--color2);
-    background-color: var(--color1);
     border: .0625rem solid var(--color0);
 }
 
