@@ -33,13 +33,16 @@ a:hover {
     color: var(--color1);
 }
 
-header {
+header, footer, article, main div#paste, main div.extra, form textarea {
     background: var(--color1);
+}
+
+header nav ul, main article, main div#paste, main div.extra, form textarea, footer {
+    padding: .5rem;
 }
 
 header nav ul {
     margin: 0;
-    padding: .5rem;
 }
 
 header nav ul li {
@@ -55,47 +58,27 @@ main {
     margin: 1rem 0;
 }
 
-main article {
-    background: var(--color1);
-    padding: .5rem;
-}
-
 main div#paste {
-    background: var(--color1);
-    padding: .5rem;
     overflow: auto;
 }
 
 main div.extra {
     margin-top: 1rem;
-    padding: .5rem;
-    background: var(--color1);
 }
 
 form.create textarea {
     color: var(--color2);
-    background-color: var(--color1);
     border: none;
     box-sizing: border-box;
     resize: none;
     width: 100%;
     height: 20rem;
-    padding: .5rem;
 }
 
 form select {
     color: var(--color2);
     background-color: var(--color1);
     border: .0625rem solid var(--color0);
-}
-
-form.create div.extra {
-    padding: .5rem;
-}
-
-footer {
-    background: var(--color1);
-    padding: .5rem;
 }
 
 td.linenos {
