@@ -39,8 +39,8 @@ class Paste(Base):  # type: ignore
     pub_date = Column(DateTime)
     chg_date = Column(DateTime)
 
-    paste_id = Column(String(250))
-    removal_id = Column(String(250))
+    paste_id = Column(String(250), unique=True)
+    removal_id = Column(String(250), unique=True)
 
     lexer = Column(String(250))
 
