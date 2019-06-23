@@ -24,5 +24,4 @@ def list_languages() -> Dict[str, str]:
 expiries = {
     "1day": timedelta(days=1),
     "1week": timedelta(days=7),
-    "1month": timedelta(days=30),
 }

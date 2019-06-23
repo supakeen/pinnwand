@@ -2,11 +2,12 @@
 a HTTP server, add and remove paste, initialize the database and reap expired
 pastes."""
 
-import click
 import sys
 import logging
 
 from datetime import datetime, timedelta
+
+import click
 
 import tornado.ioloop
 
@@ -22,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG)
 @click.group()
 def main() -> None:
     """Pinnwand pastebin software."""
-    pass
+    return None
 
 
 @main.command()
