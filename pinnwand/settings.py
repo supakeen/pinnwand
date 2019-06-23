@@ -2,7 +2,7 @@ DEBUG = True
 
 ABUSE_EMAIL = "your@email"
 
-DATABASE_URI = "postgres://pinnwand:password@localhost/pinnwand"
+DATABASE_URI = "postgresql://pinnwand:password@localhost/pinnwand"
 
 NAME = "pinnwand"
 LOGO = "logo.png"
