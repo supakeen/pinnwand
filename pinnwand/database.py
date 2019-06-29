@@ -9,6 +9,7 @@ import pygments.formatters
 
 from sqlalchemy import Integer, Column, String, DateTime, Text, create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 from pinnwand.settings import DATABASE_URI
@@ -21,17 +22,16 @@ _session = sessionmaker(bind=_engine)
 
 
 @contextlib.contextmanager
-def session():
-    session = _session()
+def session() -> Session:
+    a_session = _session()
 
     try:
-        yield session
+        yield a_session
     except:
-        session.rollback()
+        a_session.rollback()
         raise
     finally:
-        session.close()
-
+        a_session.close()
 
 
 class _Base(object):
@@ -39,8 +39,8 @@ class _Base(object):
     and a primary key column."""
 
     @declared_attr
-    def __tablename__(cls) -> str:
-        return str(cls.__name__.lower())  # type: ignore
+    def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
+        return str(cls.__class__.__name__.lower())
 
     id = Column(Integer, primary_key=True)
 
@@ -66,11 +66,11 @@ class Paste(Base):  # type: ignore
     exp_date = Column(DateTime)
 
     def create_hash(self) -> str:
-        # XXX This should organically grow as more is used, probably depending
+        # This should organically grow as more is used, probably depending
         # on how often collissions occur.
         # Aside from that we should never repeat hashes which have been used before
         # without keeping the pastes in the database.
-        # XXX this does expose urandom directly ..., is that bad?
+        # this does expose urandom directly ..., is that bad?
         return (
             base64.urlsafe_b64encode(os.urandom(3))
             .decode("ascii")
@@ -100,7 +100,7 @@ class Paste(Base):  # type: ignore
         self.lexer = lexer
 
         lexer = pygments.lexers.get_lexer_by_name(lexer)
-        formatter = pygments.formatters.HtmlFormatter(
+        formatter = pygments.formatters.HtmlFormatter(  # pylint: disable=no-member
             linenos=True, cssclass="source"
         )
 

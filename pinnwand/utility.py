@@ -21,7 +21,4 @@ def list_languages() -> Dict[str, str]:
     return _get_pygments_lexers(False)
 
 
-expiries = {
-    "1day": timedelta(days=1),
-    "1week": timedelta(days=7),
-}
+expiries = {"1day": timedelta(days=1), "1week": timedelta(days=7)}

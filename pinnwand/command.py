@@ -46,7 +46,9 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(sys.stdin.read(), lexer=lexer, expiry=timedelta(days=1))
+    paste = database.Paste(
+        sys.stdin.read(), lexer=lexer, expiry=timedelta(days=1)
+    )
 
     with database.session() as session:
         session.add(paste)
@@ -60,7 +62,11 @@ def add(lexer: str) -> None:
 def delete(paste: str) -> None:
     """Delete a paste from pinnwand's database."""
     with database.session() as session:
-        paste_object = session.query(database.Paste).filter(database.Paste.paste_id == paste).first()
+        paste_object = (
+            session.query(database.Paste)
+            .filter(database.Paste.paste_id == paste)
+            .first()
+        )
 
         if not paste_object:
             log.error("delete: unknown paste")
@@ -77,7 +83,11 @@ def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
        database."""
     with database.session() as session:
-        pastes = session.query(database.Paste).filter(database.Paste.exp_date < datetime.now()).all()
+        pastes = (
+            session.query(database.Paste)
+            .filter(database.Paste.exp_date < datetime.now())
+            .all()
+        )
 
         for paste in pastes:
             session.delete(paste)
