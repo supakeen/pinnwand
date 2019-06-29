@@ -12,10 +12,8 @@ setup(
     install_requires=[
         "click",
         "tornado",
-        "pytoml",
         "pygments",
         "sqlalchemy",
-        "tornado-sqlalchemy",
     ],
     tests_require=["pytest", "pytest-cov"],
     entry_points={"console_scripts": ["pinnwand=pinnwand.command:main"]},

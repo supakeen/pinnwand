@@ -2,21 +2,36 @@ import datetime
 import logging
 import os
 import base64
+import contextlib
 
 import pygments.lexers
 import pygments.formatters
 
-from sqlalchemy import Integer, Column, String, DateTime, Text
+from sqlalchemy import Integer, Column, String, DateTime, Text, create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-
-from tornado_sqlalchemy import make_session_factory
 
 from pinnwand.settings import DATABASE_URI
 
 
 log = logging.getLogger(__name__)
 
-session_factory = make_session_factory(DATABASE_URI)
+_engine = create_engine(DATABASE_URI)
+_session = sessionmaker(bind=_engine)
+
+
+@contextlib.contextmanager
+def session():
+    session = _session()
+
+    try:
+        yield session
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
 
 
 class _Base(object):

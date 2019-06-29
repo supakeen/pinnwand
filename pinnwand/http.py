@@ -3,8 +3,6 @@ import logging
 
 import tornado.web
 
-from tornado_sqlalchemy import as_future, SessionMixin
-
 from pinnwand import database
 from pinnwand import utility
 from pinnwand import path
@@ -13,7 +11,7 @@ from pinnwand import path
 log = logging.getLogger(__name__)
 
 
-class Base(tornado.web.RequestHandler, SessionMixin):
+class Base(tornado.web.RequestHandler):
     pass
 
 
@@ -65,7 +63,7 @@ class CreatePaste(Base):
 
         paste = database.Paste(raw, lexer, utility.expiries[expiry])
 
-        with self.make_session() as session:
+        with database.session() as session:
             session.add(paste)
             session.commit()
 
@@ -89,11 +87,11 @@ class CreatePaste(Base):
 
 class ShowPaste(Base):
     async def get(self, paste_id: str) -> None:
-        with self.make_session() as session:
-            paste = await as_future(
+        with database.session() as session:
+            paste = (
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first
+                .first()
             )
 
             if not paste:
@@ -114,11 +112,11 @@ class ShowPaste(Base):
 
 class RawPaste(Base):
     async def get(self, paste_id: str) -> None:
-        with self.make_session() as session:
-            paste = await as_future(
+        with database.session() as session:
+            paste = (
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first
+                .first()
             )
 
             if not paste:
@@ -137,11 +135,11 @@ class RemovePaste(Base):
         """Look up if the user visiting this page has the removal id for a
            certain paste. If they do they're authorized to remove the paste."""
 
-        with self.make_session() as session:
-            paste = await as_future(
+        with database.session() as session:
+            paste = (
                 session.query(database.Paste)
                 .filter(database.Paste.removal_id == removal_id)
-                .first
+                .first()
             )
 
             if not paste:
@@ -158,11 +156,11 @@ class RemovePaste(Base):
 
 class APIShow(Base):
     async def get(self, paste_id: str) -> None:
-        with self.make_session() as session:
-            paste = await as_future(
+        with database.session() as session:
+            paste = (
                 session.query(database.Paste)
                 .filter(database.Paste.paste_id == paste_id)
-                .first
+                .first()
             )
 
         if not paste:
@@ -202,7 +200,7 @@ class APINew(Base):
 
         paste = database.Paste(raw, lexer, utility.expiries[expiry])
 
-        with self.make_session() as session:
+        with database.session() as session:
             session.add(paste)
             session.commit()
 
@@ -211,14 +209,14 @@ class APINew(Base):
 
 class APIRemove(Base):
     async def post(self) -> None:
-        with self.make_session() as session:
-            paste = await as_future(
+        with database.session() as session:
+            paste = (
                 session.query(database.Paste)
                 .filter(
                     database.Paste.removal_id
                     == self.get_body_argument("removal_id")
                 )
-                .first
+                .first()
             )
 
             if not paste:
@@ -277,5 +275,4 @@ def make_application() -> tornado.web.Application:
             ),
         ],
         template_path=path.template,
-        session_factory=database.session_factory,
     )

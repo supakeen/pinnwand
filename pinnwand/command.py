@@ -11,9 +11,10 @@ import click
 
 import tornado.ioloop
 
-from pinnwand.database import Base, session_factory, Paste
-from pinnwand.http import make_application
 from pinnwand import utility
+from pinnwand import database
+
+from pinnwand.http import make_application
 
 
 log = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ def main() -> None:
 @click.option("--port", default=8000, help="Port to listen to.")
 def http(port: int) -> None:
     """Run pinnwand's HTTP server."""
-    Base.metadata.create_all(session_factory.engine)
+    database.Base.metadata.create_all(database._engine)
 
     application = make_application()
     application.listen(port)
@@ -45,42 +46,42 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = Paste(sys.stdin.read(), lexer=lexer, expiry=timedelta(days=1))
+    paste = database.Paste(sys.stdin.read(), lexer=lexer, expiry=timedelta(days=1))
 
-    session = session_factory.make_session()
-    session.add(paste)
-    session.commit()
+    with database.session() as session:
+        session.add(paste)
+        session.commit()
 
     log.info("add: paste created: %s", paste.paste_id)
 
 
 @main.command()
-@click.option("--paste", help="Paste identifier.", required=True)
+@click.option("--paste", help="database.Paste identifier.", required=True)
 def delete(paste: str) -> None:
     """Delete a paste from pinnwand's database."""
-    session = session_factory.make_session()
-    paste_object = session.query(Paste).filter(Paste.paste_id == paste).first()
+    with database.session() as session:
+        paste_object = session.query(database.Paste).filter(database.Paste.paste_id == paste).first()
 
-    if not paste_object:
-        log.error("delete: unknown paste")
-        return
+        if not paste_object:
+            log.error("delete: unknown paste")
+            return
 
-    session.delete(paste_object)
-    session.commit()
+        session.delete(paste_object)
+        session.commit()
 
-    log.info("delete: paste %s deleted", paste_object)
+        log.info("delete: paste %s deleted", paste_object)
 
 
 @main.command()
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
        database."""
-    session = session_factory.make_session()
-    pastes = session.query(Paste).filter(Paste.exp_date < datetime.now()).all()
+    with database.session() as session:
+        pastes = session.query(database.Paste).filter(database.Paste.exp_date < datetime.now()).all()
 
-    for paste in pastes:
-        session.delete(paste)
+        for paste in pastes:
+            session.delete(paste)
 
-    session.commit()
+        session.commit()
 
-    log.info("reap: removed %d pastes", len(pastes))
+        log.info("reap: removed %d pastes", len(pastes))
