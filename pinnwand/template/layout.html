@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ pagetitle }}</title>
+    <link rel="stylesheet" href="/static/bpaste.css" type="text/css">
+    <link rel="stylesheet" href="/static/pygments.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="/"><img class="logo" src="/static/logo.png"></a>
+          </li>
+          <li>
+            <a href="/">new paste</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+       {% block body %}{% end %}
+    </main>
+    <footer>
+      View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.
+    </footer>
+  </body>
+</html>

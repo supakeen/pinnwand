@@ -1,21 +1,37 @@
 import datetime
-import hashlib
-import uuid
+import logging
+import os
+import base64
+import contextlib
+
 import pygments.lexers
 import pygments.formatters
 
-from sqlalchemy import Integer, Column, String, DateTime
-from sqlalchemy import create_engine, Text
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import Integer, Column, String, DateTime, Text, create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 from pinnwand.settings import DATABASE_URI
 
-engine = create_engine(DATABASE_URI, pool_recycle=3600)
 
-session = scoped_session(
-    sessionmaker(autocommit=False, autoflush=False, bind=engine)
-)
+log = logging.getLogger(__name__)
+
+_engine = create_engine(DATABASE_URI)
+_session = sessionmaker(bind=_engine)
+
+
+@contextlib.contextmanager
+def session() -> Session:
+    a_session = _session()
+
+    try:
+        yield a_session
+    except:
+        a_session.rollback()
+        raise
+    finally:
+        a_session.close()
 
 
 class _Base(object):
@@ -23,8 +39,8 @@ class _Base(object):
     and a primary key column."""
 
     @declared_attr
-    def __tablename__(cls) -> str:
-        return str(cls.__name__.lower())  # type: ignore
+    def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
+        return str(cls.__class__.__name__.lower())
 
     id = Column(Integer, primary_key=True)
 
@@ -32,16 +48,14 @@ class _Base(object):
 Base = declarative_base(cls=_Base)
 
 
-class HasDates(object):
-    """Define attributes present on all dated content."""
+class Paste(Base):  # type: ignore
+    """The Paste model represents a single Paste."""
 
     pub_date = Column(DateTime)
     chg_date = Column(DateTime)
 
-
-class Paste(HasDates, Base):
-    paste_id = Column(String(250))
-    removal_id = Column(String(250))
+    paste_id = Column(String(250), unique=True)
+    removal_id = Column(String(250), unique=True)
 
     lexer = Column(String(250))
 
@@ -52,13 +66,16 @@ class Paste(HasDates, Base):
     exp_date = Column(DateTime)
 
     def create_hash(self) -> str:
-        # XXX This should organically grow as more is used, probably depending
+        # This should organically grow as more is used, probably depending
         # on how often collissions occur.
         # Aside from that we should never repeat hashes which have been used before
         # without keeping the pastes in the database.
-        return hashlib.sha224(str(uuid.uuid4()).encode("ascii")).hexdigest()[
-            :12
-        ]
+        # this does expose urandom directly ..., is that bad?
+        return (
+            base64.urlsafe_b64encode(os.urandom(3))
+            .decode("ascii")
+            .replace("=", "")
+        )
 
     def __init__(
         self,
@@ -83,7 +100,7 @@ class Paste(HasDates, Base):
         self.lexer = lexer
 
         lexer = pygments.lexers.get_lexer_by_name(lexer)
-        formatter = pygments.formatters.HtmlFormatter(
+        formatter = pygments.formatters.HtmlFormatter(  # pylint: disable=no-member
             linenos=True, cssclass="source"
         )
 
@@ -96,4 +113,4 @@ class Paste(HasDates, Base):
             self.exp_date = None
 
     def __repr__(self) -> str:
-        return "<Paste(paste_id=%s)>" % (self.paste_id,)
+        return f"<Paste(paste_id={self.paste.id})>"
