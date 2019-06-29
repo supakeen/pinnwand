@@ -1,3 +1,4 @@
 tornado
 pygments
 sqlalchemy
+click
