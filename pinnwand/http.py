@@ -163,19 +163,19 @@ class APIShow(Base):
                 .first()
             )
 
-        if not paste:
-            self.set_status(404)
-            return
+            if not paste:
+                self.set_status(404)
+                return
 
-        self.write(
-            {
-                "paste_id": paste.paste_id,
-                "raw": paste.raw,
-                "fmt": paste.fmt,
-                "lexer": paste.lexer,
-                "expiry": paste.exp_date.isoformat(),
-            }
-        )
+            self.write(
+                {
+                    "paste_id": paste.paste_id,
+                    "raw": paste.raw,
+                    "fmt": paste.fmt,
+                    "lexer": paste.lexer,
+                    "expiry": paste.exp_date.isoformat(),
+                }
+            )
 
 
 class APINew(Base):
@@ -204,7 +204,7 @@ class APINew(Base):
             session.add(paste)
             session.commit()
 
-        self.write({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
+            self.write({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
 
 
 class APIRemove(Base):
@@ -226,14 +226,14 @@ class APIRemove(Base):
             session.delete(paste)
             session.commit()
 
-        # this is set this way because tornado tries to protect us
-        # by not allowing lists to be returned, looking at this code
-        # it really shouldn't be a list but we have to keep it for
-        # backwards compatibility
-        self.set_header("Content-Type", "application/json")
-        self.write(
-            json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
-        )
+            # this is set this way because tornado tries to protect us
+            # by not allowing lists to be returned, looking at this code
+            # it really shouldn't be a list but we have to keep it for
+            # backwards compatibility
+            self.set_header("Content-Type", "application/json")
+            self.write(
+                json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
+            )
 
 
 class RemovalPage(Base):
