@@ -268,9 +268,9 @@ def make_application() -> tornado.web.Application:
             (r"/about", AboutPage),
             (r"/removal", RemovalPage),
             (r"/expiry", ExpiryPage),
-            (r"/api/new", APINew),
-            (r"/api/remove", APIRemove),
-            (r"/api/show", APIShow),
+            (r"/json/new", APINew),
+            (r"/json/remove", APIRemove),
+            (r"/json/show", APIShow),
             (
                 r"/static/(.*)",
                 tornado.web.StaticFileHandler,
