@@ -8,6 +8,7 @@ Prerequisites
 * Python >= 3.6
 * Tornado
 * sqlalchemy
+* click
 * a database driver
 
 Usage
