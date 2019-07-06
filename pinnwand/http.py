@@ -204,7 +204,9 @@ class APINew(Base):
             session.add(paste)
             session.commit()
 
-            self.write({"paste_id": paste.paste_id, "removal_id": paste.removal_id})
+            self.write(
+                {"paste_id": paste.paste_id, "removal_id": paste.removal_id}
+            )
 
 
 class APIRemove(Base):
