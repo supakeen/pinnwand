@@ -238,6 +238,18 @@ class APIRemove(Base):
             )
 
 
+class APILexers(Base):
+    async def get(self) -> None:
+        self.write(utility.list_languages())
+
+
+class APIExpiries(Base):
+    async def get(self) -> None:
+        self.write(
+            {name: str(delta) for name, delta in utility.expiries.items()}
+        )
+
+
 class RemovalPage(Base):
     """Serve the removal page."""
 
@@ -273,6 +285,8 @@ def make_application() -> tornado.web.Application:
             (r"/json/new", APINew),
             (r"/json/remove", APIRemove),
             (r"/json/show/(.*)", APIShow),
+            (r"/json/lexers", APILexers),
+            (r"/json/expiries", APIExpiries),
             (
                 r"/static/(.*)",
                 tornado.web.StaticFileHandler,
