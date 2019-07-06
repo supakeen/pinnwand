@@ -27,7 +27,7 @@ def session() -> Session:
 
     try:
         yield a_session
-    except:
+    except Exception:
         a_session.rollback()
         raise
     finally:
