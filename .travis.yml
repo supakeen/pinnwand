@@ -1,0 +1,7 @@
+language: python
+python:
+- "3.6"
+install:
+- pip install pytest pytest-cov tornado click sqlalchemy
+script:
+- python setup.py test
