@@ -7,6 +7,7 @@ import tornado.testing
 
 from pinnwand import http
 from pinnwand import database
+from pinnwand import utility
 
 
 class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
@@ -149,3 +150,15 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(f"/json/show/{data['paste_id']}")
 
         assert response.code == 404
+
+    def test_api_get_lexers(self) -> None:
+        response = self.fetch("/json/lexers", method="GET")
+
+        assert response.code == 200
+        assert json.loads(response.body) == utility.list_languages()
+
+    def test_api_get_expiries(self) -> None:
+        response = self.fetch("/json/expiries", method="GET")
+
+        assert response.code == 200
+        assert json.loads(response.body).keys() == utility.expiries.keys()
