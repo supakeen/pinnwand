@@ -27,6 +27,32 @@ Prerequisites
 Usage
 =====
 
+Enter text, click "Paste". Easy enough.
+
+Using API is slightly more difficult but certainly recommended for programmatic usage.
+``pinnwand`` accepts HTTP POST requests to ``/json/new`` with following body:
+
+::
+
+    {
+        "code": "text to send",
+        "lexer": "text",
+        "expiry": "1day",
+        "filename": "source.txt"
+    }
+
+``filename`` is optional here.
+
+API will return JSON response with full URL for convenience and ``paste_id, removal_id`` keys.
+Use first one to query existing records by GET request to ``/json/show/paste_id``.
+
+To remove existing paste send POST request to ``/json/remove`` with data
+
+::
+
+    {"removal_id": <removal_id>}
+
+
 Reporting bugs
 ==============
 Bugs are reported best at ``pinnwand``'s `project page`_ on github.

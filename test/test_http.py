@@ -85,6 +85,28 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch("/json/new")
         assert response.code == 405
 
+    def test_api_return_filename(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "lexer": "python",
+                    "code": "foo",
+                    "expiry": "1day",
+                    "filename": "example.py",
+                }
+            ),
+        )
+
+        assert response.code == 200
+        data = json.loads(response.body)
+
+        response = self.fetch(f"/json/show/{data['paste_id']}")
+        data = json.loads(response.body)
+
+        assert data["filename"] == "example.py"
+
     def test_api_show(self) -> None:
         response = self.fetch(
             "/json/new",
