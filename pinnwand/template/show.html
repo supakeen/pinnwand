@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+
 {% block body %}
 <div id="paste" class="lang-{{ paste.lexer }} code{% if not linenos %} nolinenos{% end %}">
     <div class="code">
@@ -6,23 +7,22 @@
     </div>
 </div>
 {% end %}
+
 {% block aside %}
-<aside>
-    {% if paste.exp_date %}
-    <p>This paste expires on <span>{{ paste.exp_date }}</span>.
-    {% else %}
-    <p>This paste <span>never</span> expires.
-    {% end %}
-    View <a href="/raw/{{ paste.paste_id }}">raw</a>.
-    {% if can_delete %}
-    <a href="/remove/{{ paste.removal_id }}">Remove now</a>.
-    {% end %}
-    Pasted through <em>{{ paste.src }}</em>.
-    </p>
-    {% if paste.filename %}
-    <p>
-    Source: <span>{{ paste.filename }}</span>
-    </p>
-    {% end %}
-</aside>
+{% if paste.exp_date %}
+<p>This paste expires on <span>{{ paste.exp_date }}</span>.
+{% else %}
+<p>This paste <span>never</span> expires.
+{% end %}
+View <a href="/raw/{{ paste.paste_id }}">raw</a>.
+{% if can_delete %}
+<a href="/remove/{{ paste.removal_id }}">Remove now</a>.
+{% end %}
+Pasted through <em>{{ paste.src }}</em>.
+</p>
+{% if paste.filename %}
+<p>
+Source: <span>{{ paste.filename }}</span>
+</p>
+{% end %}
 {% end %}

@@ -13,20 +13,18 @@
 {% end %}
 
 {% block aside %}
-<aside>
-    <button type="submit">Paste!</button>
-    <select name="lexer">
-        <option value="text">Text</option>
-        {% for key, caption in lexers.items() %}
-        <option value="{{ key }}"{% if lexer == key
-        %} selected="selected"{% end %}>{{ caption }}</option>
-    {% end %}
-    </select>
-    <select name="expiry">
-        <option value="1day">Expiry (1 day)</option>
-        <option value="1week">1 week</option>
-    </select>
-</aside>
+<button type="submit">Paste!</button>
+<select name="lexer">
+    <option value="text">Text</option>
+    {% for key, caption in lexers.items() %}
+    <option value="{{ key }}"{% if lexer == key
+    %} selected="selected"{% end %}>{{ caption }}</option>
+{% end %}
+</select>
+<select name="expiry">
+    <option value="1day">Expiry (1 day)</option>
+    <option value="1week">1 week</option>
+</select>
 {% end %}
 
 {% block wrap_end %}

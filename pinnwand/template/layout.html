@@ -8,25 +8,29 @@
   </head>
   <body>
     {% block wrap_start %}{% end %}
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <a href="/"><img class="logo" src="/static/logo.png"></a>
-          </li>
-          <li>
-            <a href="/">new paste</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-       {% block body %}{% end %}
-    </main>
-    {% block aside %}{% end %}
-    <footer>
-      View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.
-    </footer>
+    <div class="content">
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <a href="/"><img class="logo" src="/static/logo.png"></a>
+            </li>
+            <li>
+              <a href="/">new paste</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        {% block body %}{% end %}
+      </main>
+      <aside>
+        {% block aside %}{% end %}
+      </aside>
+      <footer>
+        View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.
+      </footer>
+    </div>
     {% block wrap_end %}{% end %}
   </body>
 </html>

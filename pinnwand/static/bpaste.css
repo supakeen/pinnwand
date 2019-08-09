@@ -14,14 +14,25 @@
     }
 }
 
-body {
+html, body, body > form {
+    width: 100%;
+    height: 100%;
     color: var(--color2);
     font-family: sans-serif;
-    font-size: .8rem;
+    font-size: 1rem;
     background: var(--color0);
-    padding: 2rem;
-    margin: 0 auto;
-    min-width: 20rem;
+    padding: 0;
+    margin: 0;
+}
+
+div.content {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    display: grid;
+    grid-row-gap: .5rem;
+    grid-template-rows: min-content 1fr min-content min-content;
 }
 
 a {
@@ -54,16 +65,10 @@ header nav ul li img.logo {
     width: 2rem;
 }
 
-main {
-    margin: 1rem 0;
-}
-
-main div#paste {
+article, main div#paste {
+    box-sizing: border-box;
     overflow: auto;
-}
-
-aside {
-    margin: 1rem 0;
+    height: 100%;
 }
 
 form.create textarea {
@@ -72,12 +77,18 @@ form.create textarea {
     box-sizing: border-box;
     resize: none;
     width: 100%;
-    height: 20rem;
+    height: 100%;
+    font-size: 1rem;
 }
 
 form select {
+    font-size: 1rem;
     color: var(--color2);
     border: .0625rem solid var(--color0);
+}
+
+form button {
+    font-size: 1rem;
 }
 
 td.linenos {
@@ -87,4 +98,12 @@ td.linenos {
 
 td.code {
     padding-left: .25rem;
+}
+
+pre {
+    margin: 0;
+}
+
+p {
+    margin: 0;
 }
