@@ -3,6 +3,7 @@ import logging
 import os
 import base64
 import contextlib
+from typing import Optional
 
 import pygments.lexers
 import pygments.formatters
@@ -65,6 +66,8 @@ class Paste(Base):  # type: ignore
 
     exp_date = Column(DateTime)
 
+    filename = Column(String(250))
+
     def create_hash(self) -> str:
         # This should organically grow as more is used, probably depending
         # on how often collissions occur.
@@ -82,7 +85,8 @@ class Paste(Base):  # type: ignore
         raw: str,
         lexer: str = "text",
         expiry: datetime.timedelta = datetime.timedelta(days=7),
-        src: str = "web",
+        src: Optional[str] = None,
+        filename: Optional[str] = None,
     ) -> None:
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
@@ -96,6 +100,8 @@ class Paste(Base):  # type: ignore
         self.raw = raw
 
         self.src = src
+
+        self.filename = filename
 
         self.lexer = lexer
 

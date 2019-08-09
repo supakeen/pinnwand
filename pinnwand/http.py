@@ -1,12 +1,11 @@
 import json
 import logging
+from urllib.parse import urljoin
 
 import tornado.web
+from tornado.escape import url_escape
 
-from pinnwand import database
-from pinnwand import utility
-from pinnwand import path
-
+from pinnwand import database, path, utility
 
 log = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(raw, lexer, utility.expiries[expiry])
+        paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
 
         with database.session() as session:
             session.add(paste)
@@ -104,7 +103,7 @@ class ShowPaste(Base):
             self.render(
                 "show.html",
                 paste=paste,
-                pagetitle="show",
+                pagetitle=paste.filename or "show",
                 can_delete=can_delete,
                 linenos=False,
             )
@@ -174,6 +173,7 @@ class APIShow(Base):
                     "fmt": paste.fmt,
                     "lexer": paste.lexer,
                     "expiry": paste.exp_date.isoformat(),
+                    "filename": paste.filename,
                 }
             )
 
@@ -183,6 +183,7 @@ class APINew(Base):
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code")
         expiry = self.get_body_argument("expiry")
+        filename = self.get_body_argument("filename", None)
 
         if not raw:
             log.info("APINew.post: a paste was submitted without content")
@@ -198,14 +199,25 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(raw, lexer, utility.expiries[expiry])
+        paste = database.Paste(
+            raw, lexer, utility.expiries[expiry], "api", filename
+        )
 
         with database.session() as session:
             session.add(paste)
             session.commit()
 
+            req_url = self.request.full_url()
+            location = paste.paste_id
+            if filename:
+                location += "#" + url_escape(filename)
             self.write(
-                {"paste_id": paste.paste_id, "removal_id": paste.removal_id}
+                {
+                    "paste_id": paste.paste_id,
+                    "removal_id": paste.removal_id,
+                    "paste_url": urljoin(req_url, f"/show/{location}"),
+                    "raw_url": urljoin(req_url, f"/raw/{location}"),
+                }
             )
 
 
@@ -276,15 +288,15 @@ def make_application() -> tornado.web.Application:
         [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
-            (r"/show/(.*)", ShowPaste),
-            (r"/raw/(.*)", RawPaste),
+            (r"/show/(.*)(?:#.+)?", ShowPaste),
+            (r"/raw/(.*)(?:#.+)?", RawPaste),
             (r"/remove/(.*)", RemovePaste),
             (r"/about", AboutPage),
             (r"/removal", RemovalPage),
             (r"/expiry", ExpiryPage),
             (r"/json/new", APINew),
             (r"/json/remove", APIRemove),
-            (r"/json/show/(.*)", APIShow),
+            (r"/json/show/(.*)(?:#.+)?", APIShow),
             (r"/json/lexers", APILexers),
             (r"/json/expiries", APIExpiries),
             (

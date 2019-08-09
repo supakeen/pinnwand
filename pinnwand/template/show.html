@@ -17,5 +17,10 @@
     {% end %}
     Pasted through <em>{{ paste.src }}</em>.
     </p>
+    {% if paste.filename %}
+    <p>
+    Source: <span>{{ paste.filename }}</span>
+    </p>
+    {% end %}
 </div>
 {% end %}
