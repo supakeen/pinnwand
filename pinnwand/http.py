@@ -1,17 +1,51 @@
 import json
 import logging
+
+from typing import Any
 from urllib.parse import urljoin
 
 import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import database, path, utility
+from pinnwand import database, path, utility, error
 
 log = logging.getLogger(__name__)
 
 
 class Base(tornado.web.RequestHandler):
-    pass
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        print("write_error")
+        if status_code == 404:
+            self.render(
+                "error.html",
+                text="That page does not exist",
+                status_code=404,
+                pagetitle="error",
+            )
+        else:
+            type_, exc, traceback = kwargs["exc_info"]
+
+            if type_ == error.ValidationError:
+                self.set_status(400)
+                self.render(
+                    "error.html",
+                    text=str(exc),
+                    status_code=400,
+                    pagetitle="error",
+                )
+            else:
+                self.render(
+                    "error.html",
+                    text="unknown error",
+                    status_code=500,
+                    pagetitle="error",
+                )
+
+    async def get(self) -> None:
+        raise tornado.web.HTTPError(404)
+
+    async def post(self) -> None:
+        raise tornado.web.HTTPError(405)
 
 
 class CreatePaste(Base):
@@ -31,9 +65,7 @@ class CreatePaste(Base):
         # Make sure a valid lexer is given
         if lexer not in lexers:
             log.debug("CreatePaste.get: non-existent logger requested")
-            self.set_status(404)
-            self.render("404.html", pagetitle="404")
-            return
+            raise tornado.web.HTTPError(404)
 
         await self.render(
             "new.html",
@@ -60,10 +92,7 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        try:
-            paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
-        except ValueError:
-            raise tornado.web.HTTPError(400)
+        paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
 
         with database.session() as session:
             session.add(paste)
@@ -88,7 +117,7 @@ class CreatePaste(Base):
 
 
 class ShowPaste(Base):
-    async def get(self, paste_id: str) -> None:
+    async def get(self, paste_id: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -97,9 +126,7 @@ class ShowPaste(Base):
             )
 
             if not paste:
-                self.set_status(404)
-                self.render("404.html", pagetitle="404")
-                return
+                raise tornado.web.HTTPError(404)
 
             can_delete = self.get_cookie("removal") == str(paste.removal_id)
 
@@ -113,7 +140,7 @@ class ShowPaste(Base):
 
 
 class RawPaste(Base):
-    async def get(self, paste_id: str) -> None:
+    async def get(self, paste_id: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -122,9 +149,7 @@ class RawPaste(Base):
             )
 
             if not paste:
-                self.set_status(404)
-                self.render("404.html", pagetitle="404")
-                return
+                raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(paste.raw)
@@ -133,7 +158,7 @@ class RawPaste(Base):
 class RemovePaste(Base):
     """Remove a paste."""
 
-    async def get(self, removal_id: str) -> None:
+    async def get(self, removal_id: str) -> None:  # type: ignore
         """Look up if the user visiting this page has the removal id for a
            certain paste. If they do they're authorized to remove the paste."""
 
@@ -146,9 +171,7 @@ class RemovePaste(Base):
 
             if not paste:
                 log.info("RemovePaste.get: someone visited with invalid id")
-                self.set_status(404)
-                self.render("404.html", pagetitle="404")
-                return
+                raise tornado.web.HTTPError(404)
 
             session.delete(paste)
             session.commit()
@@ -157,7 +180,7 @@ class RemovePaste(Base):
 
 
 class APIShow(Base):
-    async def get(self, paste_id: str) -> None:
+    async def get(self, paste_id: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -166,8 +189,7 @@ class APIShow(Base):
             )
 
             if not paste:
-                self.set_status(404)
-                return
+                raise tornado.web.HTTPError(404)
 
             self.write(
                 {
@@ -182,6 +204,9 @@ class APIShow(Base):
 
 
 class APINew(Base):
+    async def get(self) -> None:
+        raise tornado.web.HTTPError(405)
+
     async def post(self) -> None:
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code")
@@ -202,12 +227,9 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        try:
-            paste = database.Paste(
-                raw, lexer, utility.expiries[expiry], "api", filename
-            )
-        except ValueError:
-            raise tornado.web.HTTPError(400)
+        paste = database.Paste(
+            raw, lexer, utility.expiries[expiry], "api", filename
+        )
 
         with database.session() as session:
             session.add(paste)
@@ -271,21 +293,21 @@ class APIExpiries(Base):
 class RemovalPage(Base):
     """Serve the removal page."""
 
-    def get(self) -> None:
+    async def get(self) -> None:
         self.render("removal.html", pagetitle="removal")
 
 
 class AboutPage(Base):
     """Serve the about page."""
 
-    def get(self) -> None:
+    async def get(self) -> None:
         self.render("about.html", pagetitle="about")
 
 
 class ExpiryPage(Base):
     """Serve the expiry page."""
 
-    def get(self) -> None:
+    async def get(self) -> None:
         self.render("expiry.html", pagetitle="expiry")
 
 
@@ -312,4 +334,5 @@ def make_application() -> tornado.web.Application:
             ),
         ],
         template_path=path.template,
+        default_handler_class=Base,
     )

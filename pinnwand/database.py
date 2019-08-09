@@ -13,12 +13,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
-from pinnwand.settings import DATABASE_URI
+from pinnwand import settings, error
 
 
 log = logging.getLogger(__name__)
 
-_engine = create_engine(DATABASE_URI)
+_engine = create_engine(settings.DATABASE_URI)
 _session = sessionmaker(bind=_engine)
 
 
@@ -90,7 +90,7 @@ class Paste(Base):  # type: ignore
     ) -> None:
         # Start with some basic housekeeping related to size
         if len(raw) > (25 * 1024):
-            raise ValueError("Text exceeds size limit (25kB)")
+            raise error.ValidationError("Text exceeds size limit (25kB)")
 
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
@@ -117,7 +117,9 @@ class Paste(Base):  # type: ignore
         formatted = pygments.highlight(self.raw, lexer, formatter)
 
         if len(formatted) > (25 * 1024):
-            raise ValueError("Highlighted text exceeds size limit (25kB)")
+            raise error.ValidationError(
+                "Highlighted text exceeds size limit (25kB)"
+            )
 
         self.fmt = formatted
 
