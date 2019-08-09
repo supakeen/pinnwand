@@ -1,27 +1,34 @@
 {% extends "layout.html" %}
 
+{% block wrap_start %}
+<form action="/" method="post" class="create">
+{% end %}
+
 {% block body %}
 {% if message %}
 <div class="quick"><p>{{ message }}</p></div>
-{% else %}
 {% end %}
 
-<form action="/" method="post" class="create">
-    <textarea name="code" spellcheck="false" placeholder="Enter code to paste."></textarea>
+<textarea name="code" spellcheck="false" placeholder="Enter code to paste."></textarea>
+{% end %}
 
-    <div class="extra">
-        <button type="submit">Paste!</button>
-        <select name="lexer">
-            <option value="text">Text</option>
-            {% for key, caption in lexers.items() %}
-            <option value="{{ key }}"{% if lexer == key
-            %} selected="selected"{% end %}>{{ caption }}</option>
-        {% end %}
-        </select>
-        <select name="expiry">
-            <option value="1day">Expiry (1 day)</option>
-            <option value="1week">1 week</option>
-        </select>
-    </div>
-  </form>
+{% block aside %}
+<aside>
+    <button type="submit">Paste!</button>
+    <select name="lexer">
+        <option value="text">Text</option>
+        {% for key, caption in lexers.items() %}
+        <option value="{{ key }}"{% if lexer == key
+        %} selected="selected"{% end %}>{{ caption }}</option>
+    {% end %}
+    </select>
+    <select name="expiry">
+        <option value="1day">Expiry (1 day)</option>
+        <option value="1week">1 week</option>
+    </select>
+</aside>
+{% end %}
+
+{% block wrap_end %}
+</form>
 {% end %}

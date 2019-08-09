@@ -33,11 +33,11 @@ a:hover {
     color: var(--color1);
 }
 
-header, footer, article, main div#paste, main div.extra, form textarea, form select {
+header, footer, article, main div#paste, aside, form textarea, form select {
     background-color: var(--color1);
 }
 
-header nav ul, main article, main div#paste, main div.extra, form textarea, footer {
+header nav ul, main article, main div#paste, aside, form textarea, footer {
     padding: .5rem;
 }
 
@@ -62,8 +62,8 @@ main div#paste {
     overflow: auto;
 }
 
-main div.extra {
-    margin-top: 1rem;
+aside {
+    margin: 1rem 0;
 }
 
 form.create textarea {

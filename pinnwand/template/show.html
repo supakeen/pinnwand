@@ -5,7 +5,9 @@
         {% raw paste.fmt %}
     </div>
 </div>
-<div class="extra">
+{% end %}
+{% block aside %}
+<aside>
     {% if paste.exp_date %}
     <p>This paste expires on <span>{{ paste.exp_date }}</span>.
     {% else %}
@@ -22,5 +24,5 @@
     Source: <span>{{ paste.filename }}</span>
     </p>
     {% end %}
-</div>
+</aside>
 {% end %}
