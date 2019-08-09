@@ -1,2 +1,4 @@
 include pinnwand/template/*
 include pinnwand/static/*
+include versioneer.py
+include pinnwand/_version.py
