@@ -1,1 +1,0 @@
-from pinnwand import command

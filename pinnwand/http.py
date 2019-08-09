@@ -60,7 +60,10 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
+        try:
+            paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
+        except ValueError:
+            raise tornado.web.HTTPError(400)
 
         with database.session() as session:
             session.add(paste)
@@ -199,9 +202,12 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
-            raw, lexer, utility.expiries[expiry], "api", filename
-        )
+        try:
+            paste = database.Paste(
+                raw, lexer, utility.expiries[expiry], "api", filename
+            )
+        except ValueError:
+            raise tornado.web.HTTPError(400)
 
         with database.session() as session:
             session.add(paste)

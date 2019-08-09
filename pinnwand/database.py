@@ -85,9 +85,13 @@ class Paste(Base):  # type: ignore
         raw: str,
         lexer: str = "text",
         expiry: datetime.timedelta = datetime.timedelta(days=7),
-        src: Optional[str] = None,
+        src: str = None,
         filename: Optional[str] = None,
     ) -> None:
+        # Start with some basic housekeeping related to size
+        if len(raw) > (25 * 1024):
+            raise ValueError("Text exceeds size limit (25kB)")
+
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
 
@@ -110,7 +114,12 @@ class Paste(Base):  # type: ignore
             linenos=True, cssclass="source"
         )
 
-        self.fmt = pygments.highlight(self.raw, lexer, formatter)
+        formatted = pygments.highlight(self.raw, lexer, formatter)
+
+        if len(formatted) > (25 * 1024):
+            raise ValueError("Highlighted text exceeds size limit (25kB)")
+
+        self.fmt = formatted
 
         # The expires date is the pub_date with the delta of the expiry
         if expiry:
