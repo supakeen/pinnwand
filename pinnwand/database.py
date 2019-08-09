@@ -27,7 +27,7 @@ def session() -> Session:
 
     try:
         yield a_session
-    except:
+    except Exception:
         a_session.rollback()
         raise
     finally:
@@ -40,7 +40,7 @@ class _Base(object):
 
     @declared_attr
     def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
-        return str(cls.__class__.__name__.lower())
+        return str(cls.__name__.lower())  # type: ignore
 
     id = Column(Integer, primary_key=True)
 
