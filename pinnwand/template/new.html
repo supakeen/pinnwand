@@ -15,11 +15,9 @@
 {% block aside %}
 <button type="submit">Paste!</button>
 <select name="lexer">
-    <option value="text">Text</option>
     {% for key, caption in lexers.items() %}
-    <option value="{{ key }}"{% if lexer == key
-    %} selected="selected"{% end %}>{{ caption }}</option>
-{% end %}
+    <option value="{{ key }}"{% if lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
+    {% end %}
 </select>
 <select name="expiry">
     <option value="1day">Expiry (1 day)</option>
