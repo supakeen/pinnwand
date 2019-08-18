@@ -89,7 +89,7 @@ class Paste(Base):  # type: ignore
         filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
-        if len(raw) > (25 * 1024):
+        if len(raw) > (64 * 1024):
             raise error.ValidationError("Text exceeds size limit (25kB)")
 
         self.pub_date = datetime.datetime.utcnow()
@@ -116,9 +116,9 @@ class Paste(Base):  # type: ignore
 
         formatted = pygments.highlight(self.raw, lexer, formatter)
 
-        if len(formatted) > (25 * 1024):
+        if len(formatted) >= (64 * 1024):
             raise error.ValidationError(
-                "Highlighted text exceeds size limit (25kB)"
+                "Highlighted text exceeds size limit (64kB)"
             )
 
         self.fmt = formatted

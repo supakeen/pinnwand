@@ -86,7 +86,7 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
             "/json/new",
             method="POST",
             body=urllib.parse.urlencode(
-                {"code": "a" * (24 * 1024), "lexer": "python", "expiry": "1day"}
+                {"code": "a" * (63 * 1024), "lexer": "python", "expiry": "1day"}
             ),
         )
 
@@ -97,7 +97,7 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
             "/json/new",
             method="POST",
             body=urllib.parse.urlencode(
-                {"code": "a" * (26 * 1024), "lexer": "python", "expiry": "1day"}
+                {"code": "a" * (65 * 1024), "lexer": "python", "expiry": "1day"}
             ),
         )
 
