@@ -90,7 +90,7 @@ class Paste(Base):  # type: ignore
     ) -> None:
         # Start with some basic housekeeping related to size
         if len(raw) > (64 * 1024):
-            raise error.ValidationError("Text exceeds size limit (25kB)")
+            raise error.ValidationError("Text exceeds size limit (64kB)")
 
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
