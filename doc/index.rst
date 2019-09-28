@@ -30,7 +30,8 @@ You can install ``pinnwand`` from PyPI_ by running pip_ as follows:
 
   pip install pinnwand
 
-I suggest you use a virtual environment for installation.
+I suggest you use a virtual environment for installation. There is extended
+installation instructions available.
 
 Contributing
 ============
@@ -42,6 +43,18 @@ a pull request. I will make sure to review your code.
 If you are thinking about contributing a new feature then keep in mind that
 ``pinnwand`` is trying to stay as small and lean of a project as possible. Open
 a ticket first if you have a specific feature in mind.
+
+You can read more about contributing further on.
+
+Table of Contents
+=================
+.. toctree::
+
+   installation
+   configuration
+   usage
+   contributing
+   autodoc
 
 .. _GitHub: https://github.com/supakeen/pinnwand
 .. _issue: https://github.com/supakeen/pinnwand/issues
