@@ -1,8 +1,8 @@
 .. image:: https://travis-ci.org/supakeen/pinnwand.svg?branch=master
     :target: https://travis-ci.org/supakeen/pinnwand
 
-.. image:: https://readthedocs.org/projects/pinwnand/badge/?version=latest
-    :target: https://pinwnand.readthedocs.io/en/latest/
+.. image:: https://readthedocs.org/projects/pinnwand/badge/?version=latest
+    :target: https://pinnwand.readthedocs.io/en/latest/
 
 .. image:: https://pinnwand.readthedocs.io/en/latest/_static/license.svg
     :target: https://github.com/supakeen/pinnwand/blob/master/LICENSE
