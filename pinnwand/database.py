@@ -60,8 +60,8 @@ class Paste(Base):  # type: ignore
 
     lexer = Column(String(250))
 
-    raw = Column(Text)
-    fmt = Column(Text)
+    raw = Column(Text(settings.PASTE_SIZE))
+    fmt = Column(Text(settings.PASTE_SIZE))
     src = Column(String(250))
 
     exp_date = Column(DateTime)
@@ -89,8 +89,10 @@ class Paste(Base):  # type: ignore
         filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
-        if len(raw) > (64 * 1024):
-            raise error.ValidationError("Text exceeds size limit (64kB)")
+        if len(raw) > settings.PASTE_SIZE:
+            raise error.ValidationError(
+                f"Text exceeds size limit {settings.PASTE_SIZE//1024} (kB)"
+            )
 
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
