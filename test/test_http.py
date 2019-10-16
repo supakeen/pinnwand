@@ -87,10 +87,15 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
             "/json/new",
             method="POST",
             body=urllib.parse.urlencode(
-                {"code": "a" * (63 * 1024), "lexer": "python", "expiry": "1day"}
+                {
+                    "code": "a" * (128 * 1024),
+                    "lexer": "python",
+                    "expiry": "1day",
+                }
             ),
         )
 
+        print(response.body)
         assert response.code == 200
 
     def test_api_new_large_file(self) -> None:
