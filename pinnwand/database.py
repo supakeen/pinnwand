@@ -118,7 +118,7 @@ class Paste(Base):  # type: ignore
 
         formatted = pygments.highlight(self.raw, lexer, formatter)
 
-        if len(formatted) >= (settings.PASTE_SIZE * 1024):
+        if len(formatted) >= settings.PASTE_SIZE:
             raise error.ValidationError(
                 f"Highlighted text exceeds size limit ({settings.PASTE_SIZE//1024} kB)"
             )
