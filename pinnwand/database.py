@@ -74,11 +74,7 @@ class Paste(Base):  # type: ignore
         # Aside from that we should never repeat hashes which have been used before
         # without keeping the pastes in the database.
         # this does expose urandom directly ..., is that bad?
-        return (
-            base64.urlsafe_b64encode(os.urandom(3))
-            .decode("ascii")
-            .replace("=", "")
-        )
+        return base64.b32encode(os.urandom(3)).decode("ascii").replace("=", "")
 
     def __init__(
         self,
