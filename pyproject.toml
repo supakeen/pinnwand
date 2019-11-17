@@ -3,13 +3,34 @@ name = "pinnwand"
 version = "0.1.0"
 description = "Straightforward pastebin software."
 authors = ["supakeen <cmdr@supakeen.com>"]
+license = "MIT"
+readme = "README.rst"
+keywords = ["pastebin"]
+repository = "https://github.com/supakeen/pinnwand"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Langauge :: Python :: 3",
+]
 
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.6,<4"
 tornado = "^6.0"
 pygments = "^2.4"
 sqlalchemy = "^1.3"
 click = "^7.0"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+coverage = "^4.5"
+black = { version = "*", allows-prereleases = true }
+pytest-cov = "^2.8"
+pre-commit = "^1.20"
+flake8 = "^3.7"
+mypy = "^0.740.0"
+dunamai = "^1.0"
+
 
 [tool.black]
 line-length = 80
