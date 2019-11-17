@@ -1,4 +1,0 @@
-tornado
-pygments
-sqlalchemy
-click
