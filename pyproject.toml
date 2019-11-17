@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pinnwand"
-version = "0.1.1"
+version = "0.2.0"
 description = "Straightforward pastebin software."
 authors = ["supakeen <cmdr@supakeen.com>"]
 license = "MIT"
@@ -49,8 +49,8 @@ exclude = '''
   | dist
 )/
 '''
+[tool.poetry.scripts]
+pinnwand = 'pinnwand.__main__:main'
 [build-system]
 requires = ["setuptools", "wheel"]
 
-[tool.poetry.scripts]
-pinnwand = 'pinnwand.__main__:main'
