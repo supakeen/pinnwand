@@ -10,6 +10,9 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/ambv/black
 
+.. image:: https://img.shields.io/pypi/v/pinnwand
+    :target: https://pypi.org/project/pinnwand
+
 
 pinnwand
 ########
