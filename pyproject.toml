@@ -52,3 +52,5 @@ exclude = '''
 [build-system]
 requires = ["setuptools", "wheel"]
 
+[tool.poetry.scripts]
+pinnwand = 'pinnwand.__main__:main'
