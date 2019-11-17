@@ -6,4 +6,4 @@ python:
 install:
 - pip install pytest pytest-cov tornado click sqlalchemy
 script:
-- python setup.py test
+- pytest
