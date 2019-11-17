@@ -10,7 +10,7 @@ repository = "https://github.com/supakeen/pinnwand"
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
-  "Programming Langauge :: Python :: 3",
+  "Programming Language :: Python :: 3",
 ]
 
 [tool.poetry.dependencies]
