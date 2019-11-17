@@ -59,7 +59,7 @@ Bugs are reported best at ``pinnwand``'s `project page`_ on github.
 
 License
 =======
-``pinnwand`` is distributed under a 3-clause BSD-style license. See `LICENSE`
+``pinnwand`` is distributed under the MIT license. See `LICENSE`
 for details.
 
 .. _project page: https://github.com/supakeen/pinnwand
