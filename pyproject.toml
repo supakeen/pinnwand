@@ -13,7 +13,6 @@ click = "^7.0"
 
 [tool.black]
 line-length = 80
-py36 = true
 include = '\.pyi?$'
 exclude = '''
 /(
