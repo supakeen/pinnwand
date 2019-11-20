@@ -8,7 +8,7 @@ import tornado.testing
 from pinnwand import http
 from pinnwand import database
 from pinnwand import utility
-from pinnwand import settings
+from pinnwand import configuration
 
 
 class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
@@ -88,7 +88,7 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             body=urllib.parse.urlencode(
                 {
-                    "code": "a" * (settings.PASTE_SIZE // 2),
+                    "code": "a" * (configuration.paste_size // 2),
                     "lexer": "python",
                     "expiry": "1day",
                 }
@@ -104,7 +104,7 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             body=urllib.parse.urlencode(
                 {
-                    "code": "a" * (settings.PASTE_SIZE + 1),
+                    "code": "a" * (configuration.paste_size + 1),
                     "lexer": "python",
                     "expiry": "1day",
                 }
