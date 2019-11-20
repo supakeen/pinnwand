@@ -7,12 +7,15 @@ import logging
 
 from datetime import datetime, timedelta
 
+from typing import Optional
+
 import click
 
 import tornado.ioloop
 
 from pinnwand import utility
 from pinnwand import database
+from pinnwand import configuration
 
 from pinnwand.http import make_application
 
@@ -22,9 +25,17 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @click.group()
-def main() -> None:
+@click.option("--configuration-path", default=None, help="Configuration file.")
+def main(configuration_path: Optional[str]) -> None:
     """Pinnwand pastebin software."""
-    return None
+    if configuration_path:
+        import toml
+
+        with open(configuration_path) as file:
+            configuration_file = toml.load(file)
+
+            for key, value in configuration_file.items():
+                setattr(configuration, key, value)
 
 
 @main.command()

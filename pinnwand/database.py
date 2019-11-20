@@ -13,12 +13,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
-from pinnwand import settings, error
+from pinnwand import configuration, error
 
 
 log = logging.getLogger(__name__)
 
-_engine = create_engine(settings.DATABASE_URI)
+_engine = create_engine(configuration.database_uri)
 _session = sessionmaker(bind=_engine)
 
 
@@ -60,8 +60,8 @@ class Paste(Base):  # type: ignore
 
     lexer = Column(String(250))
 
-    raw = Column(Text(settings.PASTE_SIZE))
-    fmt = Column(Text(settings.PASTE_SIZE))
+    raw = Column(Text(configuration.paste_size))
+    fmt = Column(Text(configuration.paste_size))
     src = Column(String(250))
 
     exp_date = Column(DateTime)
@@ -85,9 +85,9 @@ class Paste(Base):  # type: ignore
         filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
-        if len(raw) > settings.PASTE_SIZE:
+        if len(raw) > configuration.paste_size:
             raise error.ValidationError(
-                f"Text exceeds size limit {settings.PASTE_SIZE//1024} (kB)"
+                f"Text exceeds size limit {configuration.paste_size//1024} (kB)"
             )
 
         self.pub_date = datetime.datetime.utcnow()
@@ -114,9 +114,9 @@ class Paste(Base):  # type: ignore
 
         formatted = pygments.highlight(self.raw, lexer, formatter)
 
-        if len(formatted) >= settings.PASTE_SIZE:
+        if len(formatted) >= configuration.paste_size:
             raise error.ValidationError(
-                f"Highlighted text exceeds size limit ({settings.PASTE_SIZE//1024} kB)"
+                f"Highlighted text exceeds size limit ({configuration.paste_size//1024} kB)"
             )
 
         self.fmt = formatted
