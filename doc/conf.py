@@ -12,12 +12,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
+# import os
+# import sys
 
-sys.path.insert(0, os.path.abspath("../"))
+# sys.path.insert(0, os.path.abspath("../"))
 
-import pinnwand  # noqa: E402
+# import pinnwand  # noqa: E402
 
 
 # -- Project information -----------------------------------------------------
@@ -27,9 +27,9 @@ copyright = "2018, supakeen"
 author = "supakeen"
 
 # The short X.Y version
-version = pinnwand.__version__
+version = "0.0"
 # The full version, including alpha/beta/rc tags
-release = pinnwand.__version__
+release = "0.0.0"
 
 
 # -- General configuration ---------------------------------------------------
