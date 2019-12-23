@@ -29,7 +29,7 @@ div.content {
     box-sizing: border-box;
     height: 100%;
     width: 100%;
-    padding: 1rem;
+    padding: 2rem;
     display: grid;
     grid-row-gap: .5rem;
     grid-template-rows: min-content 1fr min-content min-content;
@@ -78,7 +78,7 @@ form.create textarea {
     resize: none;
     width: 100%;
     height: 100%;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-family: monospace;
 }
 
@@ -94,11 +94,15 @@ form button {
 
 td.linenos {
     background: var(--color0);
-    padding-right: .25rem;
+    padding: 0 .25rem;
+}
+
+div.code {
+    font-size: 1.2rem;
 }
 
 td.code {
-    padding-left: .25rem;
+    padding-left: .5rem;
 }
 
 pre {
