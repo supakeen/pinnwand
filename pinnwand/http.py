@@ -101,11 +101,11 @@ class CreatePaste(Base):
             # The removal cookie is set for the specific path of the paste it is
             # related to
             self.set_cookie(
-                "removal", str(paste.removal_id), path=f"/show/{paste.paste_id}"
+                "removal", str(paste.removal_id), path=f"/{paste.paste_id}"
             )
 
             # Send the client to the paste
-            self.redirect(f"/show/{paste.paste_id}")
+            self.redirect(f"/{paste.paste_id}")
 
     def check_xsrf_cookie(self) -> None:
         """The CSRF token check is disabled. While it would be better if it
@@ -137,6 +137,21 @@ class ShowPaste(Base):
                 can_delete=can_delete,
                 linenos=False,
             )
+
+
+class RedirectShowPaste(Base):
+    async def get(self, paste_id: str) -> None:  # type: ignore
+        with database.session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.paste_id == paste_id)
+                .first()
+            )
+
+            if not paste:
+                raise tornado.web.HTTPError(404)
+
+            self.redirect(f"/{paste.paste_id}")
 
 
 class RawPaste(Base):
@@ -243,7 +258,7 @@ class APINew(Base):
                 {
                     "paste_id": paste.paste_id,
                     "removal_id": paste.removal_id,
-                    "paste_url": urljoin(req_url, f"/show/{location}"),
+                    "paste_url": urljoin(req_url, f"/{location}"),
                     "raw_url": urljoin(req_url, f"/raw/{location}"),
                 }
             )
@@ -316,7 +331,7 @@ def make_application() -> tornado.web.Application:
         [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
-            (r"/show/(.*)(?:#.+)?", ShowPaste),
+            (r"/show/(.*)(?:#.+)?", RedirectShowPaste),
             (r"/raw/(.*)(?:#.+)?", RawPaste),
             (r"/remove/(.*)", RemovePaste),
             (r"/about", AboutPage),
@@ -332,6 +347,7 @@ def make_application() -> tornado.web.Application:
                 tornado.web.StaticFileHandler,
                 {"path": path.static},
             ),
+            (r"/(.*)(?:#.+)?", ShowPaste),
         ],
         template_path=path.template,
         default_handler_class=Base,
