@@ -3,6 +3,9 @@
     --color1: #fff;
     --color2: #333;
     --color3: #39c;
+
+    --color-pygments-gh: #000080;
+    --color-pygments-gp: #000080;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -11,6 +14,9 @@
         --color1: #222;
         --color2: #eee;
         --color3: #fffd70;
+
+        --color-pygments-gh: #555580;
+        --color-pygments-gp: #555580;
     }
 }
 
@@ -111,4 +117,12 @@ pre {
 
 p {
     margin: 0;
+}
+
+span.gh {
+    color: var(--color-pygments-gh);
+}
+
+span.gp {
+    color: var(--color-pygments-gp);
 }
