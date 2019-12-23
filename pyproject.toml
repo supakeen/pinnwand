@@ -23,7 +23,7 @@ click = "^7.0"
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 coverage = "^4.5"
-black = { version = "*", allows-prereleases = true }
+black = { version = "*", allow-prereleases = true }
 pytest-cov = "^2.8"
 pre-commit = "^1.20"
 flake8 = "^3.7"
