@@ -68,13 +68,17 @@ class Paste(Base):  # type: ignore
 
     filename = Column(String(250))
 
-    def create_hash(self) -> str:
+    def create_hash(self, length: int = 3) -> str:
         # This should organically grow as more is used, probably depending
         # on how often collissions occur.
         # Aside from that we should never repeat hashes which have been used before
         # without keeping the pastes in the database.
         # this does expose urandom directly ..., is that bad?
-        return base64.b32encode(os.urandom(3)).decode("ascii").replace("=", "")
+        return (
+            base64.b32encode(os.urandom(length))
+            .decode("ascii")
+            .replace("=", "")
+        )
 
     def __init__(
         self,
@@ -97,7 +101,7 @@ class Paste(Base):  # type: ignore
         # Unless someone proves me wrong that I need to check for collisions
         # my famous last words will be that the odds are astronomically small
         self.paste_id = self.create_hash()
-        self.removal_id = self.create_hash()
+        self.removal_id = self.create_hash(16)
 
         self.raw = raw
 
