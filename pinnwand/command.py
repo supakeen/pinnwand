@@ -45,7 +45,7 @@ def http(port: int) -> None:
     database.Base.metadata.create_all(database._engine)
 
     application = make_application()
-    application.listen(port)
+    application.listen(port, xheaders=True)
     tornado.ioloop.IOLoop.current().start()
 
 
