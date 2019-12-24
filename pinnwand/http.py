@@ -73,6 +73,7 @@ class CreatePaste(Base):
             lexers=lexers,
             pagetitle="new",
             message=None,
+            prefill="",
         )
 
     async def post(self) -> None:
@@ -114,6 +115,45 @@ class CreatePaste(Base):
            exfiltration from other XSS) and some command line utilities
            POST directly to this endpoint without using the JSON endpoint."""
         return
+
+
+class RepastePaste(Base):
+    """Repaste is a specific case of the paste page. It only works for pre-
+       existing pastes and will prefill the textarea and lexer."""
+
+    async def get(self, paste_id: str, lexer: str = "") -> None:  # type: ignore
+        """Render the new paste form, optionally have a lexer preselected from
+           the URL."""
+
+        with database.session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.paste_id == paste_id)
+                .first()
+            )
+
+            if not paste:
+                raise tornado.web.HTTPError(404)
+
+        lexers = utility.list_languages()
+
+        # Our default lexer is just that, text
+        if not lexer:
+            lexer = "text"
+
+        # Make sure a valid lexer is given
+        if lexer not in lexers:
+            log.debug("Repaste.get: non-existent lexer requested")
+            raise tornado.web.HTTPError(404)
+
+        await self.render(
+            "new.html",
+            lexer=lexer,
+            lexers=lexers,
+            pagetitle="repaste",
+            message=None,
+            prefill=paste.raw,
+        )
 
 
 class ShowPaste(Base):
@@ -331,15 +371,17 @@ def make_application() -> tornado.web.Application:
         [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
-            (r"/show/(.*)(?:#.+)?", RedirectShowPaste),
-            (r"/raw/(.*)(?:#.+)?", RawPaste),
-            (r"/remove/(.*)", RemovePaste),
+            (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
+            (r"/repaste/([A-Z2-7]+)", RepastePaste),
+            (r"/repaste/([A-Z2-7]+)/\+(.*)", RepastePaste),
+            (r"/raw/([A-Z2-7]+)(?:#.+)?", RawPaste),
+            (r"/remove/([A-Z2-7]+)", RemovePaste),
             (r"/about", AboutPage),
             (r"/removal", RemovalPage),
             (r"/expiry", ExpiryPage),
             (r"/json/new", APINew),
             (r"/json/remove", APIRemove),
-            (r"/json/show/(.*)(?:#.+)?", APIShow),
+            (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
             (r"/json/lexers", APILexers),
             (r"/json/expiries", APIExpiries),
             (

@@ -18,6 +18,7 @@ View <a href="/raw/{{ paste.paste_id }}">raw</a>.
 {% if can_delete %}
 <a href="/remove/{{ paste.removal_id }}">Remove now</a>.
 {% end %}
+<a href="/repaste/{{ paste.paste_id }}/+{{ paste.lexer }}">Repaste</a> this paste.
 Pasted through <em>{{ paste.src }}</em>.
 </p>
 {% if paste.filename %}
