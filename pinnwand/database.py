@@ -3,6 +3,8 @@ import logging
 import os
 import base64
 import contextlib
+import math
+
 from typing import Optional
 
 import pygments.lexers
@@ -69,16 +71,49 @@ class Paste(Base):  # type: ignore
     filename = Column(String(250))
 
     def create_hash(self, length: int = 3) -> str:
-        # This should organically grow as more is used, probably depending
-        # on how often collissions occur.
-        # Aside from that we should never repeat hashes which have been used before
-        # without keeping the pastes in the database.
-        # this does expose urandom directly ..., is that bad?
         return (
             base64.b32encode(os.urandom(length))
             .decode("ascii")
             .replace("=", "")
         )
+
+    def create_paste_id(self) -> str:
+        """Auto lengthening and collision checking way to create paste ids."""
+
+        with session() as database:
+            # We count our new paste as well
+            count = database.query(Paste).count() + 1
+
+            # The amount of bits necessary to store that count times two, then
+            # converted to bytes with a minimum of 1.
+
+            # We double the count so that we always keep half of the space
+            # available (e.g we increase the number of bytes at 127 instead of
+            # 255). This ensures that the probing below can find an empty space
+            # fast in case of collision.
+            necessary = math.ceil(math.log2(count * 2)) // 8 + 1
+
+            # Now generate random ids in the range with a maximum amount of
+            # retries, continuing until an empty slot is found
+            tries = 0
+            paste_id = self.create_hash(necessary)
+
+            while (
+                database.query(Paste).filter_by(paste_id=paste_id).one_or_none()
+            ):
+                log.debug("Paste.create_paste_id triggered a collision")
+                if tries > 10:
+                    raise RuntimeError(
+                        "We exceeded our retry quota on a collision."
+                    )
+                tries += 1
+                paste_id = self.create_hash(necessary)
+
+            return paste_id
+
+    def create_removal_id(self) -> str:
+        """Static lengths removal id."""
+        return self.create_hash(8)
 
     def __init__(
         self,
@@ -100,8 +135,8 @@ class Paste(Base):  # type: ignore
         # Generate a paste_id and a removal_id
         # Unless someone proves me wrong that I need to check for collisions
         # my famous last words will be that the odds are astronomically small
-        self.paste_id = self.create_hash()
-        self.removal_id = self.create_hash(16)
+        self.paste_id = self.create_paste_id()
+        self.removal_id = self.create_removal_id()
 
         self.raw = raw
 
