@@ -10,8 +10,16 @@ from typing import Optional
 import pygments.lexers
 import pygments.formatters
 
-from sqlalchemy import Integer, Column, String, DateTime, Text, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import (
+    Integer,
+    Column,
+    String,
+    DateTime,
+    Text,
+    ForeignKey,
+    create_engine,
+)
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
@@ -60,15 +68,11 @@ class Paste(Base):  # type: ignore
     paste_id = Column(String(250), unique=True)
     removal_id = Column(String(250), unique=True)
 
-    lexer = Column(String(250))
-
-    raw = Column(Text(configuration.paste_size))
-    fmt = Column(Text(configuration.paste_size))
     src = Column(String(250))
 
     exp_date = Column(DateTime)
 
-    filename = Column(String(250))
+    files = relationship("File", cascade="all,delete", backref="paste")
 
     def create_hash(self, length: int = 3) -> str:
         return (
@@ -117,11 +121,43 @@ class Paste(Base):  # type: ignore
 
     def __init__(
         self,
-        raw: str,
-        lexer: str = "text",
         expiry: datetime.timedelta = datetime.timedelta(days=7),
         src: str = None,
-        filename: Optional[str] = None,
+    ) -> None:
+        # Generate a paste_id and a removal_id
+        # Unless someone proves me wrong that I need to check for collisions
+        # my famous last words will be that the odds are astronomically small
+        self.paste_id = self.create_paste_id()
+        self.removal_id = self.create_removal_id()
+
+        self.pub_date = datetime.datetime.utcnow()
+        self.chg_date = datetime.datetime.utcnow()
+
+        # The expires date is the pub_date with the delta of the expiry
+        if expiry:
+            self.exp_date = self.pub_date + expiry
+        else:
+            self.exp_date = None
+
+    def __repr__(self) -> str:
+        return f"<Paste(paste_id={self.paste.id})>"
+
+
+class File(Base):  # type: ignore
+    paste_id = Column(ForeignKey("paste.id"))
+
+    pub_date = Column(DateTime)
+    chg_date = Column(DateTime)
+
+    lexer = Column(String(250))
+
+    raw = Column(Text(configuration.paste_size))
+    fmt = Column(Text(configuration.paste_size))
+
+    filename = Column(String(250))
+
+    def __init__(
+        self, raw: str, lexer: str = "text", filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
         if len(raw) > configuration.paste_size:
@@ -132,15 +168,7 @@ class Paste(Base):  # type: ignore
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
 
-        # Generate a paste_id and a removal_id
-        # Unless someone proves me wrong that I need to check for collisions
-        # my famous last words will be that the odds are astronomically small
-        self.paste_id = self.create_paste_id()
-        self.removal_id = self.create_removal_id()
-
         self.raw = raw
-
-        self.src = src
 
         self.filename = filename
 
@@ -159,12 +187,3 @@ class Paste(Base):  # type: ignore
             )
 
         self.fmt = formatted
-
-        # The expires date is the pub_date with the delta of the expiry
-        if expiry:
-            self.exp_date = self.pub_date + expiry
-        else:
-            self.exp_date = None
-
-    def __repr__(self) -> str:
-        return f"<Paste(paste_id={self.paste.id})>"

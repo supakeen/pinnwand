@@ -93,7 +93,8 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(raw, lexer, utility.expiries[expiry], "web")
+        paste = database.Paste(utility.expiries[expiry], "web")
+        paste.files.append(database.File(raw, lexer))
 
         with database.session() as session:
             session.add(paste)
@@ -173,7 +174,7 @@ class ShowPaste(Base):
             self.render(
                 "show.html",
                 paste=paste,
-                pagetitle=paste.filename or "show",
+                pagetitle=paste.paste_id,
                 can_delete=can_delete,
                 linenos=False,
             )
@@ -207,7 +208,7 @@ class RawPaste(Base):
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
-            self.write(paste.raw)
+            self.write(paste.files[0].raw)
 
 
 class RemovePaste(Base):
@@ -249,11 +250,11 @@ class APIShow(Base):
             self.write(
                 {
                     "paste_id": paste.paste_id,
-                    "raw": paste.raw,
-                    "fmt": paste.fmt,
-                    "lexer": paste.lexer,
+                    "raw": paste.files[0].raw,
+                    "fmt": paste.files[0].fmt,
+                    "lexer": paste.files[0].lexer,
                     "expiry": paste.exp_date.isoformat(),
-                    "filename": paste.filename,
+                    "filename": paste.files[0].filename,
                 }
             )
 
@@ -282,9 +283,8 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
-            raw, lexer, utility.expiries[expiry], "api", filename
-        )
+        paste = database.Paste(utility.expiries[expiry], "old-api")
+        paste.files.append(database.File(raw, lexer, filename))
 
         with database.session() as session:
             session.add(paste)
