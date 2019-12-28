@@ -14,7 +14,6 @@ log = logging.getLogger(__name__)
 
 class Base(tornado.web.RequestHandler):
     def write_error(self, status_code: int, **kwargs: Any) -> None:
-        print("write_error")
         if status_code == 404:
             self.render(
                 "error.html",
