@@ -133,6 +133,8 @@ class Paste(Base):  # type: ignore
         self.pub_date = datetime.datetime.utcnow()
         self.chg_date = datetime.datetime.utcnow()
 
+        self.src = src
+
         # The expires date is the pub_date with the delta of the expiry
         if expiry:
             self.exp_date = self.pub_date + expiry
