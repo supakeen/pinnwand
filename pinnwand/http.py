@@ -76,6 +76,15 @@ class CreatePaste(Base):
         )
 
     async def post(self) -> None:
+        # This is a historical endpoint to create pastes, pastes are marked as
+        # old-web and will get a warning on top of them to remove any access to
+        # this route.
+
+        # pinnwand has since evolved with an API which should be used and a
+        # multi-file paste.
+
+        # See the 'CreateAction' for the new-style creation of pastes.
+
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code")
         expiry = self.get_body_argument("expiry")
@@ -92,7 +101,7 @@ class CreatePaste(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(utility.expiries[expiry], "web")
+        paste = database.Paste(utility.expiries[expiry], "deprecated-web")
         paste.files.append(database.File(raw, lexer))
 
         with database.session() as session:
@@ -115,6 +124,52 @@ class CreatePaste(Base):
            exfiltration from other XSS) and some command line utilities
            POST directly to this endpoint without using the JSON endpoint."""
         return
+
+
+class CreateAction(Base):
+    def post(self) -> None:  # type: ignore
+        expiry = self.get_body_argument("expiry")
+
+        if expiry not in utility.expiries:
+            log.info(
+                "CreateAction.post: a paste was submitted with an invalid expiry"
+            )
+            raise tornado.web.HTTPError(400)
+
+        lexers = self.get_body_arguments("lexer")
+        raws = self.get_body_arguments("raw")
+        filenames = self.get_body_arguments("filename")
+
+        with database.session() as session:
+            paste = database.Paste(utility.expiries[expiry], "web")
+
+            if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
+                print(lexers, raws, filenames)
+                log.info("CreateAction.post: mismatching argument lists")
+                raise tornado.web.HTTPError(400)
+
+            for (lexer, raw, filename) in zip(lexers, raws, filenames):
+                if lexer not in utility.list_languages():
+                    log.info("CreateAction.post: a file had an invalid lexer")
+                    raise tornado.web.HTTPError(400)
+
+                if not raw:
+                    log.info("CreateAction.post: a file had an empty raw")
+                    raise tornado.web.HTTPError(400)
+
+                paste.files.append(database.File(raw, lexer))
+
+            session.add(paste)
+            session.commit()
+
+            # The removal cookie is set for the specific path of the paste it is
+            # related to
+            self.set_cookie(
+                "removal", str(paste.removal_id), path=f"/{paste.paste_id}"
+            )
+
+            # Send the client to the paste
+            self.redirect(f"/{paste.paste_id}")
 
 
 class RepastePaste(Base):
@@ -282,7 +337,7 @@ class APINew(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(utility.expiries[expiry], "old-api")
+        paste = database.Paste(utility.expiries[expiry], "deprecated-api")
         paste.files.append(database.File(raw, lexer, filename))
 
         with database.session() as session:
@@ -370,6 +425,7 @@ def make_application() -> tornado.web.Application:
         [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
+            (r"/create", CreateAction),
             (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
             (r"/repaste/([A-Z2-7]+)", RepastePaste),
             (r"/repaste/([A-Z2-7]+)/\+(.*)", RepastePaste),

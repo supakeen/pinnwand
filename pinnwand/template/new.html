@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
 {% block wrap_start %}
-<form action="/" method="post" class="create">
+<form action="/create" method="post" class="create">
+    <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
 {% end %}
 
 {% block body %}
@@ -9,7 +10,7 @@
 <div class="quick"><p>{{ message }}</p></div>
 {% end %}
 
-<textarea name="code" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ prefill }}</textarea>
+<textarea name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ prefill }}</textarea>
 {% end %}
 
 {% block aside %}
@@ -23,6 +24,7 @@
     <option value="1day">Expiry (1 day)</option>
     <option value="1week">1 week</option>
 </select>
+<input name="filename">
 {% end %}
 
 {% block wrap_end %}
