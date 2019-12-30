@@ -67,7 +67,7 @@ class CreatePaste(Base):
             raise tornado.web.HTTPError(404)
 
         await self.render(
-            "new.html",
+            "create.html",
             lexer=lexer,
             lexers=lexers,
             pagetitle="new",
@@ -102,7 +102,9 @@ class CreatePaste(Base):
             raise tornado.web.HTTPError(400)
 
         paste = database.Paste(utility.expiries[expiry], "deprecated-web")
-        paste.files.append(database.File(raw, lexer))
+        file = database.File(raw, lexer)
+        file.file_id = paste.paste_id  # XXX fix, this can duplicate!!!
+        paste.files.append(file)
 
         with database.session() as session:
             session.add(paste)
@@ -157,7 +159,9 @@ class CreateAction(Base):
                     log.info("CreateAction.post: a file had an empty raw")
                     raise tornado.web.HTTPError(400)
 
-                paste.files.append(database.File(raw, lexer))
+                paste.files.append(
+                    database.File(raw, lexer, filename if filename else None)
+                )
 
             session.add(paste)
             session.commit()
@@ -202,7 +206,7 @@ class RepastePaste(Base):
             raise tornado.web.HTTPError(404)
 
         await self.render(
-            "new.html",
+            "create.html",
             lexer=lexer,
             lexers=lexers,
             pagetitle="repaste",
@@ -249,20 +253,39 @@ class RedirectShowPaste(Base):
             self.redirect(f"/{paste.paste_id}")
 
 
-class RawPaste(Base):
-    async def get(self, paste_id: str) -> None:  # type: ignore
+class RawFile(Base):
+    async def get(self, file_id: str) -> None:  # type: ignore
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.paste_id == paste_id)
+            file = (
+                session.query(database.File)
+                .filter(database.File.file_id == file_id)
                 .first()
             )
 
-            if not paste:
+            if not file:
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
-            self.write(paste.files[0].raw)
+            self.write(file.raw)
+
+
+class DownloadFile(Base):
+    async def get(self, file_id: str) -> None:  # type: ignore
+        with database.session() as session:
+            file = (
+                session.query(database.File)
+                .filter(database.File.file_id == file_id)
+                .first()
+            )
+
+            if not file:
+                raise tornado.web.HTTPError(404)
+
+            self.set_header("Content-Type", "text/plain; charset=utf-8")
+            self.set_header(
+                "Content-Disposition", f"attachment; filename={file.file_id}"
+            )
+            self.write(file.raw)
 
 
 class RemovePaste(Base):
@@ -429,7 +452,8 @@ def make_application() -> tornado.web.Application:
             (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
             (r"/repaste/([A-Z2-7]+)", RepastePaste),
             (r"/repaste/([A-Z2-7]+)/\+(.*)", RepastePaste),
-            (r"/raw/([A-Z2-7]+)(?:#.+)?", RawPaste),
+            (r"/raw/([A-Z2-7]+)(?:#.+)?", RawFile),
+            (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
             (r"/remove/([A-Z2-7]+)", RemovePaste),
             (r"/about", AboutPage),
             (r"/removal", RemovalPage),

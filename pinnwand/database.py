@@ -147,6 +147,7 @@ class Paste(Base):  # type: ignore
 
 class File(Base):  # type: ignore
     paste_id = Column(ForeignKey("paste.id"))
+    file_id = Column(String(255))
 
     pub_date = Column(DateTime)
     chg_date = Column(DateTime)
@@ -157,6 +158,47 @@ class File(Base):  # type: ignore
     fmt = Column(Text(configuration.paste_size))
 
     filename = Column(String(250))
+
+    def create_hash(self, length: int = 3) -> str:
+        return (
+            base64.b32encode(os.urandom(length))
+            .decode("ascii")
+            .replace("=", "")
+        )
+
+    def create_file_id(self) -> str:
+        """Auto lengthening and collision checking way to create paste ids."""
+
+        with session() as database:
+            # We count our new paste as well
+            count = database.query(Paste).count() + 1
+
+            # The amount of bits necessary to store that count times two, then
+            # converted to bytes with a minimum of 1.
+
+            # We double the count so that we always keep half of the space
+            # available (e.g we increase the number of bytes at 127 instead of
+            # 255). This ensures that the probing below can find an empty space
+            # fast in case of collision.
+            necessary = math.ceil(math.log2(count * 2)) // 8 + 1
+
+            # Now generate random ids in the range with a maximum amount of
+            # retries, continuing until an empty slot is found
+            tries = 0
+            paste_id = self.create_hash(necessary)
+
+            while (
+                database.query(File).filter_by(paste_id=paste_id).one_or_none()
+            ):
+                log.debug("File.create_file_id triggered a collision")
+                if tries > 10:
+                    raise RuntimeError(
+                        "We exceeded our retry quota on a collision."
+                    )
+                tries += 1
+                paste_id = self.create_hash(necessary)
+
+            return paste_id
 
     def __init__(
         self, raw: str, lexer: str = "text", filename: Optional[str] = None,
@@ -189,3 +231,4 @@ class File(Base):  # type: ignore
             )
 
         self.fmt = formatted
+        self.file_id = self.create_file_id()

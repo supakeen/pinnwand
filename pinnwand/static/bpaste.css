@@ -20,25 +20,15 @@
     }
 }
 
-html, body, body > form {
-    width: 100%;
-    height: 100%;
+html {
     color: var(--color2);
     font-family: sans-serif;
     font-size: 13px;
     background: var(--color0);
-    padding: 0;
-    margin: 0;
 }
 
-div.content {
-    box-sizing: border-box;
-    height: 100%;
-    width: 100%;
-    padding: 2rem;
-    display: grid;
-    grid-row-gap: .5rem;
-    grid-template-rows: min-content 1fr min-content min-content;
+body {
+    margin: 2rem;
 }
 
 a {
@@ -50,16 +40,107 @@ a:hover {
     color: var(--color1);
 }
 
-header, footer, article, main div#paste, aside, form textarea, form select {
-    background-color: var(--color1);
+span.gh {
+    color: var(--color-pygments-gh);
 }
 
-header nav ul, main article, main div#paste, aside, form textarea, footer {
+span.gp {
+    color: var(--color-pygments-gp);
+}
+
+section.file-template {
+    display: none;
+}
+
+section.paste-help {
+    background-color: var(--color1);
+    padding: .5rem;
+    margin-bottom: .5rem;
+    opacity: .5;
+}
+
+section.paste-help:hover {
+    opacity: 1;
+}
+
+section.file-part {
+    width: 100%;
+    margin-bottom: .5rem;
+}
+
+section.file-part textarea {
+    background-color: var(--color1);
+    width: 100%;
+    resize: vertical;
+    color: var(--color2);
+    border: none;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 25rem;
+    font-size: 1.25rem;
+    font-family: monospace;
     padding: .5rem;
 }
 
+section.file-part div.file-meta select,
+section.paste-submit select {
+    background-color: var(--color1);
+    font-size: 1rem;
+    color: var(--color2);
+    border: .0625rem solid var(--color0);
+    padding: .25rem;
+}
+
+section.file-part div.file-meta input {
+    background-color: var(--color1);
+    font-size: 1rem;
+    color: var(--color2);
+    border: .0625rem solid var(--color0);
+    padding: .25rem;
+}
+
+section.file-part div.file-meta {
+    background-color: var(--color1);
+    padding: .5rem;
+}
+
+section.paste-submit {
+    background-color: var(--color1);
+    padding: .5rem;
+}
+
+section.paste-submit button {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+header, div.paste-meta {
+    background-color: var(--color1);
+    padding: .5rem;
+}
+
+footer {
+    padding: .5rem;
+    opacity: .5;
+}
+
+footer:hover {
+    opacity: 1;
+}
+
+header {
+    margin-bottom: .5rem;
+}
+
+footer {
+    margin-top: .5rem;
+}
+
+
 header nav ul {
     margin: 0;
+    padding: 0;
 }
 
 header nav ul li {
@@ -71,31 +152,23 @@ header nav ul li img.logo {
     width: 2rem;
 }
 
-article, main div#paste {
-    box-sizing: border-box;
-    overflow: auto;
-    height: 100%;
+div.file-show {
+    margin-top: .5rem;
 }
 
-form.create textarea {
-    color: var(--color2);
-    border: none;
-    box-sizing: border-box;
-    resize: none;
-    width: 100%;
-    height: 100%;
-    font-size: 1.25rem;
-    font-family: monospace;
+div.file-show div.code {
+    background-color: var(--color1);
+    padding: .5rem;
 }
 
-form select {
-    font-size: 1rem;
-    color: var(--color2);
-    border: .0625rem solid var(--color0);
+div.file-show div.meta {
+    background-color: var(--color1);
+    padding: .5rem;
+    opacity: .5;
 }
 
-form button {
-    font-size: 1rem;
+div.file-show div.meta:hover {
+    opacity: 1;
 }
 
 td.linenos {
@@ -117,12 +190,9 @@ pre {
 
 p {
     margin: 0;
+    line-height: 1.4em;
 }
 
-span.gh {
-    color: var(--color-pygments-gh);
-}
-
-span.gp {
-    color: var(--color-pygments-gp);
+p + p {
+    margin-top: .5rem;
 }
