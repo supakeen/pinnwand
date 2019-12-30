@@ -492,9 +492,10 @@ class CurlCreate(Base):
             url_request = self.request.full_url()
             url_paste = urljoin(url_request, f"/{paste.slug}")
             url_removal = urljoin(url_request, f"/remove/{paste.removal}")
+            url_raw = urljoin(url_request, f"/raw/{file.slug}")
 
             self.write(
-                f"Paste URL:   {url_paste}\nRemoval URL: {url_removal}\n"
+                f"Paste URL:   {url_paste}\nRaw URL:     {url_raw}\nRemoval URL: {url_removal}\n"
             )
 
 
