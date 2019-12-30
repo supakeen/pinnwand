@@ -39,12 +39,15 @@ curl
 ----
 ``pinnwand`` has a direct endpoint for ``curl`` users::
 
-  € echo "foo" | curl -X POST http://localhost:8000/curl -F "expiry=1day" -F "lexer=python" -F 'raw=<-'
+  € echo "foo" | curl -X POST http://localhost:8000/curl -F 'raw=<-'
   Paste URL:   http://localhost:8000/OE
   Raw URL:     http://localhost:8000/raw/GU
   Removal URL: http://localhost:8000/remove/GQBHGJYKRWIS34D6FNU6CJ3B5M
   € curl http://localhost:8000/raw/GU
   foo%
+
+This will preselect the ``lexer`` and ``expiry`` arguments to be ``text`` and
+``1day`` respectively. You can provide those to change them.
 
 API
 ---

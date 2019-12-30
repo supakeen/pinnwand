@@ -448,9 +448,9 @@ class CurlCreate(Base):
         return
 
     async def post(self) -> None:
-        lexer = self.get_body_argument("lexer", None)
+        lexer = self.get_body_argument("lexer", "text")
         raw = self.get_body_argument("raw", None)
-        expiry = self.get_body_argument("expiry", None)
+        expiry = self.get_body_argument("expiry", "1day")
 
         self.set_header("Content-Type", "text/plain")
 

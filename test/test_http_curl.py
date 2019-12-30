@@ -23,7 +23,7 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
             body=urllib.parse.urlencode({"raw": "a", "expiry": "1day"}),
         )
 
-        assert response.code == 400
+        assert response.code == 200
 
     def test_curl_post_no_raw(self) -> None:
         response = self.fetch(
@@ -41,7 +41,7 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
             body=urllib.parse.urlencode({"lexer": "c", "raw": "a"}),
         )
 
-        assert response.code == 400
+        assert response.code == 200
 
     def test_curl_post_nonexistent_lexer(self) -> None:
         response = self.fetch(
