@@ -8,11 +8,6 @@ from pinnwand import database
 
 
 class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
-    def get_app(self) -> tornado.web.Application:
-        return http.make_application()
-
-
-class APITestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self) -> None:
         super().setUp()
         database.Base.metadata.create_all(database._engine)
