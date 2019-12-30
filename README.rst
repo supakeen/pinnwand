@@ -44,9 +44,18 @@ curl
   Removal URL: http://localhost:8000/remove/ZR2VVYDAQKMZ356KN6FOQE4C4Q
   €
 
-api
+API
 ---
 There is also an API.
+
+More ways to use pinnwand
+-------------------------
+Various deprecated ways of posting are still supported, don't implement these
+for any new software but if you are maintaining old software and want to know
+how they used to work you can read our documentation_.
+
+If you do use a deprecated endpoint to post a warning will be shown below any
+pastes that are created this way.
 
 Reporting bugs
 ==============
@@ -58,3 +67,4 @@ License
 for details.
 
 .. _project page: https://github.com/supakeen/pinnwand
+.. _documentationpage: https://pinnwand.readthedocs.io/en/latest/
