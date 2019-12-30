@@ -103,7 +103,7 @@ class CreatePaste(Base):
 
         paste = database.Paste(utility.expiries[expiry], "deprecated-web")
         file = database.File(raw, lexer)
-        file.file_id = paste.paste_id  # XXX fix, this can duplicate!!!
+        file.slug = paste.slug  # XXX fix, this can duplicate!!!
         paste.files.append(file)
 
         with database.session() as session:
@@ -113,11 +113,11 @@ class CreatePaste(Base):
             # The removal cookie is set for the specific path of the paste it is
             # related to
             self.set_cookie(
-                "removal", str(paste.removal_id), path=f"/{paste.paste_id}"
+                "removal", str(paste.removal), path=f"/{paste.slug}"
             )
 
             # Send the client to the paste
-            self.redirect(f"/{paste.paste_id}")
+            self.redirect(f"/{paste.slug}")
 
     def check_xsrf_cookie(self) -> None:
         """The CSRF token check is disabled. While it would be better if it
@@ -169,25 +169,25 @@ class CreateAction(Base):
             # The removal cookie is set for the specific path of the paste it is
             # related to
             self.set_cookie(
-                "removal", str(paste.removal_id), path=f"/{paste.paste_id}"
+                "removal", str(paste.removal), path=f"/{paste.slug}"
             )
 
             # Send the client to the paste
-            self.redirect(f"/{paste.paste_id}")
+            self.redirect(f"/{paste.slug}")
 
 
 class RepastePaste(Base):
     """Repaste is a specific case of the paste page. It only works for pre-
        existing pastes and will prefill the textarea and lexer."""
 
-    async def get(self, paste_id: str, lexer: str = "") -> None:  # type: ignore
+    async def get(self, slug: str, lexer: str = "") -> None:  # type: ignore
         """Render the new paste form, optionally have a lexer preselected from
            the URL."""
 
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
-                .filter(database.Paste.paste_id == paste_id)
+                .filter(database.Paste.slug == slug)
                 .first()
             )
 
@@ -216,41 +216,41 @@ class RepastePaste(Base):
 
 
 class ShowPaste(Base):
-    async def get(self, paste_id: str) -> None:  # type: ignore
+    async def get(self, slug: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
-                .filter(database.Paste.paste_id == paste_id)
+                .filter(database.Paste.slug == slug)
                 .first()
             )
 
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            can_delete = self.get_cookie("removal") == str(paste.removal_id)
+            can_delete = self.get_cookie("removal") == str(paste.removal)
 
             self.render(
                 "show.html",
                 paste=paste,
-                pagetitle=paste.paste_id,
+                pagetitle=paste.slug,
                 can_delete=can_delete,
                 linenos=False,
             )
 
 
 class RedirectShowPaste(Base):
-    async def get(self, paste_id: str) -> None:  # type: ignore
+    async def get(self, slug: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
-                .filter(database.Paste.paste_id == paste_id)
+                .filter(database.Paste.slug == slug)
                 .first()
             )
 
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            self.redirect(f"/{paste.paste_id}")
+            self.redirect(f"/{paste.slug}")
 
 
 class RawFile(Base):
@@ -258,7 +258,7 @@ class RawFile(Base):
         with database.session() as session:
             file = (
                 session.query(database.File)
-                .filter(database.File.file_id == file_id)
+                .filter(database.File.slug == file_id)
                 .first()
             )
 
@@ -274,7 +274,7 @@ class DownloadFile(Base):
         with database.session() as session:
             file = (
                 session.query(database.File)
-                .filter(database.File.file_id == file_id)
+                .filter(database.File.slug == file_id)
                 .first()
             )
 
@@ -283,7 +283,7 @@ class DownloadFile(Base):
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.set_header(
-                "Content-Disposition", f"attachment; filename={file.file_id}"
+                "Content-Disposition", f"attachment; filename={file.slug}"
             )
             self.write(file.raw)
 
@@ -291,14 +291,14 @@ class DownloadFile(Base):
 class RemovePaste(Base):
     """Remove a paste."""
 
-    async def get(self, removal_id: str) -> None:  # type: ignore
+    async def get(self, removal: str) -> None:  # type: ignore
         """Look up if the user visiting this page has the removal id for a
            certain paste. If they do they're authorized to remove the paste."""
 
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
-                .filter(database.Paste.removal_id == removal_id)
+                .filter(database.Paste.removal == removal)
                 .first()
             )
 
@@ -313,11 +313,11 @@ class RemovePaste(Base):
 
 
 class APIShow(Base):
-    async def get(self, paste_id: str) -> None:  # type: ignore
+    async def get(self, slug: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
-                .filter(database.Paste.paste_id == paste_id)
+                .filter(database.Paste.slug == slug)
                 .first()
             )
 
@@ -326,7 +326,7 @@ class APIShow(Base):
 
             self.write(
                 {
-                    "paste_id": paste.paste_id,
+                    "paste_id": paste.slug,
                     "raw": paste.files[0].raw,
                     "fmt": paste.files[0].fmt,
                     "lexer": paste.files[0].lexer,
@@ -368,13 +368,13 @@ class APINew(Base):
             session.commit()
 
             req_url = self.request.full_url()
-            location = paste.paste_id
+            location = paste.slug
             if filename:
                 location += "#" + url_escape(filename)
             self.write(
                 {
-                    "paste_id": paste.paste_id,
-                    "removal_id": paste.removal_id,
+                    "paste_id": paste.slug,
+                    "removal_id": paste.removal,
                     "paste_url": urljoin(req_url, f"/{location}"),
                     "raw_url": urljoin(req_url, f"/raw/{location}"),
                 }
@@ -387,7 +387,7 @@ class APIRemove(Base):
             paste = (
                 session.query(database.Paste)
                 .filter(
-                    database.Paste.removal_id
+                    database.Paste.removal
                     == self.get_body_argument("removal_id")
                 )
                 .first()
@@ -406,7 +406,7 @@ class APIRemove(Base):
             # backwards compatibility
             self.set_header("Content-Type", "application/json")
             self.write(
-                json.dumps([{"paste_id": paste.paste_id, "status": "removed"}])
+                json.dumps([{"paste_id": paste.slug, "status": "removed"}])
             )
 
 

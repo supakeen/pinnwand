@@ -57,15 +57,15 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(
-        sys.stdin.read(), lexer=lexer, expiry=timedelta(days=1)
-    )
+    paste = database.Paste(expiry=timedelta(days=1))
+    file = database.File(sys.stdin.read(), lexer=lexer)
+    paste.files.append(file)
 
     with database.session() as session:
         session.add(paste)
         session.commit()
 
-    log.info("add: paste created: %s", paste.paste_id)
+    log.info("add: paste created: %s", paste.slug)
 
 
 @main.command()
@@ -75,7 +75,7 @@ def delete(paste: str) -> None:
     with database.session() as session:
         paste_object = (
             session.query(database.Paste)
-            .filter(database.Paste.paste_id == paste)
+            .filter(database.Paste.slug == paste)
             .first()
         )
 
