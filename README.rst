@@ -17,7 +17,8 @@
 pinnwand
 ########
 
-``pinnwand`` is Python pastebin software.
+``pinnwand`` is Python pastebin software that tried to keep it simple but got
+a little more complex.
 
 Prerequisites
 =============
@@ -30,31 +31,22 @@ Prerequisites
 Usage
 =====
 
-Enter text, click "Paste". Easy enough.
+Web
+---
+Enter text, click "Paste", easy enough.
 
-Using API is slightly more difficult but certainly recommended for programmatic usage.
-``pinnwand`` accepts HTTP POST requests to ``/json/new`` with following body:
+curl
+----
+``pinnwand`` has a direct endpoint for ``curl`` users::
 
-::
+  € curl -X POST 'http://localhost:8000/curl' -d 'lexer=python' -d 'raw=foo' -d 'expiry=1day'
+  Paste URL:   http://localhost:8000/ZM
+  Removal URL: http://localhost:8000/remove/ZR2VVYDAQKMZ356KN6FOQE4C4Q
+  €
 
-    {
-        "code": "text to send",
-        "lexer": "text",
-        "expiry": "1day",
-        "filename": "source.txt"
-    }
-
-``filename`` is optional here.
-
-API will return JSON response with full URL for convenience and ``paste_id, removal_id`` keys.
-Use first one to query existing records by GET request to ``/json/show/paste_id``.
-
-To remove existing paste send POST request to ``/json/remove`` with data
-
-::
-
-    {"removal_id": <removal_id>}
-
+api
+---
+There is also an API.
 
 Reporting bugs
 ==============
