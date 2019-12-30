@@ -61,6 +61,7 @@ section.paste-help {
 
 section.paste-help:hover {
     opacity: 1;
+    transition: opacity .1s;
 }
 
 section.file-part {
@@ -127,6 +128,7 @@ footer {
 
 footer:hover {
     opacity: 1;
+    transition: opacity .1s;
 }
 
 header {
@@ -169,6 +171,7 @@ div.file-show div.meta {
 
 div.file-show div.meta:hover {
     opacity: 1;
+    transition: opacity .1s;
 }
 
 td.linenos {
@@ -195,4 +198,35 @@ p {
 
 p + p {
     margin-top: .5rem;
+}
+
+div.file-container {
+    display: flex;
+}
+
+div.file-container div.files {
+    width: 100%;
+}
+
+div.file-container aside {
+    background-color: var(--color1);
+    margin-top: .5rem;
+    margin-left: .5rem;
+    padding: .5rem;
+    min-width: 10rem;
+    opacity: .5;
+}
+
+div.file-container aside:hover {
+    opacity: 1;
+    transition: opacity .1s;
+}
+
+div.file-container aside ul {
+    margin: 0;
+    padding: 0;
+}
+
+div.file-container aside ul li {
+    list-style: none;
 }

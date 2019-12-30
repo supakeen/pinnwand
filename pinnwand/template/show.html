@@ -17,17 +17,30 @@
         Pasted through <em>{{ paste.src }}</em>.
         </p>
     </div>
-    {% for file in paste.files %}
-    <div class="file-show" class="lang-{{ file.lexer }} code{% if not linenos %} nolinenos{% end %}">
-        <div class="code">
-            {% raw file.fmt %}
+    <div class="file-container">
+        <div class="files">
+            {% for file in paste.files %}
+            <div class="file-show" id="{{ file.slug }}" class="lang-{{ file.lexer }} code{% if not linenos %} nolinenos{% end %}">
+                <div class="code">
+                    {% raw file.fmt %}
+                </div>
+                <div class="meta">
+                    Filename: {{ file.filename }}.
+                    Size: {{ len(file.raw) }}.
+                    View <a href="/raw/{{ file.slug }}">raw</a> or <a href="/download/{{ file.slug }}">download</a> this file.
+                </div>
+            </div>
+            {% end %}
         </div>
-        <div class="meta">
-            Filename: {{ file.filename }}.
-            Size: {{ len(file.raw) }}.
-            View <a href="/raw/{{ file.slug }}">raw</a> or <a href="/download/{{ file.slug }}">download</a> this file.
-        </div>
+        {% if len(paste.files) > 1 %}
+        <aside>
+            <ul>
+                {% for file in paste.files %}
+                <li><a href="#{{ file.slug }}">{{ file.filename }}</a></li>
+                {% end %}
+            </ul>
+        </aside>
+        {% end %}
     </div>
-    {% end %}
 </main>
 {% end %}

@@ -70,7 +70,7 @@ class CreatePaste(Base):
             "create.html",
             lexer=lexer,
             lexers=lexers,
-            pagetitle="new",
+            pagetitle="Create new paste",
             message=None,
             prefill="",
         )
@@ -232,7 +232,7 @@ class ShowPaste(Base):
             self.render(
                 "show.html",
                 paste=paste,
-                pagetitle=paste.slug,
+                pagetitle=f"View paste {paste.slug}",
                 can_delete=can_delete,
                 linenos=False,
             )
