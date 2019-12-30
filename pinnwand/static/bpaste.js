@@ -21,7 +21,14 @@ window.addEventListener("load", function(event) {
 
 function new_file_add() {
     var template = document.querySelector("section.file-template").cloneNode(true);
-    template.className = "file-part";
+    template.className = "file-part file-extra";
+    template.querySelector("a.remove").addEventListener("click", function(event) {
+        event.preventDefault();
+
+        var section = event.target.parentNode.parentNode;
+
+        document.querySelector("main.page-create").removeChild(section);
+    });
 
     document.querySelector("main.page-create").insertBefore(
         template,

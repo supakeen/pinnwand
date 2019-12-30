@@ -12,7 +12,7 @@
         <div class="quick"><p>{{ message }}</p></div>
         {% end %}
         <section class="file-part">
-            <textarea name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
+            <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
             <div class="file-meta">
                 <select name="lexer">
                     {% for key, caption in lexers.items() %}
@@ -32,7 +32,7 @@
     </main>
 </form>
 <section class="file-template">
-    <textarea name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
+    <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
     <div class="file-meta">
         <select name="lexer">
             {% for key, caption in lexers.items() %}
@@ -40,6 +40,7 @@
             {% end %}
         </select>
         <input name="filename" placeholder="Filename (optional)">
+        <a href="#" class="remove">Remove this file</a>
     </div>
 </section>
 {% end %}
