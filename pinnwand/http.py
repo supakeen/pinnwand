@@ -1,5 +1,6 @@
 import json
 import logging
+import secrets
 
 from typing import Any
 from urllib.parse import urljoin
@@ -341,6 +342,9 @@ class APIShow(Base):
 
 
 class APINew(Base):
+    def check_xsrf_cookie(self) -> None:
+        return
+
     async def get(self) -> None:
         raise tornado.web.HTTPError(405)
 
@@ -386,6 +390,9 @@ class APINew(Base):
 
 
 class APIRemove(Base):
+    def check_xsrf_cookie(self) -> None:
+        return
+
     async def post(self) -> None:
         with database.session() as session:
             paste = (
@@ -533,4 +540,6 @@ def make_application() -> tornado.web.Application:
         ],
         template_path=path.template,
         default_handler_class=Base,
+        xsrf_cookies=True,
+        cookie_secret=secrets.token_hex(),
     )
