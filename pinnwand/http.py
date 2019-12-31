@@ -142,6 +142,10 @@ class CreateAction(Base):
         raws = self.get_body_arguments("raw")
         filenames = self.get_body_arguments("filename")
 
+        if not all([lexers, raws, filenames]):
+            # Prevent empty argument lists from making it through
+            raise tornado.web.HTTPError(400)
+
         with database.session() as session:
             paste = database.Paste(utility.expiries[expiry], "web")
 
