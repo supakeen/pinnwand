@@ -30,6 +30,40 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 404
 
+    def test_website_removal(self) -> None:
+        response = self.fetch("/removal", method="GET",)
+
+        assert response.code == 200
+
+    def test_website_about(self) -> None:
+        response = self.fetch("/about", method="GET",)
+
+        assert response.code == 200
+
+    def test_website_expiry(self) -> None:
+        response = self.fetch("/expiry", method="GET",)
+
+        assert response.code == 200
+
+    def test_website_show_nonexistent_paste(self) -> None:
+        response = self.fetch("/show/doesntexist", method="GET",)
+
+        assert response.code == 404
+
+    def test_website_raw_nonexistent_paste(self) -> None:
+        response = self.fetch("/raw/doesntexist", method="GET",)
+
+        assert response.code == 404
+
+
+class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        database.Base.metadata.create_all(database._engine)
+
+    def get_app(self) -> tornado.web.Application:
+        return http.make_application()
+
     def test_website_index_post_no_lexer(self) -> None:
         response = self.fetch(
             "/",
@@ -100,31 +134,6 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         )
 
         assert response.code == 200
-
-    def test_website_removal(self) -> None:
-        response = self.fetch("/removal", method="GET",)
-
-        assert response.code == 200
-
-    def test_website_about(self) -> None:
-        response = self.fetch("/about", method="GET",)
-
-        assert response.code == 200
-
-    def test_website_expiry(self) -> None:
-        response = self.fetch("/expiry", method="GET",)
-
-        assert response.code == 200
-
-    def test_website_show_nonexistent_paste(self) -> None:
-        response = self.fetch("/show/doesntexist", method="GET",)
-
-        assert response.code == 404
-
-    def test_website_raw_nonexistent_paste(self) -> None:
-        response = self.fetch("/raw/doesntexist", method="GET",)
-
-        assert response.code == 404
 
     def test_website_show(self) -> None:
         response = self.fetch(
