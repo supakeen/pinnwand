@@ -5,6 +5,14 @@ window.addEventListener("load", function(event) {
         return false;
     }
 
+    document.querySelector("a.remove").addEventListener("click", function(event) {
+        event.preventDefault();
+
+        var section = event.target.parentNode.parentNode;
+
+        document.querySelector("main.page-create").removeChild(section);
+    });
+
     var but = document.createElement("a");
 
     but.text = "Add another file.";

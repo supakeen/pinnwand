@@ -55,6 +55,116 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 404
 
+    def test_website_create_post_nothing(self) -> None:
+        response = self.fetch("/create", method="POST", body="",)
+
+        assert response.code == 403
+
+    def test_website_create_post_only_xsrf(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"_xsrf": self.fetch("/").cookies["_xsrf"]}, True
+            ),
+        )
+
+        assert response.code == 403
+
+    def test_website_create_post_only_raws(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"_xsrf": self.fetch("/").cookies["_xsrf"], "raw": ["a"]}, True
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_only_lexers(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "lexer": ["python"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_only_filenames(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "filename": ["foo"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_mismatched(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "filename": ["a"],
+                    "raw": ["a", "b"],
+                    "lexer": ["python"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_single(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "expiry": "1day",
+                    "filename": ["a"],
+                    "raw": ["a"],
+                    "lexer": ["python"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 200
+
+    def test_website_create_post_multiple(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "expiry": "1day",
+                    "filename": ["a", "b"],
+                    "raw": ["a", "b"],
+                    "lexer": ["python", "text"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 200
+
 
 class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self) -> None:

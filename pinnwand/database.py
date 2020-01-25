@@ -94,7 +94,7 @@ class Paste(Base):  # type: ignore
             self.exp_date = None
 
     def __repr__(self) -> str:
-        return f"<Paste(paste_id={self.paste.id})>"
+        return f"<Paste(slug={self.slug})>"
 
 
 class File(Base):  # type: ignore

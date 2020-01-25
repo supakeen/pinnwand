@@ -73,7 +73,7 @@ class CreatePaste(Base):
             lexers=lexers,
             pagetitle="Create new paste",
             message=None,
-            prefill="",
+            paste=None,
         )
 
     async def post(self) -> None:
@@ -185,7 +185,7 @@ class RepastePaste(Base):
     """Repaste is a specific case of the paste page. It only works for pre-
        existing pastes and will prefill the textarea and lexer."""
 
-    async def get(self, slug: str, lexer: str = "") -> None:  # type: ignore
+    async def get(self, slug: str) -> None:  # type: ignore
         """Render the new paste form, optionally have a lexer preselected from
            the URL."""
 
@@ -199,25 +199,16 @@ class RepastePaste(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-        lexers = utility.list_languages()
+            lexers = utility.list_languages()
 
-        # Our default lexer is just that, text
-        if not lexer:
-            lexer = "text"
-
-        # Make sure a valid lexer is given
-        if lexer not in lexers:
-            log.debug("Repaste.get: non-existent lexer requested")
-            raise tornado.web.HTTPError(404)
-
-        await self.render(
-            "create.html",
-            lexer=lexer,
-            lexers=lexers,
-            pagetitle="repaste",
-            message=None,
-            prefill=paste.raw,
-        )
+            await self.render(
+                "create.html",
+                lexer="text",  # XXX make this majority of file lexers?
+                lexers=lexers,
+                pagetitle="repaste",
+                message=None,
+                paste=paste,
+            )
 
 
 class ShowPaste(Base):
@@ -517,8 +508,7 @@ def make_application() -> tornado.web.Application:
             (r"/\+(.*)", CreatePaste),
             (r"/create", CreateAction),
             (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
-            (r"/repaste/([A-Z2-7]+)", RepastePaste),
-            (r"/repaste/([A-Z2-7]+)/\+(.*)", RepastePaste),
+            (r"/repaste/([A-Z2-7]+)(?:#.+)?", RepastePaste),
             (r"/raw/([A-Z2-7]+)(?:#.+)?", RawFile),
             (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
             (r"/remove/([A-Z2-7]+)", RemovePaste),

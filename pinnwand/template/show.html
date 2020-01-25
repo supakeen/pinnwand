@@ -12,7 +12,7 @@
             <a href="/remove/{{ paste.removal }}">Remove now</a>.
         {% end %}
 
-        <a href="/repaste/{{ paste.slug }}/+{{ paste.files[0].lexer }}">Repaste</a> this paste.
+        <a href="/repaste/{{ paste.slug }}">Repaste</a> this paste.
 
         Pasted through <em>{{ paste.src }}</em>.
         </p>
@@ -32,6 +32,7 @@
             </div>
             {% end %}
         </div>
+        <!--
         {% if len(paste.files) > 1 %}
         <aside>
             <ul>
@@ -41,6 +42,7 @@
             </ul>
         </aside>
         {% end %}
+        -->
     </div>
 </main>
 {% end %}

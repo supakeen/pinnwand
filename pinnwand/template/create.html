@@ -11,6 +11,23 @@
         {% if message %}
         <div class="quick"><p>{{ message }}</p></div>
         {% end %}
+
+        {% if paste %}
+            {% for index, file in enumerate(paste.files) %}
+            <section class="file-part">
+                <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
+                <div class="file-meta">
+                    <select name="lexer">
+                        {% for key, caption in lexers.items() %}
+                        <option value="{{ key }}"{% if file.lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
+                        {% end %}
+                    </select>
+                    <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
+                    {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
+                </div>
+            </section>
+            {% end %}
+        {% else %}
         <section class="file-part">
             <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
             <div class="file-meta">
@@ -22,6 +39,7 @@
                 <input name="filename" placeholder="Filename (optional)">
             </div>
         </section>
+        {% end %}
         <section class="paste-submit">
             <select name="expiry">
                 <option value="1day">Expiry (1 day)</option>
