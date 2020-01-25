@@ -64,20 +64,18 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
-            body=urllib.parse.urlencode(
-                {"_xsrf": self.fetch("/").cookies["_xsrf"]}, True
-            ),
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode({"_xsrf": "dummy"}, True),
         )
 
-        assert response.code == 403
+        assert response.code == 400
 
     def test_website_create_post_only_raws(self) -> None:
         response = self.fetch(
             "/create",
             method="POST",
-            body=urllib.parse.urlencode(
-                {"_xsrf": self.fetch("/").cookies["_xsrf"], "raw": ["a"]}, True
-            ),
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode({"_xsrf": "dummy", "raw": ["a"]}, True),
         )
 
         assert response.code == 400
@@ -86,12 +84,9 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {
-                    "_xsrf": self.fetch("/").cookies["_xsrf"],
-                    "lexer": ["python"],
-                },
-                True,
+                {"_xsrf": "dummy", "lexer": ["python"]}, True,
             ),
         )
 
@@ -101,12 +96,9 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {
-                    "_xsrf": self.fetch("/").cookies["_xsrf"],
-                    "filename": ["foo"],
-                },
-                True,
+                {"_xsrf": "dummy", "filename": ["foo"]}, True,
             ),
         )
 
@@ -116,9 +108,10 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
                 {
-                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "_xsrf": "dummy",
                     "filename": ["a"],
                     "raw": ["a", "b"],
                     "lexer": ["python"],
@@ -133,9 +126,10 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
                 {
-                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "_xsrf": "dummy",
                     "expiry": "1day",
                     "filename": ["a"],
                     "raw": ["a"],
@@ -151,9 +145,10 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/create",
             method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
                 {
-                    "_xsrf": self.fetch("/").cookies["_xsrf"],
+                    "_xsrf": "dummy",
                     "expiry": "1day",
                     "filename": ["a", "b"],
                     "raw": ["a", "b"],
