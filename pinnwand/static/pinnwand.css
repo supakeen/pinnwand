@@ -60,7 +60,7 @@ section.paste-help {
 }
 
 section.paste-help:hover {
-    opacity: 1;
+    opacity: .9;
     transition: opacity .1s;
 }
 
@@ -170,7 +170,7 @@ div.file-show div.meta {
 }
 
 div.file-show div.meta:hover {
-    opacity: 1;
+    opacity: .9;
     transition: opacity .1s;
 }
 
@@ -218,7 +218,7 @@ div.file-container aside {
 }
 
 div.file-container aside:hover {
-    opacity: 1;
+    opacity: .9;
     transition: opacity .1s;
 }
 
