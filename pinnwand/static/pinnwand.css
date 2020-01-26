@@ -116,7 +116,7 @@ section.paste-submit button {
 }
 
 
-header, div.paste-meta {
+article, header, div.paste-meta {
     background-color: var(--color1);
     padding: .5rem;
 }
@@ -229,4 +229,9 @@ div.file-container aside ul {
 
 div.file-container aside ul li {
     list-style: none;
+}
+
+article h1 {
+    margin-top: 0;
+    margin-bottom: .5rem;
 }
