@@ -143,3 +143,7 @@ class File(Base):  # type: ignore
 
         self.fmt = formatted
         self.slug = utility.slug_create()
+
+    @property
+    def pretty_size(self) -> str:
+        return utility.size_postfix(len(self.raw))

@@ -87,3 +87,18 @@ def slug_create(auto_scale: bool = True) -> str:
             slug = hash_create(necessary)
 
         return slug
+
+
+units = [
+    (1 << 20, "mb"),
+    (1 << 10, "kb"),
+    (1, "b"),
+]
+
+
+def size_postfix(count: int) -> str:
+    for f, p in units:
+        if count > f:
+            break
+
+    return f"{count/f:.0f}{p}"
