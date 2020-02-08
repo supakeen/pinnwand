@@ -52,25 +52,26 @@ class CreatePaste(Base):
     """The index page shows the new paste page with a list of all available
        lexers from Pygments."""
 
-    async def get(self, lexer: str = "") -> None:
+    async def get(self, lexers: str = "") -> None:
         """Render the new paste form, optionally have a lexer preselected from
            the URL."""
 
-        lexers = utility.list_languages()
+        lexers_available = utility.list_languages()
+        lexers_selected = [lexer for lexer in lexers.split("+") if lexer.strip()]
 
         # Our default lexer is just that, text
-        if not lexer:
-            lexer = "text"
+        if not lexers_selected:
+            lexers_selected = ["text"]
 
-        # Make sure a valid lexer is given
-        if lexer not in lexers:
+        # Make sure all lexers are availabel
+        if not all(lexer in lexers_available for lexer in lexers_selected):
             log.debug("CreatePaste.get: non-existent logger requested")
             raise tornado.web.HTTPError(404)
 
         await self.render(
             "create.html",
-            lexer=lexer,
-            lexers=lexers,
+            lexers=lexers_selected,
+            lexers_available=lexers_available,
             pagetitle="Create new paste",
             message=None,
             paste=None,
@@ -151,7 +152,6 @@ class CreateAction(Base):
             paste = database.Paste(utility.expiries[expiry], "web")
 
             if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
-                print(lexers, raws, filenames)
                 log.info("CreateAction.post: mismatching argument lists")
                 raise tornado.web.HTTPError(400)
 
@@ -199,12 +199,12 @@ class RepastePaste(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            lexers = utility.list_languages()
+            lexers_available = utility.list_languages()
 
             await self.render(
                 "create.html",
-                lexer="text",  # XXX make this majority of file lexers?
-                lexers=lexers,
+                lexers=["text"],  # XXX make this majority of file lexers?
+                lexers_available=lexers_available,
                 pagetitle="repaste",
                 message=None,
                 paste=paste,
