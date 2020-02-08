@@ -111,8 +111,15 @@ section.paste-submit {
 }
 
 section.paste-submit button {
-    font-size: 1rem;
+    border: none;
+    border-radius: 0.2em;
+    padding: 0.4rem 1.4rem;
+    margin: 0 0.2rem;
+    background: var(--color3);
+    color: var(--color1);
     cursor: pointer;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 
