@@ -5,13 +5,19 @@ window.addEventListener("load", function(event) {
         return false;
     }
 
-    document.querySelector("a.remove").addEventListener("click", function(event) {
-        event.preventDefault();
+    var removes = document.querySelectorAll("a.remove");
 
-        var section = event.target.parentNode.parentNode;
+    for(var i = 0; i < removes.length; i++) {
+        var remove = removes[i];
 
-        document.querySelector("main.page-create").removeChild(section);
-    });
+        remove.addEventListener("click", function(event) {
+            event.preventDefault();
+
+            var section = event.target.parentNode.parentNode;
+
+            document.querySelector("main.page-create").removeChild(section);
+        });
+    };
 
     var but = document.createElement("a");
 
