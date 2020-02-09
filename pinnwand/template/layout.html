@@ -14,9 +14,11 @@
           <li>
             <a href="/"><img class="logo" src="/static/logo.png"></a>
           </li>
+          {% if handler.request.uri != '/' %}
           <li>
             <a href="/">new paste</a>
           </li>
+          {% end %}
         </ul>
       </nav>
     </header>
