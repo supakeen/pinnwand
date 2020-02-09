@@ -15,7 +15,6 @@
         {% if paste %}
             {% for index, file in enumerate(paste.files) %}
             <section class="file-part">
-                <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
                 <div class="file-meta">
                     <select name="lexer">
                         {% for key, caption in lexers_available.items() %}
@@ -25,12 +24,12 @@
                     <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
                     {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
                 </div>
+                <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
             </section>
             {% end %}
         {% else %}
         {% for index, lexer in enumerate(lexers) %}
         <section class="file-part">
-            <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
             <div class="file-meta">
                 <select name="lexer">
                     {% for key, caption in lexers_available.items() %}
@@ -40,6 +39,7 @@
                 <input name="filename" placeholder="Filename (optional)">
                 {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
             </div>
+            <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
         </section>
         {% end %}
         {% end %}
@@ -53,7 +53,6 @@
     </main>
 </form>
 <section class="file-template">
-    <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
     <div class="file-meta">
         <select name="lexer">
             {% for key, caption in lexers_available.items() %}
@@ -63,5 +62,6 @@
         <input name="filename" placeholder="Filename (optional)">
         <a href="#" class="remove">Remove this file</a>
     </div>
+    <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
 </section>
 {% end %}

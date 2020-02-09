@@ -248,3 +248,8 @@ article h1 {
     margin-top: 0;
     margin-bottom: .5rem;
 }
+
+a.remove, a.add {
+    margin: .3rem .5rem 0 0;
+    float: right;
+}

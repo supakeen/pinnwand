@@ -22,6 +22,7 @@ window.addEventListener("load", function(event) {
     var but = document.createElement("a");
 
     but.text = "Add another file.";
+    but.className = "add";
     but.href = "#";
 
     but.addEventListener("click", function(event) {
