@@ -57,7 +57,9 @@ class CreatePaste(Base):
            the URL."""
 
         lexers_available = utility.list_languages()
-        lexers_selected = [lexer for lexer in lexers.split("+") if lexer.strip()]
+        lexers_selected = [
+            lexer for lexer in lexers.split("+") if lexer.strip()
+        ]
 
         # Our default lexer is just that, text
         if not lexers_selected:
@@ -140,6 +142,8 @@ class CreateAction(Base):
             )
             raise tornado.web.HTTPError(400)
 
+        auto_scale = self.get_body_argument("long", None) is None
+
         lexers = self.get_body_arguments("lexer")
         raws = self.get_body_arguments("raw")
         filenames = self.get_body_arguments("filename")
@@ -149,7 +153,7 @@ class CreateAction(Base):
             raise tornado.web.HTTPError(400)
 
         with database.session() as session:
-            paste = database.Paste(utility.expiries[expiry], "web")
+            paste = database.Paste(utility.expiries[expiry], "web", auto_scale)
 
             if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
                 log.info("CreateAction.post: mismatching argument lists")
@@ -165,7 +169,9 @@ class CreateAction(Base):
                     raise tornado.web.HTTPError(400)
 
                 paste.files.append(
-                    database.File(raw, lexer, filename if filename else None)
+                    database.File(
+                        raw, lexer, filename if filename else None, auto_scale
+                    )
                 )
 
             session.add(paste)

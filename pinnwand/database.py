@@ -75,11 +75,12 @@ class Paste(Base):  # type: ignore
         self,
         expiry: datetime.timedelta = datetime.timedelta(days=7),
         src: str = None,
+        auto_scale: bool = True,
     ) -> None:
         # Generate a paste_id and a removal_id
         # Unless someone proves me wrong that I need to check for collisions
         # my famous last words will be that the odds are astronomically small
-        self.slug = utility.slug_create()
+        self.slug = utility.slug_create(auto_scale=auto_scale)
         self.removal = utility.slug_create(auto_scale=False)
 
         self.pub_date = datetime.datetime.utcnow()
@@ -112,7 +113,11 @@ class File(Base):  # type: ignore
     filename = Column(String(250))
 
     def __init__(
-        self, raw: str, lexer: str = "text", filename: Optional[str] = None,
+        self,
+        raw: str,
+        lexer: str = "text",
+        filename: Optional[str] = None,
+        auto_scale: bool = True,
     ) -> None:
         # Start with some basic housekeeping related to size
         if len(raw) > configuration.paste_size:
@@ -142,7 +147,7 @@ class File(Base):  # type: ignore
             )
 
         self.fmt = formatted
-        self.slug = utility.slug_create()
+        self.slug = utility.slug_create(auto_scale=auto_scale)
 
     @property
     def pretty_size(self) -> str:
