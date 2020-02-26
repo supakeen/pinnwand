@@ -9,7 +9,7 @@ repos:
     - id: pytest
       name: pytest
       language: system
-      entry: pytest -q
+      entry: poetry run pytest -q
       types: [python]
     - id: flake8
       name: flake8
