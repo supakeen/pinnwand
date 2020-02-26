@@ -1,0 +1,24 @@
+# Example configuration file for `pinnwand`. Shows what you can adjust. More
+# information can be found at `pinnwand`'s documentation:
+# https://pinnwand.readthedocs.io/en/latest/ or you can file an issue at our
+# GitHub: https://github.com/supakeen/pinnwand
+
+# Database URI to connect to see: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
+# if you want to use databases other than sqlite be sure to install the
+# appropriate packages and then format this url to correspond to them.
+database_uri = "sqlite:///:memory:"
+
+# Maximum paste size you want to allow.
+paste_size = 256 * 1024  # in bytes
+
+# The page path is used to find the pages listed in the page_list
+page_path = "/tmp"
+
+# This is the whitelist of files that should exist in the `page_path`
+# configuration directive. `pinnwand` will look for `$file.rst` in the
+# `page_path` directory and serve it at `/$file`.
+page_list = ["about", "removal", "expiry"]
+
+# The footer in raw HTML, shown at the bottom of the page and handy to link to
+# your previously configured pages.
+footer = 'View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.'
