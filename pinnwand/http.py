@@ -432,27 +432,6 @@ class APIExpiries(Base):
         )
 
 
-class RemovalPage(Base):
-    """Serve the removal page."""
-
-    async def get(self) -> None:
-        self.render("removal.html", pagetitle="removal")
-
-
-class AboutPage(Base):
-    """Serve the about page."""
-
-    async def get(self) -> None:
-        self.render("about.html", pagetitle="about")
-
-
-class ExpiryPage(Base):
-    """Serve the expiry page."""
-
-    async def get(self) -> None:
-        self.render("expiry.html", pagetitle="expiry")
-
-
 class CurlCreate(Base):
     def check_xsrf_cookie(self) -> None:
         return
@@ -515,7 +494,9 @@ class RestructuredTextPage(Base):
 
     async def get(self) -> None:
         with open(path.page / self.file) as f:
-            html = docutils.core.publish_string(f.read())
+            html = docutils.core.publish_parts(f.read(), writer_name="html")[
+                "html_body"
+            ]
 
         self.render(
             "restructuredtextpage.html",
@@ -536,8 +517,8 @@ def make_application() -> tornado.web.Application:
             (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
             (r"/remove/([A-Z2-7]+)", RemovePaste),
             (r"/about", RestructuredTextPage, {"file": "about.rst"}),
-            (r"/removal", RemovalPage),
-            (r"/expiry", ExpiryPage),
+            (r"/removal", RestructuredTextPage, {"file": "removal.rst"}),
+            (r"/expiry", RestructuredTextPage, {"file": "expiry.rst"}),
             (r"/json/new", APINew),
             (r"/json/remove", APIRemove),
             (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
