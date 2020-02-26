@@ -3,7 +3,7 @@ import logging
 import secrets
 import docutils.core
 
-from typing import Any
+from typing import Any, List
 from urllib.parse import urljoin
 
 import tornado.web
@@ -509,32 +509,41 @@ class RestructuredTextPage(Base):
 
 
 def make_application() -> tornado.web.Application:
+    pages: List[Any] = [
+        (r"/", CreatePaste),
+        (r"/\+(.*)", CreatePaste),
+        (r"/create", CreateAction),
+        (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
+        (r"/repaste/([A-Z2-7]+)(?:#.+)?", RepastePaste),
+        (r"/raw/([A-Z2-7]+)(?:#.+)?", RawFile),
+        (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
+        (r"/remove/([A-Z2-7]+)", RemovePaste),
+    ]
+
+    pages += [
+        (r"/about", RestructuredTextPage, {"file": f"{file}.rst"})
+        for file in configuration.page_list
+    ]
+
+    pages += [
+        (r"/removal", RestructuredTextPage, {"file": "removal.rst"}),
+        (r"/expiry", RestructuredTextPage, {"file": "expiry.rst"}),
+        (r"/json/new", APINew),
+        (r"/json/remove", APIRemove),
+        (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
+        (r"/json/lexers", APILexers),
+        (r"/json/expiries", APIExpiries),
+        (r"/curl", CurlCreate),
+        (
+            r"/static/(.*)",
+            tornado.web.StaticFileHandler,
+            {"path": path.static},
+        ),
+        (r"/(.*)(?:#.+)?", ShowPaste),
+    ]
+
     app = tornado.web.Application(
-        [
-            (r"/", CreatePaste),
-            (r"/\+(.*)", CreatePaste),
-            (r"/create", CreateAction),
-            (r"/show/([A-Z2-7]+)(?:#.+)?", RedirectShowPaste),
-            (r"/repaste/([A-Z2-7]+)(?:#.+)?", RepastePaste),
-            (r"/raw/([A-Z2-7]+)(?:#.+)?", RawFile),
-            (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
-            (r"/remove/([A-Z2-7]+)", RemovePaste),
-            (r"/about", RestructuredTextPage, {"file": "about.rst"}),
-            (r"/removal", RestructuredTextPage, {"file": "removal.rst"}),
-            (r"/expiry", RestructuredTextPage, {"file": "expiry.rst"}),
-            (r"/json/new", APINew),
-            (r"/json/remove", APIRemove),
-            (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
-            (r"/json/lexers", APILexers),
-            (r"/json/expiries", APIExpiries),
-            (r"/curl", CurlCreate),
-            (
-                r"/static/(.*)",
-                tornado.web.StaticFileHandler,
-                {"path": path.static},
-            ),
-            (r"/(.*)(?:#.+)?", ShowPaste),
-        ],
+        pages,
         template_path=path.template,
         default_handler_class=Base,
         xsrf_cookies=True,
