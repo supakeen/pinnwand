@@ -65,9 +65,9 @@ class CreatePaste(Base):
         if not lexers_selected:
             lexers_selected = ["text"]
 
-        # Make sure all lexers are availabel
+        # Make sure all lexers are available
         if not all(lexer in lexers_available for lexer in lexers_selected):
-            log.debug("CreatePaste.get: non-existent logger requested")
+            log.debug("CreatePaste.get: non-existent lexer requested")
             raise tornado.web.HTTPError(404)
 
         await self.render(
