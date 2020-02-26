@@ -24,7 +24,7 @@
     </header>
     {% block body %}{% end %}
     <footer>
-      View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.
+      {% raw handler.application.configuration.footer %}
     </footer>
   </body>
 </html>

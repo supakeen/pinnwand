@@ -10,7 +10,7 @@ import tornado.web
 
 from tornado.escape import url_escape
 
-from pinnwand import database, path, utility, error
+from pinnwand import database, path, utility, error, configuration
 
 log = logging.getLogger(__name__)
 
@@ -506,7 +506,7 @@ class RestructuredTextPage(Base):
 
 
 def make_application() -> tornado.web.Application:
-    return tornado.web.Application(
+    app = tornado.web.Application(
         [
             (r"/", CreatePaste),
             (r"/\+(.*)", CreatePaste),
@@ -537,3 +537,7 @@ def make_application() -> tornado.web.Application:
         xsrf_cookies=True,
         cookie_secret=secrets.token_hex(),
     )
+
+    app.configuration = configuration  # type: ignore
+
+    return app
