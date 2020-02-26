@@ -5,3 +5,4 @@ base = pathlib.Path(__file__).parent
 
 template = base / "template"
 static = base / "static"
+page = base / "page"

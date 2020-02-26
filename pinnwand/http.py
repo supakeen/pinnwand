@@ -1,11 +1,13 @@
 import json
 import logging
 import secrets
+import docutils.core
 
 from typing import Any
 from urllib.parse import urljoin
 
 import tornado.web
+
 from tornado.escape import url_escape
 
 from pinnwand import database, path, utility, error
@@ -507,6 +509,21 @@ class CurlCreate(Base):
             )
 
 
+class RestructuredTextPage(Base):
+    def initialize(self, file: str) -> None:
+        self.file = file
+
+    async def get(self) -> None:
+        with open(path.page / self.file) as f:
+            html = docutils.core.publish_string(f.read())
+
+        self.render(
+            "restructuredtextpage.html",
+            html=html,
+            pagetitle=(path.page / self.file).stem,
+        )
+
+
 def make_application() -> tornado.web.Application:
     return tornado.web.Application(
         [
@@ -518,7 +535,7 @@ def make_application() -> tornado.web.Application:
             (r"/raw/([A-Z2-7]+)(?:#.+)?", RawFile),
             (r"/download/([A-Z2-7]+)(?:#.+)?", DownloadFile),
             (r"/remove/([A-Z2-7]+)", RemovePaste),
-            (r"/about", AboutPage),
+            (r"/about", RestructuredTextPage, {"file": "about.rst"}),
             (r"/removal", RemovalPage),
             (r"/expiry", ExpiryPage),
             (r"/json/new", APINew),
