@@ -493,10 +493,13 @@ class RestructuredTextPage(Base):
         self.file = file
 
     async def get(self) -> None:
-        with open(path.page / self.file) as f:
-            html = docutils.core.publish_parts(f.read(), writer_name="html")[
-                "html_body"
-            ]
+        try:
+            with open(path.page / self.file) as f:
+                html = docutils.core.publish_parts(
+                    f.read(), writer_name="html"
+                )["html_body"]
+        except FileNotFoundError:
+            raise tornado.web.HTTPError(404)
 
         self.render(
             "restructuredtextpage.html",
