@@ -5,6 +5,6 @@ python:
 - "3.8"
 install:
 - pip install poetry
-- poetry install --no-dev
+- poetry install
 script:
 - poetry run pytest
