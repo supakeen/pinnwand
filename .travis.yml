@@ -4,6 +4,7 @@ python:
 - "3.7"
 - "3.8"
 install:
-- pip install pytest pytest-cov tornado click sqlalchemy pygments docutils
+- pip install poetry
+- poetry install
 script:
-- pytest
+- poetry run pytest
