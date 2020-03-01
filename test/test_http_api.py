@@ -242,6 +242,26 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
         assert "link" in data
         assert "removal" in data
 
+    def test_api_new_invalid_body(self) -> None:
+        response = self.fetch("/api/v1/paste", method="POST", body=b"hi",)
+
+        assert response.code == 400
+
+    def test_api_new_no_files(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps({"expiry": "1day", "files": []}),
+        )
+
+        assert response.code == 400
+
+        response = self.fetch(
+            "/api/v1/paste", method="POST", body=json.dumps({"expiry": "1day"}),
+        )
+
+        assert response.code == 400
+
     def test_api_new_no_lexer(self) -> None:
         response = self.fetch(
             "/api/v1/paste",

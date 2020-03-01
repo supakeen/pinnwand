@@ -45,6 +45,11 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 200
 
+    def test_website_nonexistent_page(self) -> None:
+        response = self.fetch("/nonexistent", method="GET",)
+
+        assert response.code == 404
+
     def test_website_show_nonexistent_paste(self) -> None:
         response = self.fetch("/show/doesntexist", method="GET",)
 
