@@ -443,6 +443,9 @@ class APIv1Paste(APIv1Base):
     def check_xsrf_cookie(self) -> None:
         return
 
+    async def get(self) -> None:
+        raise tornado.web.HTTPError(405)
+
     async def post(self) -> None:
         try:
             data = tornado.escape.json_decode(self.request.body)
@@ -480,9 +483,14 @@ class APIv1Paste(APIv1Base):
                 if not content:
                     raise tornado.web.HTTPError(400, "invalid content (empty)")
 
-                paste.files.append(
-                    database.File(content, lexer, filename, auto_scale)
-                )
+                try:
+                    paste.files.append(
+                        database.File(content, lexer, filename, auto_scale)
+                    )
+                except error.ValidationError:
+                    raise tornado.web.HTTPError(
+                        400, "invalid content (exceeds size limit)"
+                    )
 
             session.add(paste)
             session.commit()

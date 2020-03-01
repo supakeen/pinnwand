@@ -11,7 +11,7 @@ from pinnwand import utility
 from pinnwand import configuration
 
 
-class APITestCase(tornado.testing.AsyncHTTPTestCase):
+class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self) -> None:
         super().setUp()
         database.Base.metadata.create_all(database._engine)
@@ -211,3 +211,133 @@ class APITestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 200
         assert json.loads(response.body).keys() == utility.expiries.keys()
+
+
+class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        database.Base.metadata.create_all(database._engine)
+
+    def get_app(self) -> tornado.web.Application:
+        return http.make_application()
+
+    def test_api_new(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {"name": "spam", "content": "eggs", "lexer": "c"},
+                    ],
+                }
+            ),
+        )
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+
+        assert "link" in data
+        assert "removal" in data
+
+    def test_api_new_no_lexer(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [{"name": "spam", "content": "eggs"}],
+                }
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_invalid_lexer(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {
+                            "name": "spam",
+                            "content": "eggs",
+                            "lexer": "nonexistent",
+                        },
+                    ],
+                }
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_no_content(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {"expiry": "1day", "files": [{"name": "spam", "lexer": "c"}]}
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_no_expiry(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {"files": [{"name": "spam", "content": "eggs", "lexer": "c"}]}
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_small_file(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {
+                            "name": "spam",
+                            "content": "a" * (configuration.paste_size // 2),
+                            "lexer": "c",
+                        },
+                    ],
+                }
+            ),
+        )
+
+        assert response.code == 200
+
+    def test_api_new_large_file(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {
+                            "name": "spam",
+                            "content": "a" * (configuration.paste_size + 1),
+                            "lexer": "c",
+                        },
+                    ],
+                }
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_wrong_method(self) -> None:
+        response = self.fetch("/api/v1/paste")
+        assert response.code == 405
