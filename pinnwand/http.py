@@ -7,6 +7,7 @@ from typing import Any, List
 from urllib.parse import urljoin
 
 import tornado.web
+import tornado.escape
 
 from tornado.escape import url_escape
 
@@ -432,6 +433,68 @@ class APIExpiries(Base):
         )
 
 
+class APIv1Base(Base):
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        _, exc, _ = kwargs["exc_info"]
+        self.write({"state": "error", "code": status_code, "message": str(exc)})
+
+
+class APIv1Paste(APIv1Base):
+    def check_xsrf_cookie(self) -> None:
+        return
+
+    async def post(self) -> None:
+        try:
+            data = tornado.escape.json_decode(self.request.body)
+        except json.decoder.JSONDecodeError:
+            raise tornado.web.HTTPError(400, "could not parse json body")
+
+        expiry = data.get("expiry")
+
+        if expiry not in utility.expiries:
+            log.info(
+                "APIv1Paste.post: a paste was submitted with an invalid expiry"
+            )
+            raise tornado.web.HTTPError(400, "invalid expiry")
+
+        auto_scale = data.get("long", None) is None
+
+        files = data.get("files", [])
+
+        if not files:
+            raise tornado.web.HTTPError(400, "no files provided")
+
+        with database.session() as session:
+            paste = database.Paste(
+                utility.expiries[expiry], "v1-api", auto_scale
+            )
+
+            for file in files:
+                lexer = file.get("lexer", "")
+                content = file.get("content")
+                filename = file.get("name")
+
+                if lexer not in utility.list_languages():
+                    raise tornado.web.HTTPError(400, "invalid lexer")
+
+                if not content:
+                    raise tornado.web.HTTPError(400, "invalid content (empty)")
+
+                paste.files.append(
+                    database.File(content, lexer, filename, auto_scale)
+                )
+
+            session.add(paste)
+            session.commit()
+
+            # Send the client to the paste
+            url_request = self.request.full_url()
+            url_paste = urljoin(url_request, f"/{paste.slug}")
+            url_removal = urljoin(url_request, f"/remove/{paste.removal}")
+
+            self.write({"link": url_paste, "removal": url_removal})
+
+
 class CurlCreate(Base):
     def check_xsrf_cookie(self) -> None:
         return
@@ -526,6 +589,7 @@ def make_application() -> tornado.web.Application:
     ]
 
     pages += [
+        (r"/api/v1/paste", APIv1Paste),
         (r"/json/new", APINew),
         (r"/json/remove", APIRemove),
         (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
