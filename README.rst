@@ -51,7 +51,22 @@ This will preselect the ``lexer`` and ``expiry`` arguments to be ``text`` and
 
 API
 ---
-There is also an API.
+``pinnwand`` provides a straight forward JSON API, here's an example using the
+common requests library::
+
+  >>> requests.post(
+  ...     "http://localhost:8000/api/v1/paste",
+  ...     json={
+  ...             "expiry": "1day",
+  ...             "files": [
+  ...                     {"name": "spam", "lexer": "python", "content": "eggs"},
+  ...             ],
+  ...     }
+  ... ).json()
+  {'link': 'http://localhost:8000/74', 'removal': 'http://localhost:8000/remove/KYXQLPZQEWV2L4YZM7NYGTR7TY'}
+
+More information about this API is available in the documentation_.
+
 
 More ways to use pinnwand
 -------------------------
