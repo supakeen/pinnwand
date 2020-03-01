@@ -79,7 +79,9 @@ pastes that are created this way.
 
 Reporting bugs
 ==============
-Bugs are reported best at ``pinnwand``'s `project page`_ on github.
+Bugs are reported best at ``pinnwand``'s `project page`_ on github. If you just
+want to hang out and chat about ``pinnwand`` then I'm available in the
+``#pinnwand`` channel on Freenode IRC.
 
 License
 =======
