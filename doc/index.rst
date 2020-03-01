@@ -44,8 +44,6 @@ If you are thinking about contributing a new feature then keep in mind that
 ``pinnwand`` is trying to stay as small and lean of a project as possible. Open
 a ticket first if you have a specific feature in mind.
 
-You can read more about contributing on our our :ref:`contributing` page.
-
 Table of Contents
 =================
 .. toctree::
@@ -53,7 +51,6 @@ Table of Contents
    installation
    configuration
    usage
-   contributing
    tricks
    autodoc
 
