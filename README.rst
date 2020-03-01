@@ -72,4 +72,4 @@ License
 for details.
 
 .. _project page: https://github.com/supakeen/pinnwand
-.. _documentationpage: https://pinnwand.readthedocs.io/en/latest/
+.. _documentation: https://pinnwand.readthedocs.io/en/latest/
