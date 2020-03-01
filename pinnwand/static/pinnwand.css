@@ -195,6 +195,7 @@ td.linenos {
 
 div.code {
     font-size: 1.2rem;
+    overflow: scroll;
 }
 
 td.code {
