@@ -439,6 +439,18 @@ class APIv1Base(Base):
         self.write({"state": "error", "code": status_code, "message": str(exc)})
 
 
+class APIv1Lexer(APIv1Base):
+    async def get(self) -> None:
+        self.write(utility.list_languages())
+
+
+class APIv1Expiry(Base):
+    async def get(self) -> None:
+        self.write(
+            {name: str(delta) for name, delta in utility.expiries.items()}
+        )
+
+
 class APIv1Paste(APIv1Base):
     def check_xsrf_cookie(self) -> None:
         return
@@ -598,6 +610,8 @@ def make_application() -> tornado.web.Application:
 
     pages += [
         (r"/api/v1/paste", APIv1Paste),
+        (r"/api/v1/lexer", APIv1Lexer),
+        (r"/api/v1/expiry", APIv1Expiry),
         (r"/json/new", APINew),
         (r"/json/remove", APIRemove),
         (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),

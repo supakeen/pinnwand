@@ -20,7 +20,7 @@ on port 8000 and use an in-memory sqlite_ database to store data.
 If you stop the process then the database will be gone again.
 
 For persistence you'll need to configure ``pinnwand`` to use another
-database.
+database. See the :ref:`configuration` page for the howto.
 
 Installation
 ============
@@ -30,21 +30,21 @@ You can install ``pinnwand`` from PyPI_ by running pip_ as follows:
 
   pip install pinnwand
 
-I suggest you use a virtual environment for installation. There is extended
-installation instructions available.
+I suggest you use a virtual environment for installation. There are extended
+:ref:`installation` instructions available which explain how to do so.
 
 Contributing
 ============
 ``pinnwand`` is a place that will accept your first contribution to an open
 source project. The preferred place to start out is to visit our GitHub_ page
-and look at the issue_ there. If you can solve any of them then you can send
+and look at the issues_ there. If you can solve any of them then you can send
 a pull request. I will make sure to review your code.
 
 If you are thinking about contributing a new feature then keep in mind that
 ``pinnwand`` is trying to stay as small and lean of a project as possible. Open
 a ticket first if you have a specific feature in mind.
 
-You can read more about contributing further on.
+You can read more about contributing on our our :ref:`contributing` page.
 
 Table of Contents
 =================
@@ -54,10 +54,11 @@ Table of Contents
    configuration
    usage
    contributing
+   tricks
    autodoc
 
 .. _GitHub: https://github.com/supakeen/pinnwand
-.. _issue: https://github.com/supakeen/pinnwand/issues
+.. _issues: https://github.com/supakeen/pinnwand/issues
 .. _PyPI: https://pypi.org
 .. _pip: https://pip.pypa.org
 .. _tornado: https://www.tornadoweb.org
