@@ -521,13 +521,11 @@ def make_application() -> tornado.web.Application:
     ]
 
     pages += [
-        (r"/about", RestructuredTextPage, {"file": f"{file}.rst"})
+        (f"/{file}", RestructuredTextPage, {"file": f"{file}.rst"})
         for file in configuration.page_list
     ]
 
     pages += [
-        (r"/removal", RestructuredTextPage, {"file": "removal.rst"}),
-        (r"/expiry", RestructuredTextPage, {"file": "expiry.rst"}),
         (r"/json/new", APINew),
         (r"/json/remove", APIRemove),
         (r"/json/show/([A-Z2-7]+)(?:#.+)?", APIShow),
