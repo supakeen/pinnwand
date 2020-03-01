@@ -174,7 +174,6 @@ div.file-show {
 div.file-show div.code {
     background-color: var(--color1);
     padding: .5rem;
-    overflow-x: auto;
 }
 
 div.file-show div.meta {
@@ -195,7 +194,7 @@ td.linenos {
 
 div.code {
     font-size: 1.2rem;
-    overflow: scroll;
+    overflow-x: auto;
 }
 
 td.code {
