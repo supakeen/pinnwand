@@ -13,6 +13,8 @@
 .. image:: https://img.shields.io/pypi/v/pinnwand
     :target: https://pypi.org/project/pinnwand
 
+.. image:: https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/supakeen/pinnwand
 
 pinnwand
 ########
