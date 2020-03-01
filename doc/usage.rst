@@ -181,17 +181,68 @@ responses so you should not blindly try to parse their results.
 
 /json/new
 ---------
+A ``POST`` to this endpoint requires the following formencoded fields to be
+present:
+
+lexer
+  The lexer to use for this paste, you can retrieve a valid list of lexers on
+  the ``/json/lexers`` endpoint.
+
+code
+  The code to paste.
+
+expiry
+  Expiry to use for this paste, you can retrieve a valid list of expiries on
+  the ``/json/expiries`` endpoint.
+
+filename (optional)
+  Filename to use for the pasted file.
+
+An example of posting to this endpoint to show its return values::
+
+  >>> requests.post("http://localhost:8000/json/new", data={"lexer": "python", "code": "spam", "expiry": "1day"}).json()
+  {'paste_id': 'OI', 'removal_id': 'OQTL5MSDDKHSTHCBE7WXPRHY3Q', 'paste_url': 'http://localhost:8000/OI', 'raw_url': 'http://localhost:8000/raw/OI'}
+  
+The returned valued are the raw ID of the paste and the raw removal ID in case
+you want to make your own URLs. There's also some full URLs provided to visit
+the paste directly, note that a removal_url is missing.
 
 /json/remove
 ------------
+This endpoint can be ``POST``-ed to with a removal ID you've received
+previously and stored. It takes one parameter:
+
+removal_id
+  A removal ID for a paste.
+
+This is how you'd use it::
+
+  >>> requests.post("http://localhost:8000/json/remove", data={"removal_id": "OQTL5MSDDKHSTHCBE7WXPRHY3Q"}).json()
+  [{'paste_id': 'OI', 'status': 'removed'}]
+
+The return value is a bit weird here as it gives you a list.
+
 
 /json/show/([A-Z2-7]+)(?:#.+)?
 ------------------------------
+Use this endpoint to retrieve a previously pasted paste with an ID you have::
+
+  >>> requests.get("http://localhost:8000/json/show/RQ").json()
+  {'paste_id': 'RQ', 'raw': 'spam', 'fmt': '<table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><span class="n">spam</span>\n</pre></div>\n</td></tr></table>', 'lexer': 'python', 'expiry': '2020-03-02T13:56:10.622397', 'filename': None}
 
 /json/lexers
 ------------
+List valid lexers for this ``pinnwand`` instance::
+
+  >>> requests.get("http://localhost:8000/json/lexers").json()
+  {"lexer": "Lexer Name", ...}
+
 
 /json/expiries
 --------------
+List valid expiries for this ``pinnwand`` instance::
+
+  >>> requests.get("http://localhost:8000/json/expiries").json()
+  {'1day': '1 day, 0:00:00', '1week': '7 days, 0:00:00'}
 
 .. _bpython: https://bpython-interpreter.org/
