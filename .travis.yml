@@ -8,3 +8,5 @@ install:
 - poetry install
 script:
 - poetry run pytest
+after_script:
+- bash <(curl -s https://codecov.io/bash)
