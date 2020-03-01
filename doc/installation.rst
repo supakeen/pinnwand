@@ -112,7 +112,7 @@ Here's an example nginx configuration file::
           add_header Feature-Policy "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'" always;
    
           location / {
-                  limit_req zone=mypastebinburst=100;
+                  limit_req zone=mypastebin burst=100;
                   proxy_pass http://127.0.0.1:8000;
                   proxy_set_header Host $host;
                   proxy_set_header X-Forwarded-Proto https;
