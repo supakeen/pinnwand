@@ -130,3 +130,5 @@ will use these to build its URLs.
 
 Your pastebin is now up and running!
 
+
+.. _repository: https://github.com/supakeen/pinnwand
