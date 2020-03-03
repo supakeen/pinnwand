@@ -37,6 +37,20 @@ Web
 ---
 Enter text, click "Paste", easy enough.
 
+steck
+-----
+steck_ is a command line client to pinnwand instances::
+
+  € pip install steck
+  ...
+  € steck paste pinnwand/error.py
+  You are about to paste the following 1 files. Do you want to continue?
+   - pinnwand/error.py
+  Continue? [y/N] y
+  View Paste https://localhost:8000/BX
+  Remove Paste https://localhost:8000/remove/FJPK33UH2RTNQZFPYNIXYU3YXY
+
+
 curl
 ----
 ``pinnwand`` has a direct endpoint for ``curl`` users::
@@ -92,3 +106,4 @@ for details.
 
 .. _project page: https://github.com/supakeen/pinnwand
 .. _documentation: https://pinnwand.readthedocs.io/en/latest/
+.. _steck: https://supakeen.com/project/steck
