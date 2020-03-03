@@ -41,15 +41,23 @@ steck
 -----
 steck_ is a command line client to pinnwand instances::
 
-  € pip install steck
+  € pip install --user steck
   ...
-  € steck paste pinnwand/error.py
-  You are about to paste the following 1 files. Do you want to continue?
-   - pinnwand/error.py
-  Continue? [y/N] y
-  View Paste https://localhost:8000/BX
-  Remove Paste https://localhost:8000/remove/FJPK33UH2RTNQZFPYNIXYU3YXY
+  € steck paste *
+  You are about to paste the following 7 files. Do you want to continue?
+   - LICENSE
+   - mypy.ini
+   - poetry.lock
+   - pyproject.toml
+   - README.rst
+   - requirements.txt
+   - steck.py
 
+  Continue? [y/N] y
+
+  Completed paste.
+  View link:    https://localhost:8000/W5
+  Removal link: https://localhost:8000/remove/TS2AFFIEHEWUBUV5HLKNAUZFEI
 
 curl
 ----
