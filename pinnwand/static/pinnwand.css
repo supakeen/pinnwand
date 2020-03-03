@@ -116,6 +116,7 @@ section.file-part div.file-meta input {
 section.file-part div.file-meta {
     background-color: var(--color1);
     padding: .5rem;
+    margin-bottom: .0625rem;
 }
 
 section.paste-submit {
