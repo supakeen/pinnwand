@@ -20,6 +20,7 @@
     }
 }
 
+
 html {
     color: var(--color2);
     font-family: sans-serif;
@@ -29,6 +30,18 @@ html {
 
 body {
     margin: 2rem;
+}
+
+@media only screen and (min-width: 1280px) {
+    body {
+        margin: 2rem 8rem;
+    }
+}
+
+@media only screen and (min-width: 1920px) {
+    body {
+        margin: 2rem 16rem;
+    }
 }
 
 a {
@@ -129,9 +142,17 @@ section.paste-submit button:hover {
 }
 
 
-article, header, div.paste-meta {
+article, div.paste-meta {
     background-color: var(--color1);
     padding: .5rem;
+}
+
+div.paste-meta {
+    opacity: .5;
+}
+
+div.paste-meta:hover {
+    opacity: 1;
 }
 
 footer {
@@ -145,7 +166,9 @@ footer:hover {
 }
 
 header {
-    margin-bottom: .5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: .5rem;
 }
 
 footer {
@@ -164,7 +187,7 @@ header nav ul li {
 }
 
 header nav ul li img.logo {
-    width: 2rem;
+    width: 3rem;
 }
 
 div.file-show {
@@ -190,11 +213,16 @@ div.file-show div.meta:hover {
 td.linenos {
     background: var(--color0);
     padding: 0 .25rem;
+    opacity: .5;
 }
 
 div.code {
     font-size: 1.2rem;
     overflow-x: auto;
+}
+
+div.code:hover td.linenos {
+    opacity: .75;
 }
 
 td.code {
