@@ -53,6 +53,7 @@ Table of Contents
    usage
    tricks
    autodoc
+   changelog
 
 .. _GitHub: https://github.com/supakeen/pinnwand
 .. _issues: https://github.com/supakeen/pinnwand/issues
