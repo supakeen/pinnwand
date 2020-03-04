@@ -28,6 +28,8 @@ Prerequisites
 * Tornado
 * sqlalchemy
 * click
+* docutils
+* toml
 * a database driver
 
 Usage
