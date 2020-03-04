@@ -31,7 +31,7 @@ with. Here's an example file::
   database_uri = "sqlite:///:memory:"
   
   # Maximum paste size you want to allow.
-  paste_size = 256 * 1024  # in bytes
+  paste_size = 262144  # 256kB in bytes
   
   # The page path is used to find the pages listed in the page_list
   page_path = "/tmp"
