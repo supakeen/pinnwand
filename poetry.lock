@@ -431,7 +431,7 @@ postgresql_psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql"]
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python Library for Tom's Obvious, Minimal Language"
 name = "toml"
 optional = false
@@ -518,7 +518,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "80dee8afccc679e423770cb637e5735883567de1661dff845e4a8fec1fac9e3e"
+content-hash = "b94e11e86a86b3310c05d2a36f27f4b44fc89f4eb14f24ba826a7eea7d36fd46"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
