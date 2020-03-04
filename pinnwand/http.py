@@ -383,7 +383,7 @@ class APINew(Base):
                     "paste_id": paste.slug,
                     "removal_id": paste.removal,
                     "paste_url": urljoin(req_url, f"/{location}"),
-                    "raw_url": urljoin(req_url, f"/raw/{location}"),
+                    "raw_url": urljoin(req_url, f"/raw/{paste.files[0].slug}"),
                 }
             )
 
