@@ -28,7 +28,10 @@ def _get_pygments_lexers(add_empty: bool = True) -> Dict[str, str]:
 
 
 def list_languages() -> Dict[str, str]:
-    return _get_pygments_lexers(False)
+    # Since dicts are sorted since Python 3.7 (and 3.6 per implementation
+    # detail) and the Pygments ordering is a bit inane we sort and turn back
+    # into a dict here.
+    return dict(sorted(_get_pygments_lexers(False).items(), key=lambda x: x[1]))
 
 
 expiries = {"1day": timedelta(days=1), "1week": timedelta(days=7)}
