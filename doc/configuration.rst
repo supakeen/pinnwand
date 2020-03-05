@@ -50,5 +50,9 @@ with. Here's an example file::
   # The footer in raw HTML, shown at the bottom of the page and handy to link to
   # your previously configured pages.
   footer = 'View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source code</a>, the <a href="/removal">removal</a> or <a href="/expiry">expiry</a> stories, or read the <a href="/about">about</a> page.'
+  
+  # HTML for the 'help text' that can be shown above the paste area, if left
+  # empty no help text will be shown.
+  paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p><p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>"
 
 This example file shows all currently possible configuration options.

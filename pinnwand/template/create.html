@@ -3,10 +3,11 @@
 {% block body %}
 <form action="/create" method="post" class="paste-create">
     <main class="page-create">
+        {% if handler.application.configuration.paste_help %}
         <section class="paste-help">
-            <p>Welcome to bpaste, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p>
-            <p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>
+            {% raw handler.application.configuration.paste_help %}
         </section>
+        {% end %}
         <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
         {% if message %}
         <div class="quick"><p>{{ message }}</p></div>
