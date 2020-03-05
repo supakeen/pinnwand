@@ -1,5 +1,5 @@
 .. image:: https://pinnwand.readthedocs.io/en/latest/_static/logo-readme.png
-    :width: 500px
+    :width: 950px
     :align: center
 
 pinnwand
