@@ -23,6 +23,9 @@ pinnwand
 .. image:: https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/supakeen/pinnwand
 
+About
+=====
+
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
