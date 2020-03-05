@@ -121,6 +121,11 @@ License
 ``pinnwand`` is distributed under the MIT license. See `LICENSE`
 for details.
 
+History
+=======
+This pastebin has quite a long history which isn't reflected entirely in its
+repository.
+
 .. _project page: https://github.com/supakeen/pinnwand
 .. _documentation: https://pinnwand.readthedocs.io/en/latest/
 .. _steck: https://supakeen.com/project/steck
