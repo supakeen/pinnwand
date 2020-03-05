@@ -16,11 +16,7 @@
             {% for index, file in enumerate(paste.files) %}
             <section class="file-part">
                 <div class="file-meta">
-                    <select name="lexer">
-                        {% for key, caption in lexers_available.items() %}
-                        <option value="{{ key }}"{% if file.lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
-                        {% end %}
-                    </select>
+                    {% module Template("part/lexer-select.html", selected=file.lexer, lexers=lexers_available) %}
                     <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
                     {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
                 </div>
@@ -31,11 +27,7 @@
         {% for index, lexer in enumerate(lexers) %}
         <section class="file-part">
             <div class="file-meta">
-                <select name="lexer">
-                    {% for key, caption in lexers_available.items() %}
-                    <option value="{{ key }}"{% if lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
-                    {% end %}
-                </select>
+                {% module Template("part/lexer-select.html", selected=None, lexers=lexers_available) %}
                 <input name="filename" placeholder="Filename (optional)">
                 {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
             </div>
@@ -55,11 +47,7 @@
 </form>
 <section class="file-template">
     <div class="file-meta">
-        <select name="lexer">
-            {% for key, caption in lexers_available.items() %}
-            <option value="{{ key }}"{% if lexers[0] == key %} selected="selected"{% end %}>{{ caption }}</option>
-            {% end %}
-        </select>
+        {% module Template("part/lexer-select.html", selected=lexers_available, lexers=lexers_available) %}
         <input name="filename" placeholder="Filename (optional)">
         <a href="#" class="remove">Remove this file</a>
     </div>
