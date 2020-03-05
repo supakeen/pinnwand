@@ -1,3 +1,10 @@
+.. image:: https://pinnwand.readthedocs.io/en/latest/_static/logo-readme.png
+    :width: 500px
+    :align: center
+
+pinnwand
+########
+
 .. image:: https://travis-ci.org/supakeen/pinnwand.svg?branch=master
     :target: https://travis-ci.org/supakeen/pinnwand
 
@@ -15,9 +22,6 @@
 
 .. image:: https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/supakeen/pinnwand
-
-pinnwand
-########
 
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
