@@ -1,4 +1,5 @@
 Expiry
 ######
 
-bpaste.net does not offer non-expiring pastes.
+Pastes on this pastebin expire by default. The expiries are set by the pastebin's
+administrator.
