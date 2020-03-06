@@ -68,7 +68,7 @@ def add(lexer: str) -> None:
         session.add(paste)
         session.commit()
 
-    log.info("add: paste created: %s", paste.slug)
+        log.info("add: paste created: %s", paste.slug)
 
 
 @main.command()
@@ -86,7 +86,7 @@ def delete(paste: str) -> None:
 
         if not paste_object:
             log.error("delete: unknown paste")
-            return
+            raise SystemExit(1)
 
         session.delete(paste_object)
         session.commit()

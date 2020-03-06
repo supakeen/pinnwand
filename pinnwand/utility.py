@@ -15,23 +15,14 @@ from pinnwand import database
 log = logging.getLogger(__name__)
 
 
-def _get_pygments_lexers(add_empty: bool = True) -> Dict[str, str]:
-    r = {}
-
-    if add_empty:
-        r[""] = ""
-
-    for lexer in get_all_lexers():
-        r[lexer[1][0]] = lexer[0]
-
-    return r
-
-
 def list_languages() -> Dict[str, str]:
+    # Start with converting the pygments lexers index into a dict.
+    lexers = {lexer[1][0]: lexer[0] for lexer in get_all_lexers()}
+
     # Since dicts are sorted since Python 3.7 (and 3.6 per implementation
     # detail) and the Pygments ordering is a bit inane we sort and turn back
     # into a dict here.
-    return dict(sorted(_get_pygments_lexers(False).items(), key=lambda x: x[1]))
+    return dict(sorted(lexers.items(), key=lambda x: x[1]))
 
 
 expiries = {"1day": timedelta(days=1), "1week": timedelta(days=7)}

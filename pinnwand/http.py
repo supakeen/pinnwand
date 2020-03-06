@@ -17,6 +17,13 @@ log = logging.getLogger(__name__)
 
 
 class Base(tornado.web.RequestHandler):
+    """Base page for all 'web' pages to inherit from. This page handles
+       default methods for GET and POST but more importantly overwrites
+       `write_error` to render error pages.
+
+       It automatically converts ValidationError to a 400 error page but leaves
+       other HTTPErrors alone."""
+
     def write_error(self, status_code: int, **kwargs: Any) -> None:
         if status_code == 404:
             self.render(
@@ -83,14 +90,14 @@ class CreatePaste(Base):
         )
 
     async def post(self) -> None:
-        # This is a historical endpoint to create pastes, pastes are marked as
-        # old-web and will get a warning on top of them to remove any access to
-        # this route.
+        """This is a historical endpoint to create pastes, pastes are marked as
+           old-web and will get a warning on top of them to remove any access to
+           this route.
 
-        # pinnwand has since evolved with an API which should be used and a
-        # multi-file paste.
+           pinnwand has since evolved with an API which should be used and a
+           multi-file paste.
 
-        # See the 'CreateAction' for the new-style creation of pastes.
+           See the 'CreateAction' for the new-style creation of pastes."""
 
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code")
@@ -136,14 +143,19 @@ class CreatePaste(Base):
 
 
 class CreateAction(Base):
+    """The create action is the 'new' way to create pastes and supports multi
+       file pastes."""
+
     def post(self) -> None:  # type: ignore
+        """POST handler for the 'web' side of things."""
+
         expiry = self.get_body_argument("expiry")
 
         if expiry not in utility.expiries:
             log.info(
                 "CreateAction.post: a paste was submitted with an invalid expiry"
             )
-            raise tornado.web.HTTPError(400)
+            raise ValidationError()
 
         auto_scale = self.get_body_argument("long", None) is None
 
@@ -153,23 +165,23 @@ class CreateAction(Base):
 
         if not all([lexers, raws, filenames]):
             # Prevent empty argument lists from making it through
-            raise tornado.web.HTTPError(400)
+            raise ValidationError()
 
         with database.session() as session:
             paste = database.Paste(utility.expiries[expiry], "web", auto_scale)
 
             if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
                 log.info("CreateAction.post: mismatching argument lists")
-                raise tornado.web.HTTPError(400)
+                raise ValidationError()
 
             for (lexer, raw, filename) in zip(lexers, raws, filenames):
                 if lexer not in utility.list_languages():
                     log.info("CreateAction.post: a file had an invalid lexer")
-                    raise tornado.web.HTTPError(400)
+                    raise ValidationError()
 
                 if not raw:
                     log.info("CreateAction.post: a file had an empty raw")
-                    raise tornado.web.HTTPError(400)
+                    raise ValidationError()
 
                 paste.files.append(
                     database.File(
@@ -221,7 +233,10 @@ class RepastePaste(Base):
 
 
 class ShowPaste(Base):
+    """Show a paste."""
+
     async def get(self, slug: str) -> None:  # type: ignore
+        """Fetch paste from database by slug and render the paste."""
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -244,7 +259,11 @@ class ShowPaste(Base):
 
 
 class RedirectShowPaste(Base):
+    """Redirect old-style "/show/" paths to new-style "/" paths."""
+
     async def get(self, slug: str) -> None:  # type: ignore
+        """Fetch paste from database and redirect to /slug if the paste
+           exists."""
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -259,7 +278,11 @@ class RedirectShowPaste(Base):
 
 
 class RawFile(Base):
+    """Show a file as plaintext."""
+
     async def get(self, file_id: str) -> None:  # type: ignore
+        """Get a file from the database and show it in the plain."""
+
         with database.session() as session:
             file = (
                 session.query(database.File)
@@ -275,7 +298,11 @@ class RawFile(Base):
 
 
 class DownloadFile(Base):
+    """Download a file."""
+
     async def get(self, file_id: str) -> None:  # type: ignore
+        """Get a file from the database and download it in the plain."""
+
         with database.session() as session:
             file = (
                 session.query(database.File)
@@ -318,6 +345,8 @@ class RemovePaste(Base):
 
 
 class APIShow(Base):
+    """Show a paste on the deprecated API."""
+
     async def get(self, slug: str) -> None:  # type: ignore
         with database.session() as session:
             paste = (
@@ -342,7 +371,10 @@ class APIShow(Base):
 
 
 class APINew(Base):
+    """Create a paste on the deprecated API."""
+
     def check_xsrf_cookie(self) -> None:
+        """No XSRF cookies on the API."""
         return
 
     async def get(self) -> None:
@@ -390,7 +422,10 @@ class APINew(Base):
 
 
 class APIRemove(Base):
+    """Remove a paste through the deprecated API."""
+
     def check_xsrf_cookie(self) -> None:
+        """No XSRF cookies on the API."""
         return
 
     async def post(self) -> None:
@@ -422,11 +457,15 @@ class APIRemove(Base):
 
 
 class APILexers(Base):
+    """List lexers through the deprecated API."""
+
     async def get(self) -> None:
         self.write(utility.list_languages())
 
 
 class APIExpiries(Base):
+    """List expiries through the deprecated API."""
+
     async def get(self) -> None:
         self.write(
             {name: str(delta) for name, delta in utility.expiries.items()}
