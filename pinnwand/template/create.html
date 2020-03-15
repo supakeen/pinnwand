@@ -28,7 +28,7 @@
         {% for index, lexer in enumerate(lexers) %}
         <section class="file-part">
             <div class="file-meta">
-                {% module Template("part/lexer-select.html", selected=None, lexers=lexers_available) %}
+                {% module Template("part/lexer-select.html", selected=lexer, lexers=lexers_available) %}
                 <input name="filename" placeholder="Filename (optional)">
                 {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
             </div>
