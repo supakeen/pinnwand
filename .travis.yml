@@ -4,6 +4,7 @@ python:
 - "3.7"
 - "3.8"
 install:
+- pip install -U pip setuptools
 - pip install poetry
 - poetry install
 script:
