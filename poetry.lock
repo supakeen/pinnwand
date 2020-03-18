@@ -350,6 +350,17 @@ python-versions = ">=3.5"
 version = "2.6.1"
 
 [[package]]
+category = "main"
+description = "Better HTML formatter for Pygments"
+name = "pygments-better-html"
+optional = false
+python-versions = "*"
+version = "0.1.0"
+
+[package.dependencies]
+Pygments = ">=2.0.0"
+
+[[package]]
 category = "dev"
 description = "Python parsing module"
 name = "pyparsing"
@@ -530,7 +541,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "b94e11e86a86b3310c05d2a36f27f4b44fc89f4eb14f24ba826a7eea7d36fd46"
+content-hash = "bab87c077b4e103db1377d39a513f8b8c01b43e5ea1090b0846a5e471aaf2171"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
@@ -701,6 +712,10 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.6.1-py3-none-any.whl", hash = "sha256:ff7a40b4860b727ab48fad6360eb351cc1b33cbf9b15a0f689ca5353e9463324"},
     {file = "Pygments-2.6.1.tar.gz", hash = "sha256:647344a061c249a3b74e230c739f434d7ea4d8b1d5f3721bc0f3558049b38f44"},
+]
+pygments-better-html = [
+    {file = "pygments_better_html-0.1.0-py3-none-any.whl", hash = "sha256:5706140aa42f58446c67d4d910afe4a0f3dee723b9ecee717252ac1e0e30a38a"},
+    {file = "pygments_better_html-0.1.0.tar.gz", hash = "sha256:16ea025060453add08cbbc9b9c3dc30434fb7957b6f21c674787239d60cd3a79"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.6-py2.py3-none-any.whl", hash = "sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"},

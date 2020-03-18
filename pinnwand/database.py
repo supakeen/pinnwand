@@ -5,7 +5,6 @@ import contextlib
 from typing import Optional
 
 import pygments.lexers
-import pygments.formatters
 
 from sqlalchemy import (
     Integer,
@@ -19,6 +18,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+
+from pygments_better_html import BetterHtmlFormatter
 
 from pinnwand import configuration, error, utility
 
@@ -135,8 +136,8 @@ class File(Base):  # type: ignore
         self.lexer = lexer
 
         lexer = pygments.lexers.get_lexer_by_name(lexer)
-        formatter = pygments.formatters.HtmlFormatter(  # pylint: disable=no-member
-            linenos=True, cssclass="source"
+        formatter = BetterHtmlFormatter(  # pylint: disable=no-member
+            linenos="table", cssclass="source"
         )
 
         formatted = pygments.highlight(self.raw, lexer, formatter)
