@@ -41,6 +41,15 @@ def make_application() -> tornado.web.Application:
         (r"/json/lexers", handler.api_deprecated.Lexer),
         (r"/json/expiries", handler.api_deprecated.Expiry),
         (r"/curl", handler.api_curl.Create),
+    ]
+
+    if configuration.logo_path:
+        pages += [
+            (r"/static/logo.png", handler.website.Logo, {"path": configuration.logo_path}),
+            (r"/static/favicon.png", handler.website.Logo, {"path": configuration.logo_path}),
+        ]
+
+    pages += [
         (
             r"/static/(.*)",
             tornado.web.StaticFileHandler,

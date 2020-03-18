@@ -5,3 +5,4 @@ paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to 
 page_path = None
 page_list = ["about", "removal", "expiry"]
 preferred_lexers = []  # type: ignore
+logo_path = None

@@ -356,3 +356,14 @@ class RestructuredTextPage(Base):
             html=html,
             pagetitle=(path.page / self.file).stem,
         )
+
+
+class Logo(Base):
+    def initialize(self, path: str) -> None:
+        self.path = path
+
+    def get(self) -> None:
+        self.set_header("Content-Type", "image/png")
+
+        with open(self.path, "rb") as f:
+            self.write(f.read())
