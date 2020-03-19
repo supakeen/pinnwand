@@ -32,13 +32,17 @@ with. Here's an example file::
   
   # Maximum paste size you want to allow.
   paste_size = 262144  # 256kB in bytes
-
+  
   # Preferred lexers. This list of lexers will appear on top of the dropdown
   # on the website allowing you to preselect commonly used lexers. Note that the
   # names here have to be the identifiers used by pygments, not the human names.
   # If empty no preferred lexers are shown.
   preferred_lexers = []
-   
+  
+  # Logo path, used to render your logo. If left out the default logo will be
+  # used. This file must be a png file.
+  # logo_path = "/path/to/a/file.png"
+  
   # The page path is used to find the pages listed in the page_list
   page_path = "/tmp"
   
@@ -54,5 +58,3 @@ with. Here's an example file::
   # HTML for the 'help text' that can be shown above the paste area, if left
   # empty no help text will be shown.
   paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p><p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>"
-
-This example file shows all currently possible configuration options.
