@@ -174,3 +174,4 @@ epub_title = project
 epub_exclude_files = ["search.html"]
 
 html_logo = "_static/logo-doc.png"
+html_favicon = "_static/logo-doc.png"
