@@ -2,7 +2,7 @@
 Description=pinnwand pastebin
 
 [Service]
-ExecStart=/home/youruser/virtual-environment/bin/pinnwand --config-path /home/youruser/pinnwand.toml http
+ExecStart=/home/youruser/virtual-environment/bin/pinnwand --configuration-path /home/youruser/pinnwand.toml http
 Restart=always
 
 [Install]

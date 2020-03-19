@@ -6,11 +6,11 @@ Configuration
 through a configuration file.
 
 The options available are dependent on the command you're running. You can
-always pass the ``--config-path`` argument to ``pinnwand``.
+always pass the ``--configuration-path`` argument to ``pinnwand``.
 
 Here is a quick example::
 
-  pinnwand --config-path /tmp/foo.toml http --port 9000
+  pinnwand --configuration-path /tmp/foo.toml http --port 9000
 
 The ``http`` subcommand takes a separate argument ``--port`` to override
 the default listening port (8000).

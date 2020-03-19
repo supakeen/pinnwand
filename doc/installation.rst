@@ -70,7 +70,7 @@ If you want to configure more then read the :ref:`configuration` section.
 Now that we have all of this setup it's time to test out ``pinnwand`` real
 quick::
 
-  /home/youruser/virtual-environment/bin/pinnwand --config-path /home/youruser/pinnwand.toml http
+  /home/youruser/virtual-environment/bin/pinnwand --configuration-path /home/youruser/pinnwand.toml http
 
 This should start ``pinnwand`` listening on localhost port 8000. Verify
 that this is the case and make sure to paste some data and see if it ends
