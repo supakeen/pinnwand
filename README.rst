@@ -37,6 +37,7 @@ Prerequisites
 * click
 * docutils
 * toml
+* pygments-better-html
 * a database driver
 
 Usage

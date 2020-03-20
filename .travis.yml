@@ -4,8 +4,8 @@ python:
 - "3.7"
 - "3.8"
 install:
-- pip install -U pip setuptools
-- pip install poetry
+- pip install -U pip setuptools wheel
+- pip install -U poetry
 - poetry install
 script:
 - poetry run pytest --cov=pinnwand
