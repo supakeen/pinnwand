@@ -124,6 +124,7 @@ section.paste-submit {
     padding: .5rem;
 }
 
+div.file-meta button,
 section.paste-submit button {
     box-sizing: border-box;
     border: .0625rem solid var(--color3);
@@ -136,6 +137,7 @@ section.paste-submit button {
     text-align: center;
 }
 
+div.file-meta button:hover,
 section.paste-submit button:hover {
     color: var(--color3);
     background: var(--color1);
@@ -279,7 +281,7 @@ article h1 {
     margin-bottom: .5rem;
 }
 
-a.remove, a.add {
-    margin: .3rem .5rem 0 0;
+button.remove, button.add {
+    margin: 0 .5rem 0 0;
     float: right;
 }

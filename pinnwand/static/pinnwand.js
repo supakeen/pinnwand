@@ -19,9 +19,9 @@ window.addEventListener("load", function(event) {
         });
     };
 
-    var but = document.createElement("a");
+    var but = document.createElement("button");
 
-    but.text = "Add another file.";
+    but.innerText = "Add another file.";
     but.className = "add";
     but.href = "#";
 
@@ -37,7 +37,7 @@ window.addEventListener("load", function(event) {
 function new_file_add() {
     var template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
-    template.querySelector("a.remove").addEventListener("click", function(event) {
+    template.querySelector("button.remove").addEventListener("click", function(event) {
         event.preventDefault();
 
         var section = event.target.parentNode.parentNode;

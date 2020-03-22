@@ -19,7 +19,7 @@
                 <div class="file-meta">
                     {% module Template("part/lexer-select.html", selected=file.lexer, lexers=lexers_available) %}
                     <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
-                    {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
+                    {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
                 </div>
                 <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
             </section>
@@ -30,7 +30,7 @@
             <div class="file-meta">
                 {% module Template("part/lexer-select.html", selected=lexer, lexers=lexers_available) %}
                 <input name="filename" placeholder="Filename (optional)">
-                {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
+                {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
             </div>
             <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
         </section>
@@ -50,7 +50,7 @@
     <div class="file-meta">
         {% module Template("part/lexer-select.html", selected=lexers_available, lexers=lexers_available) %}
         <input name="filename" placeholder="Filename (optional)">
-        <a href="#" class="remove">Remove this file</a>
+        <button class="remove">Remove this file</button>
     </div>
     <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
 </section>
