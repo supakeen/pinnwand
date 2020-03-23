@@ -5,7 +5,7 @@ Changelog
 a little more complex.
 
 
-v1.0.0 (unreleased)
+v1.0.0 (20200323)
 *******************
 
 After a period of darkness (changelog-wise) version 1.0.0 was released and this
