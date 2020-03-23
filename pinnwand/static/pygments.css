@@ -17,6 +17,7 @@
     padding-right: 5px;
     user-select: none;
     -webkit-user-select: none;
+    text-align: right;
 }
 
 .sourcetable td.linenos code:before {
