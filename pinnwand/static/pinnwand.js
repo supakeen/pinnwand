@@ -5,7 +5,7 @@ window.addEventListener("load", function(event) {
         return false;
     }
 
-    var removes = document.querySelectorAll("a.remove");
+    var removes = document.querySelectorAll("button.remove");
 
     for(var i = 0; i < removes.length; i++) {
         var remove = removes[i];
