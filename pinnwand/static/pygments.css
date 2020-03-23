@@ -1,3 +1,48 @@
+.source table,
+.source tr,
+.source td {
+    border-spacing: 0;
+    border-collapse: separate;
+    padding: 0;
+}
+
+.source pre {
+    white-space: pre-wrap;
+    line-height: normal;
+}
+
+.sourcetable td.linenos {
+    vertical-align: top;
+    padding-left: 5px;
+    padding-right: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.sourcetable td.linenos code:before {
+    content: attr(data-line-number);
+}
+
+.sourcetable td.code {
+    overflow-wrap: normal;
+    border-collapse: collapse;
+    padding-left: 5px;
+}
+
+.sourcetable td.code code {
+    overflow: unset;
+    border: none;
+    padding: 0;
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: unset;
+    background: none;
+}
+
+.source .lineno.nonumber {
+    list-style: none;
+}
+
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
 .err { border: 1px solid #FF0000 } /* Error */
