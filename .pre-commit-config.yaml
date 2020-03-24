@@ -23,4 +23,4 @@ repos:
       language: system
       entry: python -m mypy
       types: [python]
-      exclude: ^doc/conf.py
+      exclude: ^doc/conf.py|^test

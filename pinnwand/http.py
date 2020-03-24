@@ -45,8 +45,16 @@ def make_application() -> tornado.web.Application:
 
     if configuration.logo_path:
         pages += [
-            (r"/static/logo.png", handler.website.Logo, {"path": configuration.logo_path}),
-            (r"/static/favicon.png", handler.website.Logo, {"path": configuration.logo_path}),
+            (
+                r"/static/logo.png",
+                handler.website.Logo,
+                {"path": configuration.logo_path},
+            ),
+            (
+                r"/static/favicon.png",
+                handler.website.Logo,
+                {"path": configuration.logo_path},
+            ),
         ]
 
     pages += [
