@@ -11,6 +11,11 @@
     line-height: normal;
 }
 
+div.code.no-word-wrap .source pre,
+div.code.no-word-wrap .sourcetable td.code code {
+    white-space: pre;
+}
+
 .sourcetable td.linenos {
     vertical-align: top;
     padding-left: 5px;
