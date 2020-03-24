@@ -362,7 +362,7 @@ class Logo(Base):
     def initialize(self, path: str) -> None:
         self.path = path
 
-    def get(self) -> None:
+    async def get(self) -> None:
         self.set_header("Content-Type", "image/png")
 
         with open(self.path, "rb") as f:
