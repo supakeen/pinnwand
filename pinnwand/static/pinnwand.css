@@ -53,6 +53,23 @@ a:hover {
     color: var(--color1);
 }
 
+button.btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color3);
+    font-family: sans-serif;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline;
+}
+
+button.btn-link:hover {
+    background-color: var(--color3);
+    color: var(--color1);
+}
+
 span.gh {
     color: var(--color-pygments-gh);
 }

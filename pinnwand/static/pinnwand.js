@@ -2,6 +2,17 @@ window.addEventListener("load", function(event) {
     var bar = document.querySelector("section.paste-submit");
 
     if(!bar) {
+        // Not the new paste page.
+        var wordWrapButton = document.getElementById("toggle-word-wrap");
+        if(wordWrapButton != null) {
+            wordWrapButton.addEventListener("click", function(event) {
+                var codeBlocks = document.querySelectorAll("div.code");
+                for(var i = 0; i < codeBlocks.length; i++) {
+                    codeBlocks[i].classList.toggle("no-word-wrap");
+                }
+            });
+        }
+
         return false;
     }
 
