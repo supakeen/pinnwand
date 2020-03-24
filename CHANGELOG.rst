@@ -4,9 +4,17 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.1.0 (unreleased)
+*******************
+The 1.1.0 release is focused on new features to improve ease of use.
+
+* Provide a button to toggle line wrapping, contributed by Kwpolska_.
 
 v1.0.0 (20200323)
-*******************
+*****************
 
 After a period of darkness (changelog-wise) version 1.0.0 was released and this
 changelog created.
+
+
+.. _Kwpolska: https://github.com/Kwpolska
