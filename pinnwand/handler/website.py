@@ -1,6 +1,7 @@
 import logging
 
 from typing import Any
+from datetime import datetime
 
 import docutils.core
 import tornado.web
@@ -241,6 +242,16 @@ class Show(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
+            if paste.exp_date < datetime.now():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "Show.get: paste was expired, is your cronjob running?"
+                )
+
+                raise tornado.web.HTTPError(404)
+
             can_delete = self.get_cookie("removal") == str(paste.removal)
 
             self.render(
@@ -268,6 +279,16 @@ class RedirectShow(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
+            if paste.exp_date < datetime.now():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "RedirectShow.get: paste was expired, is your cronjob running?"
+                )
+
+                raise tornado.web.HTTPError(404)
+
             self.redirect(f"/{paste.slug}")
 
 
@@ -285,6 +306,16 @@ class FileRaw(Base):
             )
 
             if not file:
+                raise tornado.web.HTTPError(404)
+
+            if file.paste.exp_date < datetime.now():
+                session.delete(file.paste)
+                session.commit()
+
+                log.warn(
+                    "FileRaw.get: paste was expired, is your cronjob running?"
+                )
+
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
@@ -305,6 +336,16 @@ class FileDownload(Base):
             )
 
             if not file:
+                raise tornado.web.HTTPError(404)
+
+            if file.paste.exp_date < datetime.now():
+                session.delete(file.paste)
+                session.commit()
+
+                log.warn(
+                    "FileDownload.get: paste was expired, is your cronjob running?"
+                )
+
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
@@ -330,6 +371,16 @@ class Remove(Base):
 
             if not paste:
                 log.info("RemovePaste.get: someone visited with invalid id")
+                raise tornado.web.HTTPError(404)
+
+            if paste.exp_date < datetime.now():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "Remove.get: paste was expired, is your cronjob running?"
+                )
+
                 raise tornado.web.HTTPError(404)
 
             session.delete(paste)

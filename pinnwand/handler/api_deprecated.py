@@ -3,6 +3,7 @@ import logging
 
 from typing import Any
 from urllib.parse import urljoin
+from datetime import datetime
 
 import tornado.web
 import tornado.escape
@@ -68,6 +69,16 @@ class Show(Base):
             )
 
             if not paste:
+                raise tornado.web.HTTPError(404)
+
+            if paste.exp_date < datetime.now():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "Show.get: paste was expired, is your cronjob running?"
+                )
+
                 raise tornado.web.HTTPError(404)
 
             self.write(
