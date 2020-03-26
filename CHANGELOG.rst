@@ -8,7 +8,7 @@ v1.1.0 (unreleased)
 *******************
 The 1.1.0 release is focused on new features to improve ease of use.
 
-* Provide a button to toggle line wrapping, contributed by Kwpolska_.
+* Provide a button to toggle line wrapping, contributed by Kwpolska_. (#51)
 * Auto-delete pastes on view when they've expired. (#63)
 
 v1.0.1 (20200326)
