@@ -68,6 +68,24 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    def test_api_new_empty_code(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": ""}),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_space_code(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": "  "}),
+        )
+
+        assert response.code == 400
+
     def test_api_new_no_expiry(self) -> None:
         response = self.fetch(
             "/json/new",
@@ -157,6 +175,30 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
         data = json.loads(response.body)
 
         assert data["raw"] == "foo"
+
+    def test_api_show_spaced(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "python", "code": "    foo  ", "expiry": "1day"}
+            ),
+        )
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+
+        assert "paste_id" in data
+        assert "removal_id" in data
+
+        response = self.fetch(f"/json/show/{data['paste_id']}")
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+
+        assert data["raw"] == "    foo  "
 
     def test_api_show_web(self) -> None:
         response = self.fetch(

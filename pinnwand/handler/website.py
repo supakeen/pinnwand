@@ -95,7 +95,7 @@ class Create(Base):
            See the 'CreateAction' for the new-style creation of pastes."""
 
         lexer = self.get_body_argument("lexer")
-        raw = self.get_body_argument("code")
+        raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
 
         if lexer not in utility.list_languages():
@@ -103,7 +103,7 @@ class Create(Base):
             raise tornado.web.HTTPError(400)
 
         # Guard against empty strings
-        if not raw:
+        if not raw.strip():
             return self.redirect(f"/+{lexer}")
 
         if expiry not in utility.expiries:
@@ -155,11 +155,15 @@ class CreateAction(Base):
         auto_scale = self.get_body_argument("long", None) is None
 
         lexers = self.get_body_arguments("lexer")
-        raws = self.get_body_arguments("raw")
+        raws = self.get_body_arguments("raw", strip=False)
         filenames = self.get_body_arguments("filename")
 
         if not all([lexers, raws, filenames]):
             # Prevent empty argument lists from making it through
+            raise error.ValidationError()
+
+        if not all(raw.strip() for raw in raws):
+            # Prevent empty raws from making it through
             raise error.ValidationError()
 
         with database.session() as session:

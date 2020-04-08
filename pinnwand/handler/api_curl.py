@@ -19,7 +19,7 @@ class Create(tornado.web.RequestHandler):
 
     def post(self) -> None:
         lexer = self.get_body_argument("lexer", "text")
-        raw = self.get_body_argument("raw", None)
+        raw = self.get_body_argument("raw", "", strip=False)
         expiry = self.get_body_argument("expiry", "1day")
 
         self.set_header("Content-Type", "text/plain")
@@ -33,7 +33,7 @@ class Create(tornado.web.RequestHandler):
             return
 
         # Guard against empty strings
-        if not raw:
+        if not raw.strip():
             log.info("CurlCreate.post: a paste was submitted without raw")
             self.set_status(400)
             self.write("Invalid `raw` supplied.\n")
