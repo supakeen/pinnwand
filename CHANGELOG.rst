@@ -5,8 +5,8 @@ Changelog
 a little more complex.
 
 
-v1.0.2 (unreleased)
-===================
+v1.0.2 (20200408)
+=================
 
 Bugfix release to deal with spaces at the front of pastes being eaten leading
 to wonky things when people paste pre-indented code.
