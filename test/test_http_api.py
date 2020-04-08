@@ -158,6 +158,30 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert data["raw"] == "foo"
 
+    def test_api_show_spaced(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "python", "code": "    foo  ", "expiry": "1day"}
+            ),
+        )
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+
+        assert "paste_id" in data
+        assert "removal_id" in data
+
+        response = self.fetch(f"/json/show/{data['paste_id']}")
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+
+        assert data["raw"] == "    foo  "
+
     def test_api_show_web(self) -> None:
         response = self.fetch(
             "/json/new",
