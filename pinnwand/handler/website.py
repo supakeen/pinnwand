@@ -94,7 +94,7 @@ class Create(Base):
            See the 'CreateAction' for the new-style creation of pastes."""
 
         lexer = self.get_body_argument("lexer")
-        raw = self.get_body_argument("code")
+        raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
 
         if lexer not in utility.list_languages():
@@ -102,7 +102,7 @@ class Create(Base):
             raise tornado.web.HTTPError(400)
 
         # Guard against empty strings
-        if not raw:
+        if not raw.strip():
             return self.redirect(f"/+{lexer}")
 
         if expiry not in utility.expiries:
