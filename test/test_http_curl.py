@@ -34,6 +34,24 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    def test_curl_post_empty_raw(self) -> None:
+        response = self.fetch(
+            "/curl",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "c", "expiry": "1day", "raw": ""}),
+        )
+
+        assert response.code == 400
+
+    def test_curl_post_spaced_raw(self) -> None:
+        response = self.fetch(
+            "/curl",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "c", "expiry": "1day", "raw": "  "}),
+        )
+
+        assert response.code == 400
+
     def test_curl_post_no_expiry(self) -> None:
         response = self.fetch(
             "/curl",
@@ -101,6 +119,7 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
             .group(1)  # type: ignore
             .decode("ascii")
         )
+        print(paste)
         paste = urllib.parse.urlparse(paste).path
 
         response = self.fetch(paste, method="GET",)
@@ -166,3 +185,72 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(paste, method="GET",)
 
         assert response.code == 404
+
+    def test_curl_raw(self) -> None:
+        response = self.fetch(
+            "/curl",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "raw": "a", "expiry": "1day"}
+            ),
+            follow_redirects=False,
+        )
+
+        paste = (
+            re.search(b"Paste URL:   (.*)", response.body)
+            .group(1)  # type: ignore
+            .decode("ascii")
+        )
+        paste = urllib.parse.urlparse(paste).path
+
+        raw = (
+            re.search(b"Raw URL:     (.*)", response.body)
+            .group(1)  # type: ignore
+            .decode("ascii")
+        )
+        raw = urllib.parse.urlparse(raw).path
+
+        # Can we visit the paste?
+        response = self.fetch(paste, method="GET",)
+
+        assert response.code == 200
+
+        response = self.fetch(raw, method="GET",)
+        assert response.code == 200
+        assert response.body == b"a"
+
+    def test_curl_raw_spaced(self) -> None:
+        response = self.fetch(
+            "/curl",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "raw": " a ", "expiry": "1day"}
+            ),
+            follow_redirects=False,
+        )
+
+        print(response.body)
+
+        paste = (
+            re.search(b"Paste URL:   (.*)", response.body)
+            .group(1)  # type: ignore
+            .decode("ascii")
+        )
+        paste = urllib.parse.urlparse(paste).path
+
+        raw = (
+            re.search(b"Raw URL:     (.*)", response.body)
+            .group(1)  # type: ignore
+            .decode("ascii")
+        )
+        raw = urllib.parse.urlparse(raw).path
+
+        # Can we visit the paste?
+        response = self.fetch(paste, method="GET",)
+
+        assert response.code == 200
+
+        # Can we visit the raw?
+        response = self.fetch(raw, method="GET",)
+        assert response.code == 200
+        assert response.body == b" a "
