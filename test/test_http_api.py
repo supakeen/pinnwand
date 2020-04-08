@@ -68,6 +68,24 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    def test_api_new_empty_code(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": ""}),
+        )
+
+        assert response.code == 400
+
+    def test_api_new_space_code(self) -> None:
+        response = self.fetch(
+            "/json/new",
+            method="POST",
+            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": "  "}),
+        )
+
+        assert response.code == 400
+
     def test_api_new_no_expiry(self) -> None:
         response = self.fetch(
             "/json/new",

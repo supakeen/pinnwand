@@ -94,11 +94,11 @@ class Create(Base):
 
     async def post(self) -> None:
         lexer = self.get_body_argument("lexer")
-        raw = self.get_body_argument("code")
+        raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
         filename = self.get_body_argument("filename", None)
 
-        if not raw:
+        if not raw.strip():
             log.info("APINew.post: a paste was submitted without content")
             raise tornado.web.HTTPError(400)
 
