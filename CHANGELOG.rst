@@ -13,7 +13,7 @@ The 1.1.0 release is focused on new features to improve ease of use.
 * Include original filename if given for paste downloads (#26)
 
 v1.0.2 (20200408)
-=================
+*****************
 
 Bugfix release to deal with spaces at the front of pastes being eaten leading
 to wonky things when people paste pre-indented code.
