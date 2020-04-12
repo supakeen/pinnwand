@@ -353,8 +353,16 @@ class FileDownload(Base):
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
+
+            if file.filename:
+                filename = (
+                    f"{utility.filename_clean(file.filename)}-{file.slug}.txt"
+                )
+            else:
+                filename = f"{file.slug}.txt"
+
             self.set_header(
-                "Content-Disposition", f"attachment; filename={file.slug}"
+                "Content-Disposition", f"attachment; filename={filename}"
             )
             self.write(file.raw)
 

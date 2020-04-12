@@ -2,6 +2,7 @@ from typing import Dict
 
 import logging
 import math
+import re
 
 from os import urandom
 from base64 import b32encode
@@ -96,3 +97,15 @@ def size_postfix(count: int) -> str:
             break
 
     return f"{count/f:.0f}{p}"
+
+
+def filename_clean(filename: str) -> str:
+    """Try to clean a filename for safe consumption as much as we can. These
+       filenames are sent to other users."""
+
+    # If there's a dot we remove the suffix
+    if "." in filename:
+        filename = filename.rsplit(".", 1)[0]
+
+    # Replace anything that could be misinterpreted by an operating system
+    return re.sub(r"[^A-Za-z0-9-_]", "", filename)
