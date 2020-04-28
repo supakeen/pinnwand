@@ -12,6 +12,9 @@ The 1.1.0 release is focused on new features to improve ease of use.
 * Auto-delete pastes on view when they've expired. (#63)
 * Include original filename if given for paste downloads (#26)
 * Provide a button to toggle opposite colorschemes. (#69)
+* For pastes the first file will now have the same slug as the paste itself,
+  this allows for users to replace part of the URL to get to raw and download
+  links. (#64)
 
 v1.0.2 (20200408)
 *****************

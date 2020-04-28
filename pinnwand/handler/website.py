@@ -188,6 +188,11 @@ class CreateAction(Base):
                     )
                 )
 
+            # For the first file we will always use the same slug as the paste,
+            # since slugs are generated to be unique over both pastes and files
+            # this can be done safely.
+            paste.files[0].slug = paste.slug
+
             session.add(paste)
             session.commit()
 

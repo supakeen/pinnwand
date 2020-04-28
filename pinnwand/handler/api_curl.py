@@ -47,6 +47,7 @@ class Create(tornado.web.RequestHandler):
 
         paste = database.Paste(utility.expiries[expiry], "curl")
         file = database.File(raw, lexer)
+        file.slug = paste.slug
         paste.files.append(file)
 
         with database.session() as session:

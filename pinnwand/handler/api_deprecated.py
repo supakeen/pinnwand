@@ -125,6 +125,7 @@ class Create(Base):
 
         paste = database.Paste(utility.expiries[expiry], "deprecated-api")
         paste.files.append(database.File(raw, lexer, filename))
+        paste.files[0].slug = paste.slug
 
         with database.session() as session:
             session.add(paste)

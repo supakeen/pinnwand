@@ -82,6 +82,8 @@ class Paste(Base):
                         400, "invalid content (exceeds size limit)"
                     )
 
+            paste.files[0].slug = paste.slug
+
             session.add(paste)
             session.commit()
 
