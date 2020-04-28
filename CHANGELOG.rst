@@ -11,6 +11,7 @@ The 1.1.0 release is focused on new features to improve ease of use.
 * Provide a button to toggle line wrapping, contributed by Kwpolska_. (#51)
 * Auto-delete pastes on view when they've expired. (#63)
 * Include original filename if given for paste downloads (#26)
+* Provide a button to toggle opposite colorschemes. (#69)
 
 v1.0.2 (20200408)
 *****************

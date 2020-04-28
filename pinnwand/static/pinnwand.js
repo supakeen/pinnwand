@@ -1,4 +1,25 @@
 window.addEventListener("load", function(event) {
+    var storage = window.localStorage;
+    var colorSchemeButton = document.getElementById("toggle-color-scheme");
+
+    if(storage.getItem("other-color") == "true") {
+        var html = document.querySelector("html");
+        html.classList.toggle("other-color");
+    }
+
+    if(colorSchemeButton != null) {
+        colorSchemeButton.addEventListener("click", function(event) {
+            if(storage.getItem("other-color") == "true") {
+                storage.setItem("other-color", "false");
+            } else {
+                storage.setItem("other-color", "true");
+            }
+
+            var html = document.querySelector("html");
+            html.classList.toggle("other-color");
+        });
+    }
+
     var bar = document.querySelector("section.paste-submit");
 
     if(!bar) {

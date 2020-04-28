@@ -8,6 +8,16 @@
     --color-pygments-gp: #000080;
 }
 
+html.other-color {
+    --color0: #333;
+    --color1: #222;
+    --color2: #eee;
+    --color3: #fffd70;
+
+    --color-pygments-gh: #555580;
+    --color-pygments-gp: #555580;
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --color0: #333;
@@ -17,6 +27,17 @@
 
         --color-pygments-gh: #555580;
         --color-pygments-gp: #555580;
+    }
+
+
+    html.other-color {
+        --color0: #eee;
+        --color1: #fff;
+        --color2: #333;
+        --color3: #39c;
+
+        --color-pygments-gh: #000080;
+        --color-pygments-gp: #000080;
     }
 }
 
