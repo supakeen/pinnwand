@@ -112,7 +112,7 @@ class Create(Base):
 
         paste = database.Paste(utility.expiries[expiry], "deprecated-web")
         file = database.File(raw, lexer)
-        file.slug = paste.slug  # XXX fix, this can duplicate!!!
+        file.slug = paste.slug
         paste.files.append(file)
 
         with database.session() as session:
