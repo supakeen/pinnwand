@@ -17,6 +17,7 @@ The 1.1.0 release is focused on new features to improve ease of use.
   links. (#64)
 * Allow access to raw and download handlers through /:id/(raw|download) to
   let people more easily change the URL by hand when linked to a paste (#72)
+* Consolidate separate pygments and pinnwand stylesheets into one.
 
 v1.0.2 (20200408)
 *****************
