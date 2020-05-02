@@ -15,6 +15,8 @@ The 1.1.0 release is focused on new features to improve ease of use.
 * For pastes the first file will now have the same slug as the paste itself,
   this allows for users to replace part of the URL to get to raw and download
   links. (#64)
+* Allow access to raw and download handlers through /:id/(raw|download) to
+  let people more easily change the URL by hand when linked to a paste (#72)
 
 v1.0.2 (20200408)
 *****************

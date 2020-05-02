@@ -18,7 +18,9 @@ def make_application() -> tornado.web.Application:
         (r"/show/([A-Z2-7]+)(?:#.+)?", handler.website.RedirectShow),
         (r"/repaste/([A-Z2-7]+)(?:#.+)?", handler.website.Repaste),
         (r"/raw/([A-Z2-7]+)(?:#.+)?", handler.website.FileRaw),
+        (r"/([A-Z2-7]+)(?:#.+)?/raw", handler.website.FileRaw),
         (r"/download/([A-Z2-7]+)(?:#.+)?", handler.website.FileDownload),
+        (r"/([A-Z2-7]+)(?:#.+)?/download", handler.website.FileDownload),
         (r"/remove/([A-Z2-7]+)", handler.website.Remove),
     ]
 
