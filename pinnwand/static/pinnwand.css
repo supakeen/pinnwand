@@ -12,6 +12,7 @@
     --color-pygments5: #BA2121;
     --color-pygments6: #19177C;
     --color-pygments7: #0000FF;
+    --color-pygments8: #FF0000;
 }
 
 html.other-color {
@@ -28,6 +29,7 @@ html.other-color {
     --color-pygments5: #e6db74;
     --color-pygments6: #f8f8f2;
     --color-pygments7: #a6e22e;
+    --color-pygments8: #FF0000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -373,7 +375,7 @@ div.code.no-word-wrap .sourcetable td.code code {
 }
 
 .c { color: var(--pygments-color1); font-style: italic } /* Comment */
-.err { border: 1px solid #FF0000 } /* Error */
+.err { border: 1px solid var(--pygments-color8); } /* Error */
 .k { color: var(--pygments-color2); font-weight: bold } /* Keyword */
 .o { color: var(--pygments-color3) } /* Operator */
 .cm { color: var(--pygments-color1); font-style: italic } /* Comment.Multiline */
