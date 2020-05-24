@@ -66,6 +66,8 @@ class Paste(Base):  # type: ignore
     slug = Column(String(250), unique=True)
     removal = Column(String(250), unique=True)
 
+    password = Column(String(250))
+
     src = Column(String(250))
 
     exp_date = Column(DateTime)

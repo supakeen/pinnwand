@@ -4,8 +4,17 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.1.0 (20200524)
+v1.2.0 (unreleased)
 *******************
+For 1.2.0 the focus is on feature bloat and ease of administration.
+
+* Addition of passworded pastes. Take *special* note here that passworded
+  pastes do not hide paste contents from the ``pinnwand`` administrator. They
+  are meant to prevent people who guess at URLs to see your paste contents
+  without you sharing your chosen password with them (#..).
+
+v1.1.0 (20200524)
+*****************
 The 1.1.0 release is focused on new features to improve ease of use.
 
 * Provide a button to toggle line wrapping, contributed by Kwpolska_. (#51)
