@@ -435,3 +435,7 @@ class Logo(Base):
 
         with open(self.path, "rb") as f:
             self.write(f.read())
+
+
+class HelpMePage(Base):
+    pass
