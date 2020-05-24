@@ -72,6 +72,8 @@ class Paste(Base):  # type: ignore
 
     files = relationship("File", cascade="all,delete", backref="paste")
 
+    history_id = Column(ForeignKey("history.id"))
+
     def __init__(
         self,
         expiry: datetime.timedelta = datetime.timedelta(days=7),
@@ -153,3 +155,9 @@ class File(Base):  # type: ignore
     @property
     def pretty_size(self) -> str:
         return utility.size_postfix(len(self.raw))
+
+
+class History(Base):  # type: ignore
+    identifier = Column(String(250), unique=True)
+
+    pastes = relationship("Paste", cascade="all,delete", backref="history")
