@@ -2,16 +2,16 @@
 <html>
   <head>
     <title>{{ pagetitle }}</title>
-    <link rel="stylesheet" href="/static/pinnwand.css" type="text/css">
-    <link rel="shortcut icon" href="/static/favicon.png">
-    <script type="text/javascript" src="/static/pinnwand.js"></script>
+    <link rel="stylesheet" href="{{ static_url('pinnwand.css') }}" type="text/css">
+    <link rel="shortcut icon" href="{{ static_url('favicon.png') }}">
+    <script type="text/javascript" src="{{ static_url('pinnwand.js') }}"></script>
   </head>
   <body>
     <header>
       <nav>
         <ul>
           <li>
-            <a href="/"><img class="logo" src="/static/logo.png"></a>
+            <a href="/"><img class="logo" src="{{ static_url('logo.png') }}"></a>
           </li>
         </ul>
       </nav>

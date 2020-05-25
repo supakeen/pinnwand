@@ -74,6 +74,7 @@ def make_application() -> tornado.web.Application:
         default_handler_class=handler.website.Base,
         xsrf_cookies=True,
         cookie_secret=secrets.token_hex(),
+        static_path=path.static,
     )
 
     app.configuration = configuration  # type: ignore
