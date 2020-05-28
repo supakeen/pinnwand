@@ -18,10 +18,10 @@
             <section class="file-part">
                 <div class="file-meta">
                     {% module Template("part/lexer-select.html", selected=file.lexer, lexers=lexers_available) %}
-                    <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
-                    {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
+                    <input name="filename" placeholder="{{ _('Filename (optional)') }}" {% if file.filename %}value="{{ file.filename }}"{% end %}>
+                    {% if index > 0 %}<button class="remove">{{ _('Remove this file.') }}</button>{% end %}
                 </div>
-                <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
+                <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="{{ _('Enter code to paste.') }}">{{ file.raw }}</textarea>
             </section>
             {% end %}
         {% else %}
@@ -29,29 +29,29 @@
         <section class="file-part">
             <div class="file-meta">
                 {% module Template("part/lexer-select.html", selected=lexer, lexers=lexers_available) %}
-                <input name="filename" placeholder="Filename (optional)">
-                {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
+                <input name="filename" placeholder="{{ _('Filename (optional)') }}">
+                {% if index > 0 %}<button class="remove">{{ _('Remove this file') }}</button>{% end %}
             </div>
-            <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
+            <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="{{ _('Enter code to paste.') }}"></textarea>
         </section>
         {% end %}
         {% end %}
         <section class="paste-submit">
-            <button type="submit">Paste!</button>
+            <button type="submit">{{ _('Paste!') }}</button>
             <select name="expiry">
-                <option value="1day">Expiry (1 day)</option>
-                <option value="1week">1 week</option>
+                <option value="1day">{{ _('Expiry') }} ({{ _('1 day') }})</option>
+                <option value="1week">{{ _('1 week') }}</option>
             </select>
-            <input type="checkbox" name="long"> Use a longer URI
+            <input type="checkbox" name="long"> {{ _('Use a longer URI.') }}
         </section>
     </main>
 </form>
 <section class="file-template">
     <div class="file-meta">
         {% module Template("part/lexer-select.html", selected=lexers_available, lexers=lexers_available) %}
-        <input name="filename" placeholder="Filename (optional)">
-        <button class="remove">Remove this file</button>
+        <input name="filename" placeholder="{{ _('Filename (optional)') }}">
+        <button class="remove">{{ _('Remove this file.') }}</button>
     </div>
-    <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
+    <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="{{ _('Enter code to paste.') }}"></textarea>
 </section>
 {% end %}

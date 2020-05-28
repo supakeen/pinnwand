@@ -7,6 +7,7 @@ base = pathlib.Path(__file__).parent
 
 template = base / "template"
 static = base / "static"
+translation = base / "translation"
 
 if configuration.page_path:
     page = pathlib.Path(configuration.page_path)
