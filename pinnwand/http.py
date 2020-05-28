@@ -4,6 +4,7 @@ import secrets
 from typing import Any, List
 
 import tornado.web
+import tornado.locale
 
 from pinnwand import path, configuration, handler
 
@@ -75,7 +76,10 @@ def make_application() -> tornado.web.Application:
         xsrf_cookies=True,
         cookie_secret=secrets.token_hex(),
         static_path=path.static,
+        translation_path=path.translation,
     )
+
+    tornado.locale.load_translations(str(path.translation))
 
     app.configuration = configuration  # type: ignore
 
