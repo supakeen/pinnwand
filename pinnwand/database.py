@@ -135,6 +135,10 @@ class File(Base):  # type: ignore
 
         self.lexer = lexer
 
+        if lexer == 'autodetect':
+            lexer = utility.guess_language(raw, filename)
+            log.debug(f"Language guessed as {lexer}")
+
         lexer = pygments.lexers.get_lexer_by_name(lexer)
         formatter = BetterHtmlFormatter(  # pylint: disable=no-member
             linenos="table", cssclass="source"
