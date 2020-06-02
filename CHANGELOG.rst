@@ -10,12 +10,16 @@ New features all around.
 
 * Add language autodetection, contributed by mweinelt_. (#83)
 
-v1.1.1 (unreleased)
+v1.1.2 (unreleased)
 *******************
-The traditional bugfix release for the previous release.
+More bugfixes.
+
+v1.1.1 (20200602)
+*****************
+The traditional bugfix release for the previous release. No real bugs here
+but something to prevent CSS changes from not being loaded.
 
 * Prevent browsers from aggressively caching (#74)
-
 
 v1.1.0 (20200524)
 *****************
