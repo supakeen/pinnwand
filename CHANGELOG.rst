@@ -4,12 +4,12 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.1.1 (unreleased)
-*******************
-The traditional bugfix release for the previous release.
+v1.1.1 (20200602)
+*****************
+The traditional bugfix release for the previous release. No real bugs here
+but something to prevent CSS changes from not being loaded.
 
 * Prevent browsers from aggressively caching (#74)
-
 
 v1.1.0 (20200524)
 *****************
