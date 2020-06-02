@@ -4,6 +4,10 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.1.2 (unreleased)
+*******************
+More bugfixes.
+
 v1.1.1 (20200602)
 *****************
 The traditional bugfix release for the previous release. No real bugs here
