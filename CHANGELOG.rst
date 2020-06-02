@@ -4,6 +4,12 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.2.0 (unreleased)
+*******************
+New features all around.
+
+* Add language autodetection, contributed by mweinelt_. (#83)
+
 v1.1.1 (unreleased)
 *******************
 The traditional bugfix release for the previous release.
@@ -48,3 +54,4 @@ After a period of darkness (changelog-wise) version 1.0.0 was released and this
 changelog created.
 
 .. _Kwpolska: https://github.com/Kwpolska
+.. _mweinelt: https://github.com/mweinelt
