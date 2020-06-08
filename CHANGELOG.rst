@@ -10,9 +10,13 @@ New features all around.
 
 * Add language autodetection, contributed by mweinelt_. (#83)
 
-v1.1.2 (unreleased)
-*******************
-More bugfixes.
+v1.1.2 (20200608)
+*****************
+More bugfixes to some things that were either introduced in 1.1.1 or were
+lower priority.
+
+* Update our dependencies.
+* Use the /static URLs directly for logo/favicon (#85)
 
 v1.1.1 (20200602)
 *****************
