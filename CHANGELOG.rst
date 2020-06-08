@@ -6,7 +6,11 @@ a little more complex.
 
 v1.1.2 (unreleased)
 *******************
-More bugfixes.
+More bugfixes to some things that were either introduced in 1.1.1 or were
+lower priority.
+
+* Update our dependencies.
+
 
 v1.1.1 (20200602)
 *****************
