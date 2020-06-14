@@ -19,6 +19,8 @@ def make_application() -> tornado.web.Application:
         (r"/repaste/([A-Z2-7]+)(?:#.+)?", handler.website.Repaste),
         (r"/raw/([A-Z2-7]+)(?:#.+)?", handler.website.FileRaw),
         (r"/([A-Z2-7]+)(?:#.+)?/raw", handler.website.FileRaw),
+        (r"/hex/([A-Z2-7]+)(?:#.+)?", handler.website.FileHex),
+        (r"/([A-Z2-7]+)(?:#.+)?/hex", handler.website.FileHex),
         (r"/download/([A-Z2-7]+)(?:#.+)?", handler.website.FileDownload),
         (r"/([A-Z2-7]+)(?:#.+)?/download", handler.website.FileDownload),
         (r"/remove/([A-Z2-7]+)", handler.website.Remove),

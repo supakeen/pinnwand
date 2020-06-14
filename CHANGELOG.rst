@@ -9,6 +9,7 @@ v1.2.0 (unreleased)
 New features all around.
 
 * Add language autodetection, contributed by mweinelt_. (#83)
+* Provide a hex view for pastes. (#86)
 
 v1.1.2 (20200608)
 *****************
