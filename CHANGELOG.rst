@@ -8,8 +8,12 @@ v1.2.0 (unreleased)
 *******************
 New features all around.
 
-* Add language autodetection, contributed by mweinelt_. (#83)
+* Add lexer language autodetection, contributed by mweinelt_. (#83)
 * Provide a hex view for pastes. (#86)
+* pinnwand now has translations. It will automatically detect the requested
+  language from the clients Accept-Language header. If there are no
+  translations for the requested locale the fallback is en_US. Initially
+  only nl_NL is provided but contributions are welcome. (#80)
 
 v1.1.2 (20200608)
 *****************
