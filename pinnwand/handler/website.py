@@ -1,4 +1,5 @@
 import logging
+import binascii
 
 from typing import Any
 from datetime import datetime
@@ -330,6 +331,35 @@ class FileRaw(Base):
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(file.raw)
 
+
+class FileHex(Base):
+    """Show a file as hexadecimal."""
+
+    async def get(self, file_id: str) -> None:  # type: ignore
+        """Get a file from the database and show it in hex."""
+
+        with database.session() as session:
+            file = (
+                session.query(database.File)
+                .filter(database.File.slug == file_id)
+                .first()
+            )
+
+            if not file:
+                raise tornado.web.HTTPError(404)
+
+            if file.paste.exp_date < datetime.now():
+                session.delete(file.paste)
+                session.commit()
+
+                log.warn(
+                    "FileRaw.get: paste was expired, is your cronjob running?"
+                )
+
+                raise tornado.web.HTTPError(404)
+
+            self.set_header("Content-Type", "text/plain; charset=utf-8")
+            self.write(binascii.hexlify(file.raw.encode("latin1")))
 
 class FileDownload(Base):
     """Download a file."""

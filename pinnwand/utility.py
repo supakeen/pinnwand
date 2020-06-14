@@ -7,8 +7,9 @@ import re
 from os import urandom
 from base64 import b32encode
 from datetime import timedelta
+from typing import Optional
 
-from pygments.lexers import get_all_lexers
+from pygments.lexers import get_all_lexers, guess_lexer, guess_lexer_for_filename
 
 from pinnwand import database
 
@@ -20,10 +21,49 @@ def list_languages() -> Dict[str, str]:
     # Start with converting the pygments lexers index into a dict.
     lexers = {lexer[1][0]: lexer[0] for lexer in get_all_lexers()}
 
+    # Add autodetection option
+    lexers["autodetect"] = "Autodetect"
+
     # Since dicts are sorted since Python 3.7 (and 3.6 per implementation
     # detail) and the Pygments ordering is a bit inane we sort and turn back
     # into a dict here.
     return dict(sorted(lexers.items(), key=lambda x: x[1]))
+
+
+GUESS_LANG_OVERRIDES = {
+    'as3': 'yaml',
+    'python2': 'python'
+}
+
+GUESS_LANG_IGNORES = [
+    'mime',
+    'tsql'
+]
+
+
+def guess_language(raw: str, filename: Optional[str] = None) -> str:
+    options = {'stripnl': True}
+
+    # Guess a lexer based on filename and raw text first
+    if filename:
+        try:
+            return guess_lexer_for_filename(filename, raw, **options).aliases[0]
+        except (ValueError, IndexError):
+            pass
+
+    # If that didn't work guess lexer just by looking at the raw text
+    try:
+        language = guess_lexer(raw, **options).aliases[0]
+    except (ValueError, IndexError):
+        # If no lexer was detected, fallback to plain text.
+        return 'text'
+
+    # These are odd lexers that match far too often, so exclude them.
+    if language in GUESS_LANG_IGNORES:
+        return 'text'
+
+    # Finally check for language overrides and return
+    return GUESS_LANG_OVERRIDES.get(language, language)
 
 
 expiries = {"1day": timedelta(days=1), "1week": timedelta(days=7)}
