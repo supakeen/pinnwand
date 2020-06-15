@@ -4,19 +4,19 @@
 <main class="paste-show{% if len(paste.files) > 1 %} multiple{% end %}">
     <div class="paste-meta">
         {% if paste.exp_date %}
-            <p>This paste expires on <span>{{ paste.exp_date }}</span>.
+        <p>{{ _('This paste expires on') }} <span>{{ paste.exp_date }}</span>.
         {% else %}
-            <p>This paste <span>never</span> expires.
+        <p>{{ _('This paste never expires.') }}</p>
         {% end %}
         {% if can_delete %}
-            <a href="/remove/{{ paste.removal }}">Remove now</a>.
+        <a href="/remove/{{ paste.removal }}">{{ _('Remove now') }}</a>.
         {% end %}
 
-        <a href="/repaste/{{ paste.slug }}">Repaste</a> this paste.
+        <a href="/repaste/{{ paste.slug }}">{{ _('Repaste') }}</a> {{ _('this paste.') }}
 
-        <button class="btn-link" id="toggle-word-wrap">Toggle word wrap</button>.
+        <button class="btn-link" id="toggle-word-wrap">{{ _('Toggle word wrap') }}</button>.
 
-        Pasted through <em>{{ paste.src }}</em>.
+        {{ _('Pasted through') }} <em>{{ paste.src }}</em>.
         </p>
     </div>
     <div class="file-container">
@@ -27,9 +27,9 @@
                     {% raw file.fmt %}
                 </div>
                 <div class="meta">
-                    Filename: {{ file.filename }}.
-                    Size: {{ file.pretty_size }}.
-                    View <a href="/raw/{{ file.slug }}">raw</a>, <a href="/hex/{{ file.slug }}">hex</a>, or <a href="/download/{{ file.slug }}">download</a> this file.
+                    {{ _('Filename:') }} {{ file.filename }}.
+                    {{ _('Size:') }} {{ file.pretty_size }}.
+                    {{ _('View:') }} <a href="/raw/{{ file.slug }}">{{ _('raw') }}</a>, <a href="/hex/{{ file.slug }}">{{ _('hex') }}</a>, {{ _('or') }} <a href="/download/{{ file.slug }}">{{ _('download') }}</a> {{ _('this file.') }}
                 </div>
             </div>
             {% end %}

@@ -20,6 +20,9 @@ class Base(tornado.web.RequestHandler):
        It automatically converts ValidationError to a 400 error page but leaves
        other HTTPErrors alone."""
 
+    def prepare(self) -> None:
+        self.set_header("Vary", "Accept-Language")
+
     def write_error(self, status_code: int, **kwargs: Any) -> None:
         if status_code == 404:
             self.render(
@@ -267,7 +270,7 @@ class Show(Base):
             self.render(
                 "show.html",
                 paste=paste,
-                pagetitle=f"View paste {paste.slug}",
+                pagetitle=self.locale.translate("View paste") + f" {paste.slug}",
                 can_delete=can_delete,
                 linenos=False,
             )
