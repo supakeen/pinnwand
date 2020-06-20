@@ -89,7 +89,12 @@ class Paste(Base):
             paste.files[0].slug = paste.slug
 
             session.add(paste)
-            session.commit()
+
+            try:
+                session.commit()
+            except:
+                log.warning("%r", slug_context._slugs)
+                raise
 
             # Send the client to the paste
             url_request = self.request.full_url()

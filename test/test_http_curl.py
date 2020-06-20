@@ -38,7 +38,9 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/curl",
             method="POST",
-            body=urllib.parse.urlencode({"lexer": "c", "expiry": "1day", "raw": ""}),
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "expiry": "1day", "raw": ""}
+            ),
         )
 
         assert response.code == 400
@@ -47,7 +49,9 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/curl",
             method="POST",
-            body=urllib.parse.urlencode({"lexer": "c", "expiry": "1day", "raw": "  "}),
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "expiry": "1day", "raw": "  "}
+            ),
         )
 
         assert response.code == 400
