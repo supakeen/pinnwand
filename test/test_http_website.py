@@ -174,9 +174,9 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
                 {
                     "_xsrf": "dummy",
                     "expiry": "1day",
-                    "filename": ["a", "b"] * 32,
-                    "raw": ["a", "b"] * 32,
-                    "lexer": ["python", "text"] * 32,
+                    "filename": ["a", "b"] * 64,
+                    "raw": ["a", "b"] * 64,
+                    "lexer": ["python", "text"] * 64,
                 },
                 True,
             ),

@@ -437,7 +437,7 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
                             "content": "a" * (configuration.paste_size // 2),
                             "lexer": "c",
                         },
-                    ] * 64,
+                    ] * 128,
                 }
             ),
         )
