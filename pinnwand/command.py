@@ -60,8 +60,8 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(expiry=timedelta(days=1))
-    file = database.File(sys.stdin.read(), lexer=lexer)
+    paste = database.Paste(utility.slug_create(), expiry=timedelta(days=1))
+    file = database.File(paste.slug, sys.stdin.read(), lexer=lexer)
     paste.files.append(file)
 
     with database.session() as session:

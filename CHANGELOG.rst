@@ -10,6 +10,14 @@ New features all around.
 
 * Add language autodetection, contributed by mweinelt_. (#83)
 
+v1.1.3 (unreleased)
+*******************
+An older bug that occurs rarely resurfaced. This time a bunch of code has been
+written to eradicate the problem.
+
+* Race condition in slug_create (#34)
+* Fix the millibyte notation.
+
 v1.1.2 (20200608)
 *****************
 More bugfixes to some things that were either introduced in 1.1.1 or were
