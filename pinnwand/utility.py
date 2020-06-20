@@ -109,35 +109,20 @@ def slug_create(
         tries = 0
         slug = hash_create(necessary)
 
-        # If we are passed 'do not use' slugs we cannot use those slugs!
-        while slug in dont_use:
-            log.debug("slug_create: triggered a collision in dont_use")
-            if tries > 10:
-                raise RuntimeError(
-                    "We exceeded our retry quota on a collision in dont_use."
-                )
-
-            tries += 1
-            slug = hash_create(necessary)
-
-        # Reset our tries for the database checks
-        tries = 0
-
         # If a slug exists in either the Paste or File namespace create a new
-        # one.
+        # one, we also check if we've already generated this slug.
         while any(
             (
                 session.query(database.Paste)
                 .filter_by(slug=slug)
                 .one_or_none(),
                 session.query(database.File).filter_by(slug=slug).one_or_none(),
+                slug in dont_use,
             )
         ):
-            log.debug("slug_create: triggered a collision in database")
+            log.debug("slug_create: triggered a collision")
             if tries > 10:
-                raise RuntimeError(
-                    "We exceeded our retry quota on a collision in database."
-                )
+                raise RuntimeError("We exceeded our retry quota on a collision")
             tries += 1
             slug = hash_create(necessary)
 

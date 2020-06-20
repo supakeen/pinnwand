@@ -72,7 +72,9 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/json/new",
             method="POST",
-            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": ""}),
+            body=urllib.parse.urlencode(
+                {"lexer": "python", "expiry": "1day", "code": ""}
+            ),
         )
 
         assert response.code == 400
@@ -81,7 +83,9 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(
             "/json/new",
             method="POST",
-            body=urllib.parse.urlencode({"lexer": "python", "expiry": "1day", "code": "  "}),
+            body=urllib.parse.urlencode(
+                {"lexer": "python", "expiry": "1day", "code": "  "}
+            ),
         )
 
         assert response.code == 400
@@ -431,13 +435,8 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
             body=json.dumps(
                 {
                     "expiry": "1day",
-                    "files": [
-                        {
-                            "name": "spam",
-                            "content": "a",
-                            "lexer": "c",
-                        },
-                    ] * 128,
+                    "files": [{"name": "spam", "content": "a", "lexer": "c",},]
+                    * 128,
                 }
             ),
         )

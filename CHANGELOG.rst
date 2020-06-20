@@ -11,8 +11,8 @@ New features all around.
 * Add language autodetection, contributed by mweinelt_. (#83)
 * Provide a hex view for pastes. (#86)
 
-v1.1.3 (unreleased)
-*******************
+v1.1.3 (20200620)
+*****************
 An older bug that occurs rarely resurfaced. This time a bunch of code has been
 written to eradicate the problem.
 
