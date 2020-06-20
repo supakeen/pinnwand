@@ -434,7 +434,7 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
                     "files": [
                         {
                             "name": "spam",
-                            "content": "a" * (configuration.paste_size // 2),
+                            "content": "a",
                             "lexer": "c",
                         },
                     ] * 128,
