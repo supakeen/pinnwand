@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional, List
 
 import logging
 import math
@@ -33,10 +33,15 @@ def hash_create(length: int = 16) -> str:
     return b32encode(urandom(length)).decode("ascii").replace("=", "")
 
 
-def slug_create(auto_scale: bool = True) -> str:
+def slug_create(
+    auto_scale: bool = True, dont_use: Optional[List[str]] = None
+) -> str:
     """Creates a new slug, a slug has to be unique within both the Paste and
        File namespace. These slugs auto-lengthen unless they are specified not
        to."""
+
+    if dont_use is None:
+        dont_use = []
 
     with database.session() as session:
         if auto_scale:
@@ -44,6 +49,7 @@ def slug_create(auto_scale: bool = True) -> str:
             count = (
                 session.query(database.Paste).count()
                 + session.query(database.File).count()
+                + len(dont_use)
                 + 1
             )
 
@@ -63,6 +69,20 @@ def slug_create(auto_scale: bool = True) -> str:
         tries = 0
         slug = hash_create(necessary)
 
+        # If we are passed 'do not use' slugs we cannot use those slugs!
+        while slug in dont_use:
+            log.debug("slug_create: triggered a collision in dont_use")
+            if tries > 10:
+                raise RuntimeError(
+                    "We exceeded our retry quota on a collision in dont_use."
+                )
+
+            tries += 1
+            slug = hash_create(necessary)
+
+        # Reset our tries for the database checks
+        tries = 0
+
         # If a slug exists in either the Paste or File namespace create a new
         # one.
         while any(
@@ -73,14 +93,31 @@ def slug_create(auto_scale: bool = True) -> str:
                 session.query(database.File).filter_by(slug=slug).one_or_none(),
             )
         ):
-            log.debug("slug_create: triggered a collision")
+            log.debug("slug_create: triggered a collision in database")
             if tries > 10:
                 raise RuntimeError(
-                    "We exceeded our retry quota on a collision."
+                    "We exceeded our retry quota on a collision in database."
                 )
             tries += 1
             slug = hash_create(necessary)
 
+        return slug
+
+
+class SlugContext:
+    def __init__(self, auto_scale: bool = True) -> None:
+        self._slugs = []
+        self._auto_scale = auto_scale
+
+    def __enter__(self) -> "SlugContext":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        return None
+
+    def __next__(self) -> str:
+        slug = slug_create(self._auto_scale, self._slugs,)
+        self._slugs.append(slug)
         return slug
 
 

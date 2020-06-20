@@ -45,9 +45,10 @@ class Create(tornado.web.RequestHandler):
             self.write("Invalid `expiry` supplied.\n")
             return
 
-        paste = database.Paste(utility.expiries[expiry], "curl")
-        file = database.File(raw, lexer)
-        file.slug = paste.slug
+        paste = database.Paste(
+            utility.slug_create(), utility.expiries[expiry], "curl"
+        )
+        file = database.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
         with database.session() as session:
