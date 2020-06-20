@@ -165,6 +165,25 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 200
 
+    def test_website_create_post_many(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "filename": ["a", "b"] * 32,
+                    "raw": ["a", "b"] * 32,
+                    "lexer": ["python", "text"] * 32,
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 200
+
 
 class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self) -> None:

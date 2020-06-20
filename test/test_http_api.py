@@ -424,6 +424,26 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    def test_api_new_many_file(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {
+                            "name": "spam",
+                            "content": "a" * (configuration.paste_size // 2),
+                            "lexer": "c",
+                        },
+                    ] * 64,
+                }
+            ),
+        )
+
+        assert response.code == 200
+
     def test_api_new_wrong_method(self) -> None:
         response = self.fetch("/api/v1/paste")
         assert response.code == 405
