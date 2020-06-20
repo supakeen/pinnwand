@@ -105,6 +105,11 @@ def slug_create(
 
 
 class SlugContext:
+    """Since pinnwand often has to create multiple slugs in one go without
+       generating any duplicates we have a context that keeps track of slugs
+       already created in the current grouping. See issue #34 for more
+       information on the *why*."""
+
     def __init__(self, auto_scale: bool = True) -> None:
         self._slugs = []
         self._auto_scale = auto_scale
