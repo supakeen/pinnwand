@@ -10,6 +10,7 @@ An older bug that occurs rarely resurfaced. This time a bunch of code has been
 written to eradicate the problem.
 
 * Race condition in slug_create (#34)
+* Fix the millibyte notation.
 
 v1.1.2 (20200608)
 *****************

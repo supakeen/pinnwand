@@ -127,7 +127,7 @@ class SlugContext:
 
 
 units = [
-    (1 << 20, "mb"),
+    (1 << 20, "Mb"),
     (1 << 10, "kb"),
     (1, "b"),
 ]
