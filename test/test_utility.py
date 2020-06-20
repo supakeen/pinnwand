@@ -57,7 +57,6 @@ def test_guess_language() -> None:
       ~~Strikethrough~~
     """, "doc.md") == "md"
 
-
 @pytest.mark.parametrize(
     "path,result",
     [
