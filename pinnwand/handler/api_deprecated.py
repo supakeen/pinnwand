@@ -123,9 +123,10 @@ class Create(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(utility.expiries[expiry], "deprecated-api")
-        paste.files.append(database.File(raw, lexer, filename))
-        paste.files[0].slug = paste.slug
+        paste = database.Paste(
+            utility.slug_create(), utility.expiries[expiry], "deprecated-api"
+        )
+        paste.files.append(database.File(paste.slug, raw, lexer, filename))
 
         with database.session() as session:
             session.add(paste)

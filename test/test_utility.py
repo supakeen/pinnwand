@@ -1,3 +1,5 @@
+import pytest
+
 from pinnwand import utility
 
 
@@ -55,3 +57,15 @@ def test_guess_language() -> None:
       ~~Strikethrough~~
     """, "doc.md") == "md"
 
+
+@pytest.mark.parametrize(
+    "path,result",
+    [
+        ("/tmp", "tmp"),
+        ("tmp.txt", "tmp"),
+        ("tmp.txt.exe", "tmptxt"),
+        ("tmp/../../txt.exe.scr", "tmptxtexe"),
+    ],
+)
+def test_filename_clean(path: str, result: str) -> None:
+    assert utility.filename_clean(path) == result
