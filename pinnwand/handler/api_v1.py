@@ -57,9 +57,11 @@ class Paste(Base):
         if not files:
             raise tornado.web.HTTPError(400, "no files provided")
 
-        with database.session() as session:
+        with database.session() as session, utility.SlugContext(
+            auto_scale
+        ) as slug_context:
             paste = database.Paste(
-                utility.expiries[expiry], "v1-api", auto_scale
+                next(slug_context), utility.expiries[expiry], "v1-api",
             )
 
             for file in files:
@@ -75,7 +77,9 @@ class Paste(Base):
 
                 try:
                     paste.files.append(
-                        database.File(content, lexer, filename, auto_scale)
+                        database.File(
+                            next(slug_context), content, lexer, filename,
+                        )
                     )
                 except error.ValidationError:
                     raise tornado.web.HTTPError(
@@ -85,7 +89,12 @@ class Paste(Base):
             paste.files[0].slug = paste.slug
 
             session.add(paste)
-            session.commit()
+
+            try:
+                session.commit()
+            except:
+                log.warning("%r", slug_context._slugs)
+                raise
 
             # Send the client to the paste
             url_request = self.request.full_url()

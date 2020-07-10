@@ -15,6 +15,14 @@ New features all around.
   translations for the requested locale the fallback is en_US. Initially
   only nl_NL is provided but contributions are welcome. (#80)
 
+v1.1.3 (20200620)
+*****************
+An older bug that occurs rarely resurfaced. This time a bunch of code has been
+written to eradicate the problem.
+
+* Race condition in slug_create (#34)
+* Fix the millibyte notation.
+
 v1.1.2 (20200608)
 *****************
 More bugfixes to some things that were either introduced in 1.1.1 or were

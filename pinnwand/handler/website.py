@@ -114,9 +114,10 @@ class Create(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(utility.expiries[expiry], "deprecated-web")
-        file = database.File(raw, lexer)
-        file.slug = paste.slug
+        paste = database.Paste(
+            utility.slug_create(), utility.expiries[expiry], "deprecated-web"
+        )
+        file = database.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
         with database.session() as session:
@@ -170,8 +171,12 @@ class CreateAction(Base):
             # Prevent empty raws from making it through
             raise error.ValidationError()
 
-        with database.session() as session:
-            paste = database.Paste(utility.expiries[expiry], "web", auto_scale)
+        with database.session() as session, utility.SlugContext(
+            auto_scale
+        ) as slug_context:
+            paste = database.Paste(
+                next(slug_context), utility.expiries[expiry], "web"
+            )
 
             if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
                 log.info("CreateAction.post: mismatching argument lists")
@@ -188,7 +193,10 @@ class CreateAction(Base):
 
                 paste.files.append(
                     database.File(
-                        raw, lexer, filename if filename else None, auto_scale
+                        next(slug_context),
+                        raw,
+                        lexer,
+                        filename if filename else None,
                     )
                 )
 
