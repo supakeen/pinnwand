@@ -369,6 +369,7 @@ class FileHex(Base):
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(binascii.hexlify(file.raw.encode("latin1")))
 
+
 class FileDownload(Base):
     """Download a file."""
 

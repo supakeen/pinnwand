@@ -7,9 +7,12 @@ import re
 from os import urandom
 from base64 import b32encode
 from datetime import timedelta
-from typing import Optional
 
-from pygments.lexers import get_all_lexers, guess_lexer, guess_lexer_for_filename
+from pygments.lexers import (
+    get_all_lexers,
+    guess_lexer,
+    guess_lexer_for_filename,
+)
 
 from pinnwand import database
 
@@ -30,19 +33,13 @@ def list_languages() -> Dict[str, str]:
     return dict(sorted(lexers.items(), key=lambda x: x[1]))
 
 
-GUESS_LANG_OVERRIDES = {
-    'as3': 'yaml',
-    'python2': 'python'
-}
+GUESS_LANG_OVERRIDES = {"as3": "yaml", "python2": "python"}
 
-GUESS_LANG_IGNORES = [
-    'mime',
-    'tsql'
-]
+GUESS_LANG_IGNORES = ["mime", "tsql"]
 
 
 def guess_language(raw: str, filename: Optional[str] = None) -> str:
-    options = {'stripnl': True}
+    options = {"stripnl": True}
 
     # Guess a lexer based on filename and raw text first
     if filename:
@@ -56,11 +53,11 @@ def guess_language(raw: str, filename: Optional[str] = None) -> str:
         language = guess_lexer(raw, **options).aliases[0]
     except (ValueError, IndexError):
         # If no lexer was detected, fallback to plain text.
-        return 'text'
+        return "text"
 
     # These are odd lexers that match far too often, so exclude them.
     if language in GUESS_LANG_IGNORES:
-        return 'text'
+        return "text"
 
     # Finally check for language overrides and return
     return GUESS_LANG_OVERRIDES.get(language, language)

@@ -92,7 +92,7 @@ class Paste(Base):
 
             try:
                 session.commit()
-            except:
+            except Exception:  # XXX be more precise
                 log.warning("%r", slug_context._slugs)
                 raise
 

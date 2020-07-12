@@ -135,7 +135,7 @@ class File(Base):  # type: ignore
 
         self.lexer = lexer
 
-        if lexer == 'autodetect':
+        if lexer == "autodetect":
             lexer = utility.guess_language(raw, filename)
             log.debug(f"Language guessed as {lexer}")
 
