@@ -26,10 +26,11 @@
                 <div class="code">
                     {% raw file.fmt %}
                 </div>
+                <textarea class="copy-area">{{ file.raw }}</textarea>
                 <div class="meta">
                     Filename: {{ file.filename }}.
                     Size: {{ file.pretty_size }}.
-                    View <a href="/raw/{{ file.slug }}">raw</a>, <a href="/hex/{{ file.slug }}">hex</a>, or <a href="/download/{{ file.slug }}">download</a> this file.
+                    View <a href="/raw/{{ file.slug }}">raw</a>, <button class="btn-link copy-button">copy</button>, <a href="/hex/{{ file.slug }}">hex</a>, or <a href="/download/{{ file.slug }}">download</a> this file.
                 </div>
             </div>
             {% end %}
