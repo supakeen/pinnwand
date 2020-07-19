@@ -12,6 +12,8 @@ New features all around.
 * Provide a hex view for pastes. (#86)
 * Add copy to clipboard button. (#87)
 * Command line option (-v) to change log level. (#88)
+* Make the outline color of the focused textarea be in-line with the general
+  highlight color.
 
 v1.1.3 (20200620)
 *****************

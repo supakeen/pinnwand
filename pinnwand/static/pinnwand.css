@@ -113,6 +113,10 @@ section.file-part textarea {
     padding: .5rem;
 }
 
+section.file-part textarea:focus {
+    outline: 1px solid var(--color3);
+}
+
 section.file-part div.file-meta select,
 section.paste-submit select {
     background-color: var(--color1);
