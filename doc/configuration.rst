@@ -59,6 +59,9 @@ with. Here's an example file::
   # empty no help text will be shown.
   paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p><p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>"
 
+  # Email used for file reporting. If the value is not None then a href with a mailto link will be added to every paste page thus allowing the users to report pastes that may need removal.
+  report_email = "maintainer@example.com"
+
 Options
 *******
 
@@ -119,3 +122,11 @@ HTML to render above the new paste page to help users on how to use your
 instance.
 
 Default: ``bunch of html``
+
+report_email
+============
+
+An email address that allows users to report a paste that may need removal or
+edition.
+
+Default: ``None``
