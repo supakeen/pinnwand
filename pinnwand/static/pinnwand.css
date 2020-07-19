@@ -113,7 +113,11 @@ section.file-part textarea {
     padding: .5rem;
 }
 
-section.file-part textarea:focus {
+section.file-part select:focus,
+section.file-part input:focus,
+section.file-part textarea:focus,
+section.paste-submit input:focus,
+section.paste-submit select:focus {
     outline: 1px solid var(--color3);
 }
 
