@@ -15,13 +15,20 @@ import tornado.ioloop
 
 
 log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 @click.group()
+@click.option(
+    "--verbose",
+    "-v",
+    count=True,
+    help="Verbosity, passing more heightens the verbosity.",
+)
 @click.option("--configuration-path", default=None, help="Configuration file.")
-def main(configuration_path: Optional[str]) -> None:
+def main(verbose: int, configuration_path: Optional[str]) -> None:
     """Pinnwand pastebin software."""
+    logging.basicConfig(level=10 + (logging.FATAL - verbose * 10))
+
     from pinnwand import configuration
 
     if configuration_path:

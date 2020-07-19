@@ -11,6 +11,7 @@ New features all around.
 * Add language autodetection, contributed by mweinelt_. (#83)
 * Provide a hex view for pastes. (#86)
 * Add copy to clipboard button. (#87)
+* Command line option (-v) to change log level. (#88)
 
 v1.1.3 (20200620)
 *****************
