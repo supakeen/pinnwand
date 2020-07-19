@@ -6,3 +6,4 @@ page_path = None
 page_list = ["about", "removal", "expiry"]
 preferred_lexers = []  # type: ignore
 logo_path = None
+report_email = None

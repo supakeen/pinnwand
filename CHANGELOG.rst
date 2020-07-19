@@ -17,6 +17,9 @@ New features all around.
 * Sum up filesizes and check against paste size. This change now makes the
   paste size limit the total size, not a per-file limit! Adjust your
   configuration accordingly. (#89)
+* Add a report link for files that may be problematic, this link will be
+  added only if the ``report_email`` field is set to anything than None in the
+  configuration file. (#2)
 
 v1.1.3 (20200620)
 *****************
