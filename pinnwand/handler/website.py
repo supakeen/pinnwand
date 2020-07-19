@@ -7,7 +7,7 @@ from datetime import datetime
 import docutils.core
 import tornado.web
 
-from pinnwand import database, path, utility, error
+from pinnwand import database, path, utility, error, configuration
 
 log = logging.getLogger(__name__)
 
@@ -196,6 +196,10 @@ class CreateAction(Base):
                         filename if filename else None,
                     )
                 )
+
+            if sum(len(f.fmt) for f in paste.files) > configuration.paste_size:
+                log.info("CreateAction.post: sum of files was too large")
+                raise error.ValidationError()
 
             # For the first file we will always use the same slug as the paste,
             # since slugs are generated to be unique over both pastes and files

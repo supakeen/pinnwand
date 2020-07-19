@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import utility, database, error
+from pinnwand import utility, database, error, configuration
 
 
 log = logging.getLogger(__name__)
@@ -85,6 +85,11 @@ class Paste(Base):
                     raise tornado.web.HTTPError(
                         400, "invalid content (exceeds size limit)"
                     )
+
+            if sum(len(f.fmt) for f in paste.files) > configuration.paste_size:
+                raise tornado.web.HTTPError(
+                    400, "invalid content (exceeds size limit)"
+                )
 
             paste.files[0].slug = paste.slug
 

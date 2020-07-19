@@ -5,6 +5,7 @@ import tornado.testing
 
 from pinnwand import http
 from pinnwand import database
+from pinnwand import configuration
 
 
 class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
@@ -192,6 +193,44 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         )
 
         assert response.code == 200
+
+    def test_website_create_post_too_large(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "filename": ["a"],
+                    "raw": ["a" * (configuration.paste_size + 1)],
+                    "lexer": ["python"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_many_too_large(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "filename": ["a"] * 4,
+                    "raw": ["a" * (configuration.paste_size // 2)] * 4,
+                    "lexer": ["text"] * 4,
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
 
 
 class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):

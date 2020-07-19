@@ -14,6 +14,9 @@ New features all around.
 * Command line option (-v) to change log level. (#88)
 * Make the outline color of the focused form elements be in-line with the
   general highlight color.
+* Sum up filesizes and check against paste size. This change now makes the
+  paste size limit the total size, not a per-file limit! Adjust your
+  configuration accordingly. (#89)
 
 v1.1.3 (20200620)
 *****************

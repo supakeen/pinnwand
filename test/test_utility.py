@@ -9,37 +9,66 @@ def test_expiries() -> None:
 
 def test_guess_language() -> None:
     # python
-    assert utility.guess_language("""
+    assert (
+        utility.guess_language(
+            """
       import math
       math.ceil(0.5)
-    """) == "python"
-    assert utility.guess_language("""
+    """
+        )
+        == "python"
+    )
+    assert (
+        utility.guess_language(
+            """
       # this is a comment
-    """, "__init__.py") == "python"
+    """,
+            "__init__.py",
+        )
+        == "python"
+    )
 
     # bash
-    assert utility.guess_language("""
+    assert (
+        utility.guess_language(
+            """
       #!/usr/bin/bash
       set -euxo pipefail
-    """, "script.sh") == "bash"
+    """,
+            "script.sh",
+        )
+        == "bash"
+    )
 
     # php
-    assert utility.guess_language("""
+    assert utility.guess_language(
+        """
       <?php
       $var = 0.5;
       abs($var);
-    """).endswith("php")  # for some reason this is guessed as js+php
+    """
+    ).endswith(
+        "php"
+    )  # for some reason this is guessed as js+php
 
     # yaml
-    assert utility.guess_language("""
+    assert (
+        utility.guess_language(
+            """
       ---
       one:
         two: 3
         four: five
-    """, "some.yml") == "yaml"
+    """,
+            "some.yml",
+        )
+        == "yaml"
+    )
 
     # rst
-    assert utility.guess_language("""
+    assert (
+        utility.guess_language(
+            """
       Title
       =====
 
@@ -47,15 +76,26 @@ def test_guess_language() -> None:
       --------
       - One
       - Two
-    """, "doc.rst") == "rst"
+    """,
+            "doc.rst",
+        )
+        == "rst"
+    )
 
     # markdown
-    assert utility.guess_language("""
+    assert (
+        utility.guess_language(
+            """
       # Title
       ## Subtitle
       [Link](http://www.example.com)
       ~~Strikethrough~~
-    """, "doc.md") == "md"
+    """,
+            "doc.md",
+        )
+        == "md"
+    )
+
 
 @pytest.mark.parametrize(
     "path,result",
