@@ -370,7 +370,8 @@ class FileHex(Base):
                 raise tornado.web.HTTPError(404)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
-            self.write(binascii.hexlify(file.raw.encode("latin1")))
+            self.write(binascii.hexlify(file.raw.encode("utf8")))
+
 
 class FileDownload(Base):
     """Download a file."""

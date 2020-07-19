@@ -113,6 +113,14 @@ section.file-part textarea {
     padding: .5rem;
 }
 
+section.file-part select:focus,
+section.file-part input:focus,
+section.file-part textarea:focus,
+section.paste-submit input:focus,
+section.paste-submit select:focus {
+    outline: 1px solid var(--color3);
+}
+
 section.file-part div.file-meta select,
 section.paste-submit select {
     background-color: var(--color1);
@@ -352,6 +360,10 @@ div.code.no-word-wrap .sourcetable td.code code {
 
 .source .lineno.nonumber {
     list-style: none;
+}
+
+textarea.copy-area {
+    display: none;
 }
 
 .hll { background-color: #ffffcc }

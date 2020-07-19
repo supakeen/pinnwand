@@ -14,6 +14,10 @@ New features all around.
   language from the clients Accept-Language header. If there are no
   translations for the requested locale the fallback is en_US. Initially
   only nl_NL is provided but contributions are welcome. (#80)
+* Add copy to clipboard button. (#87)
+* Command line option (-v) to change log level. (#88)
+* Make the outline color of the focused form elements be in-line with the
+  general highlight color.
 
 v1.1.3 (20200620)
 *****************

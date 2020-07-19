@@ -34,6 +34,26 @@ window.addEventListener("load", function(event) {
             });
         }
 
+        var copyButtons = document.querySelectorAll("button.copy-button");
+
+        for(var i = 0; i < copyButtons.length; i++) {
+            var copyButton = copyButtons[i];
+
+            copyButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                var textarea = event.target.parentNode.parentNode.querySelector("textarea.copy-area");
+                var listener = (function(event) {
+                    event.preventDefault();
+                    event.clipboardData.setData("text/plain", textarea.value);
+                });
+
+                document.addEventListener('copy', listener);
+                document.execCommand('copy');
+                document.removeEventListener('copy', listener);
+            });
+        };
+
         return false;
     }
 
