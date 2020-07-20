@@ -540,12 +540,6 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             follow_redirects=False,
         )
 
-        # Ensure that a cookie was set for the correct path
-        assert (
-            f"Path={response.headers['Location']}"
-            in response.headers["Set-Cookie"]
-        )
-
         paste = response.headers["Location"].split("/")[-1]
 
         # Can we visit the paste?
@@ -555,4 +549,52 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         # Can we visit the repaste?
         response = self.fetch(f"/repaste/{paste}", method="GET",)
+        assert response.code == 200
+
+    def test_website_hex_nonexistent_paste(self) -> None:
+        response = self.fetch(f"/hex/ABCD", method="GET",)
+        assert response.code == 404
+
+    def test_website_hex(self) -> None:
+        response = self.fetch(
+            "/",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "code": "a", "expiry": "1day"}
+            ),
+            follow_redirects=False,
+        )
+
+        paste = response.headers["Location"].split("/")[-1]
+
+        # Can we visit the paste?
+        response = self.fetch(f"/show/{paste}", method="GET",)
+
+        assert response.code == 200
+
+        response = self.fetch(f"/hex/{paste}", method="GET",)
+        assert response.code == 200
+
+    def test_website_download_nonexistent_paste(self) -> None:
+        response = self.fetch(f"/download/ABCD", method="GET",)
+        assert response.code == 404
+
+    def test_website_download(self) -> None:
+        response = self.fetch(
+            "/",
+            method="POST",
+            body=urllib.parse.urlencode(
+                {"lexer": "c", "code": "a", "expiry": "1day"}
+            ),
+            follow_redirects=False,
+        )
+
+        paste = response.headers["Location"].split("/")[-1]
+
+        # Can we visit the paste?
+        response = self.fetch(f"/show/{paste}", method="GET",)
+
+        assert response.code == 200
+
+        response = self.fetch(f"/download/{paste}", method="GET",)
         assert response.code == 200
