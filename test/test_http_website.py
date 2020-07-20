@@ -522,7 +522,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
     def test_website_remove_nonexistent_paste(self) -> None:
         # Can we visit the removal?
-        response = self.fetch(f"/remove/nonexistent", method="GET",)
+        response = self.fetch(f"/remove/ABCD", method="GET",)
         assert response.code == 404
 
     def test_website_repaste_nonexistent_paste(self) -> None:
@@ -597,4 +597,12 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         assert response.code == 200
 
         response = self.fetch(f"/download/{paste}", method="GET",)
+        assert response.code == 200
+
+    def test_website_logo(self) -> None:
+        response = self.fetch(
+            "/static/logo.png",
+            method="GET",
+        )
+
         assert response.code == 200
