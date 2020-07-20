@@ -20,6 +20,8 @@ New features all around.
 * Add a report link for files that may be problematic, this link will be
   added only if the ``report_email`` field is set to anything than None in the
   configuration file. (#2)
+* Expanded testcase coverage for website from 69% to 84% by adding and fixing
+  broken testcases.
 
 v1.1.3 (20200620)
 *****************
