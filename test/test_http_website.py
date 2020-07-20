@@ -520,7 +520,12 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 404
 
-    def test_website_remove_nonexistent_page(self) -> None:
+    def test_website_remove_nonexistent_paste(self) -> None:
         # Can we visit the removal?
         response = self.fetch(f"/remove/nonexistent", method="GET",)
+        assert response.code == 404
+
+    def test_website_repaste_nonexistent_paste(self) -> None:
+        # Can we visit the repaste?
+        response = self.fetch(f"/repaste/ABCD", method="GET",)
         assert response.code == 404
