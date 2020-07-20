@@ -85,6 +85,25 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    def test_website_create_post_nonexistent_expiry(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "no-day",
+                    "filename": ["a"],
+                    "raw": ["a"],
+                    "lexer": ["python"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
     def test_website_create_post_only_raws(self) -> None:
         response = self.fetch(
             "/create",
