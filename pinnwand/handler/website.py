@@ -168,6 +168,14 @@ class CreateAction(Base):
             # Prevent empty raws from making it through
             raise error.ValidationError()
 
+        if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
+            log.info("CreateAction.post: mismatching argument lists")
+            raise error.ValidationError()
+
+        if any(lexer not in utility.list_languages() for lexer in lexers):
+            log.info("CreateAction.post: a file had an invalid lexer")
+            raise error.ValidationError()
+
         with database.session() as session, utility.SlugContext(
             auto_scale
         ) as slug_context:
@@ -175,19 +183,7 @@ class CreateAction(Base):
                 next(slug_context), utility.expiries[expiry], "web"
             )
 
-            if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
-                log.info("CreateAction.post: mismatching argument lists")
-                raise error.ValidationError()
-
             for (lexer, raw, filename) in zip(lexers, raws, filenames):
-                if lexer not in utility.list_languages():
-                    log.info("CreateAction.post: a file had an invalid lexer")
-                    raise error.ValidationError()
-
-                if not raw:
-                    log.info("CreateAction.post: a file had an empty raw")
-                    raise error.ValidationError()
-
                 paste.files.append(
                     database.File(
                         next(slug_context),
