@@ -109,7 +109,9 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             "/create",
             method="POST",
             headers={"Cookie": "_xsrf=dummy"},
-            body=urllib.parse.urlencode({"_xsrf": "dummy", "raw": ["a"]}, True),
+            body=urllib.parse.urlencode(
+                {"_xsrf": "dummy", "expiry": "1day", "raw": ["a"]}, True
+            ),
         )
 
         assert response.code == 400
@@ -120,7 +122,7 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {"_xsrf": "dummy", "lexer": ["python"]}, True,
+                {"_xsrf": "dummy", "expiry": "1day", "lexer": ["python"]}, True,
             ),
         )
 
@@ -132,7 +134,64 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {"_xsrf": "dummy", "filename": ["foo"]}, True,
+                {"_xsrf": "dummy", "expiry": "1day", "filename": ["foo"]}, True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_empty_raws(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "lexer": ["text"],
+                    "raw": [],
+                    "filename": ["foo"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_empty_lexers(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "lexer": [],
+                    "raw": ["a"],
+                    "filename": ["foo"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_empty_filenames(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "lexer": ["text"],
+                    "raw": ["a"],
+                    "filename": [],
+                },
+                True,
             ),
         )
 
@@ -145,6 +204,7 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
                 {
+                    "expiry": "1day",
                     "_xsrf": "dummy",
                     "filename": ["a"],
                     "raw": ["a", "b"],
@@ -244,6 +304,44 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
                     "filename": ["a"] * 4,
                     "raw": ["a" * (configuration.paste_size // 2)] * 4,
                     "lexer": ["text"] * 4,
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_raw_only_space(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "lexer": ["text", "text"],
+                    "raw": ["  ", "foo"],
+                    "filename": ["foo", "bar"],
+                },
+                True,
+            ),
+        )
+
+        assert response.code == 400
+
+    def test_website_create_post_nonexistent_lexer(self) -> None:
+        response = self.fetch(
+            "/create",
+            method="POST",
+            headers={"Cookie": "_xsrf=dummy"},
+            body=urllib.parse.urlencode(
+                {
+                    "_xsrf": "dummy",
+                    "expiry": "1day",
+                    "lexer": ["nonexistent"],
+                    "raw": ["foo"],
+                    "filename": ["foo"],
                 },
                 True,
             ),
