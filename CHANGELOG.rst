@@ -19,7 +19,7 @@ New features all around.
   configuration accordingly. (#89)
 * Add a report link for files that may be problematic, this link will be
   added only if the ``report_email`` field is set to anything than None in the
-  configuration file. (#2)
+  configuration file, contributed by Bruce1347_ (#2)
 * Expanded testcase coverage for website from 69% to 84% by adding and fixing
   broken testcases.
 
@@ -84,3 +84,4 @@ changelog created.
 
 .. _Kwpolska: https://github.com/Kwpolska
 .. _mweinelt: https://github.com/mweinelt
+.. _Bruce1347: https://github.com/Bruce1347
