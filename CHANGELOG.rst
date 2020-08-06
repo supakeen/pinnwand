@@ -4,9 +4,9 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.2.0 (unreleased)
-*******************
-New features all around.
+v1.2.0 (20200806)
+*****************
+New features all around, minor bugfixes, code quality improvements.
 
 * Add language autodetection, contributed by mweinelt_. (#83)
 * Provide a hex view for pastes. (#86)
