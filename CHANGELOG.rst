@@ -4,6 +4,14 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.2.1 (20200806)
+*****************
+Minor updates to the underlying build system for easier packaging by
+distros.
+
+* Set build system correctly (#93)
+* Update version number in pyproject.toml (#93)
+
 v1.2.0 (20200806)
 *****************
 New features all around, minor bugfixes, code quality improvements.
@@ -41,7 +49,7 @@ lower priority.
 
 v1.1.1 (20200602)
 *****************
-The traditional bugfix release for the previous release. No real bugs here
+*The traditional bugfix release for the previous release. No real bugs here
 but something to prevent CSS changes from not being loaded.
 
 * Prevent browsers from aggressively caching (#74)
