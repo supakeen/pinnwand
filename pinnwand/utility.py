@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Any
 
 import logging
 import math
@@ -44,13 +44,15 @@ def guess_language(raw: str, filename: Optional[str] = None) -> str:
     # Guess a lexer based on filename and raw text first
     if filename:
         try:
-            return guess_lexer_for_filename(filename, raw, **options).aliases[0]
+            return str(
+                guess_lexer_for_filename(filename, raw, **options).aliases[0]
+            )
         except (ValueError, IndexError):
             pass
 
     # If that didn't work guess lexer just by looking at the raw text
     try:
-        language = guess_lexer(raw, **options).aliases[0]
+        language = str(guess_lexer(raw, **options).aliases[0])
     except (ValueError, IndexError):
         # If no lexer was detected, fallback to plain text.
         return "text"
@@ -133,13 +135,13 @@ class SlugContext:
        information on the *why*."""
 
     def __init__(self, auto_scale: bool = True) -> None:
-        self._slugs = []
+        self._slugs: List[str] = []
         self._auto_scale = auto_scale
 
     def __enter__(self) -> "SlugContext":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         return None
 
     def __next__(self) -> str:

@@ -104,7 +104,7 @@ class Create(Base):
             raise tornado.web.HTTPError(400)
 
         # Guard against empty strings
-        if not raw.strip():
+        if not raw or not raw.strip():
             return self.redirect(f"/+{lexer}")
 
         if expiry not in utility.expiries:

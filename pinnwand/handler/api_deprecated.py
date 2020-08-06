@@ -109,7 +109,7 @@ class Create(Base):
         expiry = self.get_body_argument("expiry")
         filename = self.get_body_argument("filename", None)
 
-        if not raw.strip():
+        if not raw or not raw.strip():
             log.info("APINew.post: a paste was submitted without content")
             raise tornado.web.HTTPError(400)
 

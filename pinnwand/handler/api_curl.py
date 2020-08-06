@@ -33,7 +33,7 @@ class Create(tornado.web.RequestHandler):
             return
 
         # Guard against empty strings
-        if not raw.strip():
+        if not raw or not raw.strip():
             log.info("CurlCreate.post: a paste was submitted without raw")
             self.set_status(400)
             self.write("Invalid `raw` supplied.\n")
