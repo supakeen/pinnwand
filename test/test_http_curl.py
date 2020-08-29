@@ -126,7 +126,10 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         print(paste)
         paste = urllib.parse.urlparse(paste).path
 
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 200
 
@@ -148,7 +151,10 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
 
         print(repr(paste))
 
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 200
 
@@ -177,16 +183,25 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         removal = urllib.parse.urlparse(removal).path
 
         # Can we visit the paste?
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 200
 
         # Can we visit the removal?
-        response = self.fetch(removal, method="GET",)
+        response = self.fetch(
+            removal,
+            method="GET",
+        )
         assert response.code == 200
 
         # Can we still visit the paste?
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 404
 
@@ -215,11 +230,17 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         raw = urllib.parse.urlparse(raw).path
 
         # Can we visit the paste?
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 200
 
-        response = self.fetch(raw, method="GET",)
+        response = self.fetch(
+            raw,
+            method="GET",
+        )
         assert response.code == 200
         assert response.body == b"a"
 
@@ -250,11 +271,17 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
         raw = urllib.parse.urlparse(raw).path
 
         # Can we visit the paste?
-        response = self.fetch(paste, method="GET",)
+        response = self.fetch(
+            paste,
+            method="GET",
+        )
 
         assert response.code == 200
 
         # Can we visit the raw?
-        response = self.fetch(raw, method="GET",)
+        response = self.fetch(
+            raw,
+            method="GET",
+        )
         assert response.code == 200
         assert response.body == b" a "

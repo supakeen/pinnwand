@@ -104,7 +104,7 @@ def delete(paste: str) -> None:
 @main.command()
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
-       database."""
+    database."""
     from pinnwand import database
 
     with database.session() as session:

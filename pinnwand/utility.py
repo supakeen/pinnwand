@@ -76,8 +76,8 @@ def slug_create(
     auto_scale: bool = True, dont_use: Optional[List[str]] = None
 ) -> str:
     """Creates a new slug, a slug has to be unique within both the Paste and
-       File namespace. These slugs auto-lengthen unless they are specified not
-       to."""
+    File namespace. These slugs auto-lengthen unless they are specified not
+    to."""
 
     if dont_use is None:
         dont_use = []
@@ -130,9 +130,9 @@ def slug_create(
 
 class SlugContext:
     """Since pinnwand often has to create multiple slugs in one go without
-       generating any duplicates we have a context that keeps track of slugs
-       already created in the current grouping. See issue #34 for more
-       information on the *why*."""
+    generating any duplicates we have a context that keeps track of slugs
+    already created in the current grouping. See issue #34 for more
+    information on the *why*."""
 
     def __init__(self, auto_scale: bool = True) -> None:
         self._slugs: List[str] = []
@@ -145,7 +145,10 @@ class SlugContext:
         return None
 
     def __next__(self) -> str:
-        slug = slug_create(self._auto_scale, self._slugs,)
+        slug = slug_create(
+            self._auto_scale,
+            self._slugs,
+        )
         self._slugs.append(slug)
         return slug
 
@@ -167,7 +170,7 @@ def size_postfix(count: int) -> str:
 
 def filename_clean(filename: str) -> str:
     """Try to clean a filename for safe consumption as much as we can. These
-       filenames are sent to other users."""
+    filenames are sent to other users."""
 
     # If there's a dot we remove the suffix
     if "." in filename:

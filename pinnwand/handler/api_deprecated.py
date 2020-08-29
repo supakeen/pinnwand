@@ -17,11 +17,11 @@ log = logging.getLogger(__name__)
 
 class Base(tornado.web.RequestHandler):
     """Base page for all 'web' pages to inherit from. This page handles
-       default methods for GET and POST but more importantly overwrites
-       `write_error` to render error pages.
+    default methods for GET and POST but more importantly overwrites
+    `write_error` to render error pages.
 
-       It automatically converts ValidationError to a 400 error page but leaves
-       other HTTPErrors alone."""
+    It automatically converts ValidationError to a 400 error page but leaves
+    other HTTPErrors alone."""
 
     def write_error(self, status_code: int, **kwargs: Any) -> None:
         if status_code == 404:

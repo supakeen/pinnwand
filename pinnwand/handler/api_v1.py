@@ -61,7 +61,9 @@ class Paste(Base):
             auto_scale
         ) as slug_context:
             paste = database.Paste(
-                next(slug_context), utility.expiries[expiry], "v1-api",
+                next(slug_context),
+                utility.expiries[expiry],
+                "v1-api",
             )
 
             for file in files:
@@ -78,7 +80,10 @@ class Paste(Base):
                 try:
                     paste.files.append(
                         database.File(
-                            next(slug_context), content, lexer, filename,
+                            next(slug_context),
+                            content,
+                            lexer,
+                            filename,
                         )
                     )
                 except error.ValidationError:

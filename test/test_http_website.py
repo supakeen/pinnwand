@@ -17,61 +17,101 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         return http.make_application()
 
     def test_website_index(self) -> None:
-        response = self.fetch("/", method="GET",)
+        response = self.fetch(
+            "/",
+            method="GET",
+        )
 
         assert response.code == 200
 
     def test_website_index_with_lexer(self) -> None:
-        response = self.fetch("/+c", method="GET",)
+        response = self.fetch(
+            "/+c",
+            method="GET",
+        )
 
         assert response.code == 200
 
     def test_website_index_with_nonexistent_lexer(self) -> None:
-        response = self.fetch("/+no-u", method="GET",)
+        response = self.fetch(
+            "/+no-u",
+            method="GET",
+        )
 
         assert response.code == 404
 
     def test_website_removal(self) -> None:
-        response = self.fetch("/removal", method="GET",)
+        response = self.fetch(
+            "/removal",
+            method="GET",
+        )
 
         assert response.code == 200
 
     def test_website_about(self) -> None:
-        response = self.fetch("/about", method="GET",)
+        response = self.fetch(
+            "/about",
+            method="GET",
+        )
 
         assert response.code == 200
 
     def test_website_expiry(self) -> None:
-        response = self.fetch("/expiry", method="GET",)
+        response = self.fetch(
+            "/expiry",
+            method="GET",
+        )
 
         assert response.code == 200
 
     def test_website_nonexistent_page(self) -> None:
-        response = self.fetch("/nonexistent", method="GET",)
+        response = self.fetch(
+            "/nonexistent",
+            method="GET",
+        )
 
         assert response.code == 404
 
     def test_website_show_nonexistent_paste(self) -> None:
-        response = self.fetch("/show/doesntexist", method="GET",)
+        response = self.fetch(
+            "/show/doesntexist",
+            method="GET",
+        )
 
         assert response.code == 404
 
     def test_website_raw_nonexistent_paste(self) -> None:
-        response = self.fetch("/raw/doesntexist", method="GET",)
+        response = self.fetch(
+            "/raw/doesntexist",
+            method="GET",
+        )
         assert response.code == 404
 
-        response = self.fetch("/doesntexist/raw", method="GET",)
+        response = self.fetch(
+            "/doesntexist/raw",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_hex_nonexistent_paste(self) -> None:
-        response = self.fetch("/hex/doesntexist", method="GET",)
+        response = self.fetch(
+            "/hex/doesntexist",
+            method="GET",
+        )
         assert response.code == 404
 
-        response = self.fetch("/doesntexist/hex", method="GET",)
+        response = self.fetch(
+            "/doesntexist/hex",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_create_post_nothing(self) -> None:
-        response = self.fetch("/create", method="POST", body="",)
+        response = self.fetch(
+            "/create",
+            method="POST",
+            body="",
+        )
 
         assert response.code == 403
 
@@ -122,7 +162,8 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {"_xsrf": "dummy", "expiry": "1day", "lexer": ["python"]}, True,
+                {"_xsrf": "dummy", "expiry": "1day", "lexer": ["python"]},
+                True,
             ),
         )
 
@@ -134,7 +175,8 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             method="POST",
             headers={"Cookie": "_xsrf=dummy"},
             body=urllib.parse.urlencode(
-                {"_xsrf": "dummy", "expiry": "1day", "filename": ["foo"]}, True,
+                {"_xsrf": "dummy", "expiry": "1day", "filename": ["foo"]},
+                True,
             ),
         )
 
@@ -440,7 +482,10 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         paste = response.effective_url.split("/")[-1]
 
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 200
 
@@ -455,10 +500,16 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         paste = response.effective_url.split("/")[-1]
 
-        response = self.fetch(f"/raw/{paste}", method="GET",)
+        response = self.fetch(
+            f"/raw/{paste}",
+            method="GET",
+        )
         assert response.code == 200
 
-        response = self.fetch(f"/{paste}/raw", method="GET",)
+        response = self.fetch(
+            f"/{paste}/raw",
+            method="GET",
+        )
         assert response.code == 200
 
     def test_website_hex(self) -> None:
@@ -472,10 +523,16 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
         paste = response.effective_url.split("/")[-1]
 
-        response = self.fetch(f"/hex/{paste}", method="GET",)
+        response = self.fetch(
+            f"/hex/{paste}",
+            method="GET",
+        )
         assert response.code == 200
 
-        response = self.fetch(f"/{paste}/hex", method="GET",)
+        response = self.fetch(
+            f"/{paste}/hex",
+            method="GET",
+        )
         assert response.code == 200
 
     def test_website_remove(self) -> None:
@@ -502,32 +559,50 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         paste = response.headers["Location"].split("/")[-1]
 
         # Can we visit the paste?
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 200
 
         # Can we visit the removal?
-        response = self.fetch(f"/remove/{removal}", method="GET",)
+        response = self.fetch(
+            f"/remove/{removal}",
+            method="GET",
+        )
         assert response.code == 200
 
         # Can we still visit the paste?
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 404
 
         # How about raw?
-        response = self.fetch(f"/raw/{paste}", method="GET",)
+        response = self.fetch(
+            f"/raw/{paste}",
+            method="GET",
+        )
 
         assert response.code == 404
 
     def test_website_remove_nonexistent_paste(self) -> None:
         # Can we visit the removal?
-        response = self.fetch(f"/remove/ABCD", method="GET",)
+        response = self.fetch(
+            f"/remove/ABCD",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_repaste_nonexistent_paste(self) -> None:
         # Can we visit the repaste?
-        response = self.fetch(f"/repaste/ABCD", method="GET",)
+        response = self.fetch(
+            f"/repaste/ABCD",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_repaste(self) -> None:
@@ -543,16 +618,25 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         paste = response.headers["Location"].split("/")[-1]
 
         # Can we visit the paste?
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 200
 
         # Can we visit the repaste?
-        response = self.fetch(f"/repaste/{paste}", method="GET",)
+        response = self.fetch(
+            f"/repaste/{paste}",
+            method="GET",
+        )
         assert response.code == 200
 
     def test_website_hex_nonexistent_paste(self) -> None:
-        response = self.fetch(f"/hex/ABCD", method="GET",)
+        response = self.fetch(
+            f"/hex/ABCD",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_hex(self) -> None:
@@ -568,15 +652,24 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         paste = response.headers["Location"].split("/")[-1]
 
         # Can we visit the paste?
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 200
 
-        response = self.fetch(f"/hex/{paste}", method="GET",)
+        response = self.fetch(
+            f"/hex/{paste}",
+            method="GET",
+        )
         assert response.code == 200
 
     def test_website_download_nonexistent_paste(self) -> None:
-        response = self.fetch(f"/download/ABCD", method="GET",)
+        response = self.fetch(
+            f"/download/ABCD",
+            method="GET",
+        )
         assert response.code == 404
 
     def test_website_download(self) -> None:
@@ -592,11 +685,17 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         paste = response.headers["Location"].split("/")[-1]
 
         # Can we visit the paste?
-        response = self.fetch(f"/show/{paste}", method="GET",)
+        response = self.fetch(
+            f"/show/{paste}",
+            method="GET",
+        )
 
         assert response.code == 200
 
-        response = self.fetch(f"/download/{paste}", method="GET",)
+        response = self.fetch(
+            f"/download/{paste}",
+            method="GET",
+        )
         assert response.code == 200
 
     def test_website_logo(self) -> None:

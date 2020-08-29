@@ -16,11 +16,11 @@ log = logging.getLogger(__name__)
 
 class Base(tornado.web.RequestHandler):
     """Base page for all 'web' pages to inherit from. This page handles
-       default methods for GET and POST but more importantly overwrites
-       `write_error` to render error pages.
+    default methods for GET and POST but more importantly overwrites
+    `write_error` to render error pages.
 
-       It automatically converts ValidationError to a 400 error page but leaves
-       other HTTPErrors alone."""
+    It automatically converts ValidationError to a 400 error page but leaves
+    other HTTPErrors alone."""
 
     def write_error(self, status_code: int, **kwargs: Any) -> None:
         if status_code == 404:
@@ -58,11 +58,11 @@ class Base(tornado.web.RequestHandler):
 
 class Create(Base):
     """The index page shows the new paste page with a list of all available
-       lexers from Pygments."""
+    lexers from Pygments."""
 
     async def get(self, lexers: str = "") -> None:
         """Render the new paste form, optionally have a lexer preselected from
-           the URL."""
+        the URL."""
 
         lexers_available = utility.list_languages()
         lexers_selected = [
@@ -89,13 +89,13 @@ class Create(Base):
 
     async def post(self) -> None:
         """This is a historical endpoint to create pastes, pastes are marked as
-           old-web and will get a warning on top of them to remove any access to
-           this route.
+        old-web and will get a warning on top of them to remove any access to
+        this route.
 
-           pinnwand has since evolved with an API which should be used and a
-           multi-file paste.
+        pinnwand has since evolved with an API which should be used and a
+        multi-file paste.
 
-           See the 'CreateAction' for the new-style creation of pastes."""
+        See the 'CreateAction' for the new-style creation of pastes."""
 
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code", strip=False)
@@ -134,16 +134,16 @@ class Create(Base):
 
     def check_xsrf_cookie(self) -> None:
         """The CSRF token check is disabled. While it would be better if it
-           was on the impact is both small (someone could make a paste in
-           a users name which could allow pinnwand to be used as a vector for
-           exfiltration from other XSS) and some command line utilities
-           POST directly to this endpoint without using the JSON endpoint."""
+        was on the impact is both small (someone could make a paste in
+        a users name which could allow pinnwand to be used as a vector for
+        exfiltration from other XSS) and some command line utilities
+        POST directly to this endpoint without using the JSON endpoint."""
         return
 
 
 class CreateAction(Base):
     """The create action is the 'new' way to create pastes and supports multi
-       file pastes."""
+    file pastes."""
 
     def post(self) -> None:  # type: ignore
         """POST handler for the 'web' side of things."""
@@ -219,11 +219,11 @@ class CreateAction(Base):
 
 class Repaste(Base):
     """Repaste is a specific case of the paste page. It only works for pre-
-       existing pastes and will prefill the textarea and lexer."""
+    existing pastes and will prefill the textarea and lexer."""
 
     async def get(self, slug: str) -> None:  # type: ignore
         """Render the new paste form, optionally have a lexer preselected from
-           the URL."""
+        the URL."""
 
         with database.session() as session:
             paste = (
@@ -288,7 +288,7 @@ class RedirectShow(Base):
 
     async def get(self, slug: str) -> None:  # type: ignore
         """Fetch paste from database and redirect to /slug if the paste
-           exists."""
+        exists."""
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -374,7 +374,8 @@ class FileHex(Base):
 
 class PasteDownload(Base):
     """Download an entire paste."""
-    async def get(self, paste_id: str) -> None:  #type: ignore
+
+    async def get(self, paste_id: str) -> None:  # type: ignore
         """Get all files from the database and download them as a zipfile."""
 
         with database.session() as session:
@@ -402,15 +403,11 @@ class PasteDownload(Base):
             with zipfile.ZipFile(data, "x") as zf:
                 for file in paste.files:
                     if file.filename:
-                        filename = (
-                            f"{utility.filename_clean(file.filename)}-{file.slug}.txt"
-                        )
+                        filename = f"{utility.filename_clean(file.filename)}-{file.slug}.txt"
                     else:
                         filename = f"{file.slug}.txt"
 
-                    zf.writestr(
-                        filename,
-                        file.raw)
+                    zf.writestr(filename, file.raw)
 
             data.seek(0)
 
@@ -467,7 +464,7 @@ class Remove(Base):
 
     async def get(self, removal: str) -> None:  # type: ignore
         """Look up if the user visiting this page has the removal id for a
-           certain paste. If they do they're authorized to remove the paste."""
+        certain paste. If they do they're authorized to remove the paste."""
 
         with database.session() as session:
             paste = (
