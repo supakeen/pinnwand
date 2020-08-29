@@ -4,6 +4,12 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.2.2 (unreleased)
+*******************
+Some longer standing bugs get squatted in pragmatic ways.
+
+* Ensure minimum body width to prevent button falling off (#79)
+
 v1.2.1 (20200806)
 *****************
 Minor updates to the underlying build system for easier packaging by
