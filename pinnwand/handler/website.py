@@ -1,5 +1,7 @@
 import logging
 import binascii
+import io
+import zipfile
 
 from typing import Any
 from datetime import datetime
@@ -368,6 +370,55 @@ class FileHex(Base):
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(binascii.hexlify(file.raw.encode("utf8")))
+
+
+class PasteDownload(Base):
+    """Download an entire paste."""
+    async def get(self, paste_id: str) -> None:  #type: ignore
+        """Get all files from the database and download them as a zipfile."""
+
+        with database.session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.slug == paste_id)
+                .first()
+            )
+
+            if not paste:
+                raise tornado.web.HTTPError(404)
+
+            if paste.exp_date < datetime.now():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "FileRaw.get: paste was expired, is your cronjob running?"
+                )
+
+                raise tornado.web.HTTPError(404)
+
+            data = io.BytesIO()
+
+            with zipfile.ZipFile(data, "x") as zf:
+                for file in paste.files:
+                    if file.filename:
+                        filename = (
+                            f"{utility.filename_clean(file.filename)}-{file.slug}.txt"
+                        )
+                    else:
+                        filename = f"{file.slug}.txt"
+
+                    zf.writestr(
+                        filename,
+                        file.raw)
+
+            data.seek(0)
+
+            self.set_header("Content-Type", "application/zip")
+            self.set_header(
+                "Content-Disposition", f"attachment; filename={paste.slug}.zip"
+            )
+            self.write(data.read())
 
 
 class FileDownload(Base):
