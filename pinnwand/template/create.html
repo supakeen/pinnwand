@@ -48,7 +48,7 @@
 </form>
 <section class="file-template">
     <div class="file-meta">
-        {% module Template("part/lexer-select.html", selected=lexers_available, lexers=lexers_available) %}
+        {% module Template("part/lexer-select.html", selected=lexers[0], lexers=lexers_available) %}
         <input name="filename" placeholder="Filename (optional)">
         <button class="remove">Remove this file</button>
     </div>

@@ -11,6 +11,13 @@ More quality of life and code quality changes.
 * Provide archive download of a full paste (#92)
 * Add a ``resyntax`` command to rerun lexer over all pastes (#70)
 
+v1.2.2 (20200829)
+*****************
+Some longer standing bugs get squatted in pragmatic ways.
+
+* Ensure minimum body width to prevent button falling off (#79)
+* Select initial lexer for additional files (#97)
+
 v1.2.1 (20200806)
 *****************
 Minor updates to the underlying build system for easier packaging by
