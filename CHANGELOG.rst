@@ -9,6 +9,7 @@ v1.3.0 (unreleased)
 More quality of life and code quality changes.
 
 * Provide archive download of a full paste (#92)
+* Add a ``resyntax`` command to rerun lexer over all pastes (#70)
 
 v1.2.1 (20200806)
 *****************

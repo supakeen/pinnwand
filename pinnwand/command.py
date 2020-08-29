@@ -120,3 +120,34 @@ def reap() -> None:
         session.commit()
 
         log.info("reap: removed %d pastes", len(pastes))
+
+
+@main.command()
+def resyntax() -> None:
+    """Rerun `pygments` over all files in the database to update their formatted
+    output."""
+    import pygments.lexers
+    from pygments_better_html import BetterHtmlFormatter
+
+    from pinnwand import database
+
+    with database.session() as session:
+        files = session.query(database.File).all()
+
+        for file in files:
+            if file.lexer == "autodetect":
+                lexer = utility.guess_language(raw, filename)
+                log.debug(f"resyntax: Language guessed as {lexer}")
+
+            lexer = pygments.lexers.get_lexer_by_name(lexer)
+            formatter = BetterHtmlFormatter(  # pylint: disable=no-member
+                linenos="table", cssclass="source"
+            )
+
+            formatted = pygments.highlight(self.raw, lexer, formatter)
+
+            file.fmt = formatted
+
+        session.commit()
+
+        log.info("resyntax: highlighted %d pastes", len(files))
