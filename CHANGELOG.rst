@@ -9,6 +9,7 @@ v1.2.2 (unreleased)
 Some longer standing bugs get squatted in pragmatic ways.
 
 * Ensure minimum body width to prevent button falling off (#79)
+* Select initial lexer for additional files (#97)
 
 v1.2.1 (20200806)
 *****************
