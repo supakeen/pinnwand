@@ -39,8 +39,9 @@
         <section class="paste-submit">
             <button type="submit">Paste!</button>
             <select name="expiry">
-                <option value="1day">Expiry (1 day)</option>
-                <option value="1week">1 week</option>
+                {% for expiry in expiries %}
+                <option value="{{ expiry }}">Expiry ({{ expiry }})</option>
+                {% end %}
             </select>
             <input type="checkbox" name="long"> Use a longer URI
         </section>

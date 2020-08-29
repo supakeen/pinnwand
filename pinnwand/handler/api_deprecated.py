@@ -3,14 +3,14 @@ import logging
 
 from typing import Any
 from urllib.parse import urljoin
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import tornado.web
 import tornado.escape
 
 from tornado.escape import url_escape
 
-from pinnwand import database, utility, error
+from pinnwand import database, utility, error, configuration
 
 log = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class Show(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.now():
+            if paste.exp_date < datetime.utcnow():
                 session.delete(paste)
                 session.commit()
 
@@ -117,14 +117,16 @@ class Create(Base):
             log.info("APINew.post: a paste was submitted with an invalid lexer")
             raise tornado.web.HTTPError(400)
 
-        if expiry not in utility.expiries:
+        if expiry not in configuration.expiries:
             log.info(
                 "APINew.post: a paste was submitted with an invalid expiry"
             )
             raise tornado.web.HTTPError(400)
 
         paste = database.Paste(
-            utility.slug_create(), utility.expiries[expiry], "deprecated-api"
+            utility.slug_create(),
+            configuration.expiries[expiry],
+            "deprecated-api",
         )
         paste.files.append(database.File(paste.slug, raw, lexer, filename))
 
@@ -193,5 +195,8 @@ class Expiry(Base):
 
     async def get(self) -> None:
         self.write(
-            {name: str(delta) for name, delta in utility.expiries.items()}
+            {
+                name: str(timedelta(seconds=delta))
+                for name, delta in configuration.expiries.items()
+            }
         )

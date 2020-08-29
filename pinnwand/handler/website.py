@@ -80,6 +80,7 @@ class Create(Base):
 
         await self.render(
             "create.html",
+            expiries=configuration.expiries,
             lexers=lexers_selected,
             lexers_available=lexers_available,
             pagetitle="Create new paste",
@@ -109,12 +110,14 @@ class Create(Base):
         if not raw or not raw.strip():
             return self.redirect(f"/+{lexer}")
 
-        if expiry not in utility.expiries:
+        if expiry not in configuration.expiries:
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
         paste = database.Paste(
-            utility.slug_create(), utility.expiries[expiry], "deprecated-web"
+            utility.slug_create(),
+            configuration.expiries[expiry],
+            "deprecated-web",
         )
         file = database.File(paste.slug, raw, lexer)
         paste.files.append(file)
@@ -150,7 +153,7 @@ class CreateAction(Base):
 
         expiry = self.get_body_argument("expiry")
 
-        if expiry not in utility.expiries:
+        if expiry not in configuration.expiries:
             log.info(
                 "CreateAction.post: a paste was submitted with an invalid expiry"
             )
@@ -182,7 +185,7 @@ class CreateAction(Base):
             auto_scale
         ) as slug_context:
             paste = database.Paste(
-                next(slug_context), utility.expiries[expiry], "web"
+                next(slug_context), configuration.expiries[expiry], "web"
             )
 
             for (lexer, raw, filename) in zip(lexers, raws, filenames):
@@ -239,6 +242,7 @@ class Repaste(Base):
 
             await self.render(
                 "create.html",
+                expiries=configuration.expiries,
                 lexers=["text"],  # XXX make this majority of file lexers?
                 lexers_available=lexers_available,
                 pagetitle="repaste",
@@ -262,7 +266,7 @@ class Show(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.now():
+            if paste.exp_date < datetime.utcnow():
                 session.delete(paste)
                 session.commit()
 
@@ -299,7 +303,7 @@ class RedirectShow(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.now():
+            if paste.exp_date < datetime.utcnow():
                 session.delete(paste)
                 session.commit()
 
@@ -328,7 +332,7 @@ class FileRaw(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.now():
+            if file.paste.exp_date < datetime.utcnow():
                 session.delete(file.paste)
                 session.commit()
 
@@ -358,7 +362,7 @@ class FileHex(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.now():
+            if file.paste.exp_date < datetime.utcnow():
                 session.delete(file.paste)
                 session.commit()
 
@@ -388,7 +392,7 @@ class PasteDownload(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.now():
+            if paste.exp_date < datetime.utcnow():
                 session.delete(paste)
                 session.commit()
 
@@ -434,7 +438,7 @@ class FileDownload(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.now():
+            if file.paste.exp_date < datetime.utcnow():
                 session.delete(file.paste)
                 session.commit()
 
@@ -477,7 +481,7 @@ class Remove(Base):
                 log.info("RemovePaste.get: someone visited with invalid id")
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.now():
+            if paste.exp_date < datetime.utcnow():
                 session.delete(paste)
                 session.commit()
 

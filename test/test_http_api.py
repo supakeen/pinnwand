@@ -280,7 +280,7 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch("/json/expiries", method="GET")
 
         assert response.code == 200
-        assert json.loads(response.body).keys() == utility.expiries.keys()
+        assert json.loads(response.body).keys() == configuration.expiries.keys()
 
 
 class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):

@@ -10,6 +10,7 @@ More quality of life and code quality changes.
 
 * Provide archive download of a full paste (#92)
 * Add a ``resyntax`` command to rerun lexer over all pastes (#70)
+* Paste expiry options now come from the configuration file (#53)
 
 v1.2.2 (20200829)
 *****************

@@ -1,6 +1,7 @@
 import logging
 import json
 
+from datetime import timedelta
 from typing import Any
 
 from urllib.parse import urljoin
@@ -27,7 +28,10 @@ class Lexer(Base):
 class Expiry(Base):
     async def get(self) -> None:
         self.write(
-            {name: str(delta) for name, delta in utility.expiries.items()}
+            {
+                name: str(timedelta(seconds=delta))
+                for name, delta in configuration.expiries.items()
+            }
         )
 
 
@@ -46,7 +50,7 @@ class Paste(Base):
 
         expiry = data.get("expiry")
 
-        if expiry not in utility.expiries:
+        if expiry not in configuration.expiries:
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400, "invalid expiry")
 
@@ -62,7 +66,7 @@ class Paste(Base):
         ) as slug_context:
             paste = database.Paste(
                 next(slug_context),
-                utility.expiries[expiry],
+                configuration.expiries[expiry],
                 "v1-api",
             )
 

@@ -67,7 +67,9 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(utility.slug_create(), expiry=timedelta(days=1))
+    paste = database.Paste(
+        utility.slug_create(), expiry=timedelta(days=1).seconds
+    )
     file = database.File(paste.slug, sys.stdin.read(), lexer=lexer)
     paste.files.append(file)
 
@@ -110,7 +112,7 @@ def reap() -> None:
     with database.session() as session:
         pastes = (
             session.query(database.Paste)
-            .filter(database.Paste.exp_date < datetime.now())
+            .filter(database.Paste.exp_date < datetime.utcnow())
             .all()
         )
 

@@ -7,3 +7,4 @@ page_list = ["about", "removal", "expiry"]
 preferred_lexers = []  # type: ignore
 logo_path = None
 report_email = None
+expiries = {"1day": 86400, "1week": 604800}

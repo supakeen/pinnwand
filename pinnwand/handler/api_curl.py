@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import utility, database
+from pinnwand import utility, database, configuration
 
 
 log = logging.getLogger(__name__)
@@ -39,14 +39,14 @@ class Create(tornado.web.RequestHandler):
             self.write("Invalid `raw` supplied.\n")
             return
 
-        if expiry not in utility.expiries:
+        if expiry not in configuration.expiries:
             log.info("CurlCreate.post: a paste was submitted without raw")
             self.set_status(400)
             self.write("Invalid `expiry` supplied.\n")
             return
 
         paste = database.Paste(
-            utility.slug_create(), utility.expiries[expiry], "curl"
+            utility.slug_create(), configuration.expiries[expiry], "curl"
         )
         file = database.File(paste.slug, raw, lexer)
         paste.files.append(file)

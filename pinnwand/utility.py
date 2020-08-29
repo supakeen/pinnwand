@@ -6,7 +6,6 @@ import re
 
 from os import urandom
 from base64 import b32encode
-from datetime import timedelta
 
 from pygments.lexers import (
     get_all_lexers,
@@ -63,9 +62,6 @@ def guess_language(raw: str, filename: Optional[str] = None) -> str:
 
     # Finally check for language overrides and return
     return GUESS_LANG_OVERRIDES.get(language, language)
-
-
-expiries = {"1day": timedelta(days=1), "1week": timedelta(days=7)}
 
 
 def hash_create(length: int = 16) -> str:

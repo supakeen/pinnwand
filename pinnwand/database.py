@@ -2,6 +2,7 @@ import datetime
 import logging
 import contextlib
 
+from datetime import timedelta
 from typing import Optional
 
 import pygments.lexers
@@ -75,7 +76,7 @@ class Paste(Base):  # type: ignore
     def __init__(
         self,
         slug: str,
-        expiry: datetime.timedelta = datetime.timedelta(days=7),
+        expiry: int = 604800,
         src: str = None,
     ) -> None:
         # Generate a paste_id and a removal_id
@@ -90,10 +91,7 @@ class Paste(Base):  # type: ignore
         self.src = src
 
         # The expires date is the pub_date with the delta of the expiry
-        if expiry:
-            self.exp_date = self.pub_date + expiry
-        else:
-            self.exp_date = None
+        self.exp_date = self.pub_date + timedelta(seconds=expiry)
 
     def __repr__(self) -> str:
         return f"<Paste(slug={self.slug})>"
