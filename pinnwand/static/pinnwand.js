@@ -1,104 +1,25 @@
-window.addEventListener("load", function(event) {
-    var storage = window.localStorage;
-    var colorSchemeButton = document.getElementById("toggle-color-scheme");
+let indents = {
+    "python": " ".repeat(4),
+    "python2": " ".repeat(4),
+};
 
-    if(storage.getItem("other-color") == "true") {
-        var html = document.querySelector("html");
-        html.classList.toggle("other-color");
-    }
+window.addEventListener("load", (event) => {
+    setupColorScheme();
 
-    if(colorSchemeButton != null) {
-        colorSchemeButton.addEventListener("click", function(event) {
-            if(storage.getItem("other-color") == "true") {
-                storage.setItem("other-color", "false");
-            } else {
-                storage.setItem("other-color", "true");
-            }
-
-            var html = document.querySelector("html");
-            html.classList.toggle("other-color");
-        });
-    }
-
-    var bar = document.querySelector("section.paste-submit");
-
-    if(!bar) {
-        // Not the new paste page.
-        var wordWrapButton = document.getElementById("toggle-word-wrap");
-        if(wordWrapButton != null) {
-            wordWrapButton.addEventListener("click", function(event) {
-                var codeBlocks = document.querySelectorAll("div.code");
-                for(var i = 0; i < codeBlocks.length; i++) {
-                    codeBlocks[i].classList.toggle("no-word-wrap");
-                }
-            });
-        }
-
-        var copyButtons = document.querySelectorAll("button.copy-button");
-
-        for(var i = 0; i < copyButtons.length; i++) {
-            var copyButton = copyButtons[i];
-
-            copyButton.addEventListener("click", function(event) {
-                event.preventDefault();
-
-                var textarea = event.target.parentNode.parentNode.querySelector("textarea.copy-area");
-                var listener = (function(event) {
-                    event.preventDefault();
-                    event.clipboardData.setData("text/plain", textarea.value);
-                });
-
-                document.addEventListener('copy', listener);
-                document.execCommand('copy');
-                document.removeEventListener('copy', listener);
-            });
-        };
-
-        return false;
-    }
-
-    var removes = document.querySelectorAll("button.remove");
-
-    for(var i = 0; i < removes.length; i++) {
-        var remove = removes[i];
-
-        remove.addEventListener("click", function(event) {
-            event.preventDefault();
-
-            var section = event.target.parentNode.parentNode;
-
-            document.querySelector("main.page-create").removeChild(section);
-        });
-    };
-
-    var but = document.createElement("button");
-
-    but.innerText = "Add another file.";
-    but.className = "add";
-    but.href = "#";
-
-    but.addEventListener("click", function(event) {
-        event.preventDefault();
-
-        add_new_file();
-    })
-
-    bar.appendChild(but);
-
-    /// textarea indent
-    let textareas = document.querySelectorAll('section.file-part textarea');
-    for(let i = 0; i < textareas.length; i++) {
-        textareas[i].addEventListener("keydown", indent_textarea);
+    if(document.querySelector("section.paste-submit")) {
+        setupCreatePage();
+    } else {
+        setupShowPage();
     }
 });
 
 function add_new_file() {
-    var template = document.querySelector("section.file-template").cloneNode(true);
+    let template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
-    template.querySelector("button.remove").addEventListener("click", function(event) {
+    template.querySelector("button.remove").addEventListener("click", (event) => {
         event.preventDefault();
 
-        var section = event.target.parentNode.parentNode;
+        let section = event.target.parentNode.parentNode;
 
         document.querySelector("main.page-create").removeChild(section);
     });
@@ -113,26 +34,25 @@ function add_new_file() {
 
 
 function indent_textarea(event) {
+	let selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']"),
+	    lexer = selector.options[selector.selectedIndex].text
 
-	//var selector = document.querySelector("div.file-meta select[name='lexer']") // select the `select` under the file-meta div
-	var selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']") // select the `select` under the file-meta div
-	var lexer = selector.options[selector.selectedIndex].text
-
-	// only indenting for python at the moment
-	if ( ! (lexer && lexer.toLowerCase().indexOf("python") == 0) ) {
+	if(!(lexer && lexer.toLowerCase().indexOf("python") == 0)) {
 		return
 	}
 
-	var keyCode = event.keyCode || event.which;
-	if (keyCode == 9) { // check if a `tab` is pressed
+    let indent = " ".repeat(4);
+	let keyCode = event.keyCode || event.which;
+
+	if (keyCode == 9) {
 		event.preventDefault();
 		var start = this.selectionStart;
         var end = this.selectionEnd;
 		var v = this.value;
 		if (start == end) {
-		    this.value = v.slice(0, start) + " ".repeat(4) + v.slice(start);
-		    this.selectionStart = start + 4;
-		    this.selectionEnd = start + 4;
+		    this.value = v.slice(0, start) + indent + v.slice(start);
+		    this.selectionStart = start + indent.length;
+		    this.selectionEnd = start + indent.length;
 		    return;
 		}
 
@@ -156,13 +76,13 @@ function indent_textarea(event) {
 		var lines = v.split("\n");
 		for (var i = 0; i < selectedLines.length; i++)
 		{
-		    lines[selectedLines[i]] = " ".repeat(4) + lines[selectedLines[i]];
+		    lines[selectedLines[i]] = indent + lines[selectedLines[i]];
 		}
 
 		this.value = lines.join("\n");
 
 		}
-	else if (keyCode == 13) { // check if an `enter` is pressed
+	else if (keyCode == 13) {
 		event.preventDefault();
 
 		var start = this.selectionStart;
@@ -181,4 +101,95 @@ function indent_textarea(event) {
         this.selectionEnd = end + indentation;
 
 	}
+}
+
+function setupColorScheme() {
+    let storage = window.localStorage,
+        colorSchemeButton = document.getElementById("toggle-color-scheme");
+
+    if(storage.getItem("other-color") == "true") {
+        document.querySelector("html").classList.toggle("other-color");
+    }
+
+    if(colorSchemeButton != null) {
+        colorSchemeButton.addEventListener("click", function(event) {
+            if(storage.getItem("other-color") == "true") {
+                storage.setItem("other-color", "false");
+            } else {
+                storage.setItem("other-color", "true");
+            }
+
+            document.querySelector("html").classList.toggle("other-color");
+        });
+    }
+}
+
+function setupShowPage() {
+    let wordWrapButton = document.getElementById("toggle-word-wrap");
+    if(wordWrapButton != null) {
+        wordWrapButton.addEventListener("click", function(event) {
+            let codeBlocks = document.querySelectorAll("div.code");
+            for(let i = 0; i < codeBlocks.length; i++) {
+                codeBlocks[i].classList.toggle("no-word-wrap");
+            }
+        });
+    }
+
+    let copyButtons = document.querySelectorAll("button.copy-button");
+
+    for(let i = 0; i < copyButtons.length; i++) {
+        let copyButton = copyButtons[i];
+
+        copyButton.addEventListener("click", function(event) {
+            event.preventDefault();
+
+            let textarea = event.target.parentNode.parentNode.querySelector("textarea.copy-area");
+            let listener = (event) => {
+                event.preventDefault();
+                event.clipboardData.setData("text/plain", textarea.value);
+            };
+
+            document.addEventListener('copy', listener);
+            document.execCommand('copy');
+            document.removeEventListener('copy', listener);
+        });
+    };
+
+    return false;
+}
+
+function setupCreatePage() {
+    let removes = document.querySelectorAll("button.remove"),
+        bar = document.querySelector("section.paste-submit");
+
+    for(let i = 0; i < removes.length; i++) {
+        let remove = removes[i];
+
+        remove.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            let section = event.target.parentNode.parentNode;
+
+            document.querySelector("main.page-create").removeChild(section);
+        });
+    };
+
+    let but = document.createElement("button");
+
+    but.innerText = "Add another file.";
+    but.className = "add";
+    but.href = "#";
+
+    but.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        add_new_file();
+    })
+
+    bar.appendChild(but);
+
+    let textareas = document.querySelectorAll('section.file-part textarea');
+    for(let i = 0; i < textareas.length; i++) {
+        textareas[i].addEventListener("keydown", indent_textarea);
+    }
 }
