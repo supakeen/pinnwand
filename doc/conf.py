@@ -12,12 +12,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 
-# sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath("../"))
 
-# import pinnwand  # noqa: E402
+import pinnwand
 
 
 # -- Project information -----------------------------------------------------
@@ -172,3 +172,6 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ["search.html"]
+
+html_logo = "_static/logo-doc.png"
+html_favicon = "_static/logo-doc.png"

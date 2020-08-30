@@ -1,0 +1,11 @@
+<select name="lexer">
+    {% if handler.application.configuration.preferred_lexers %}
+        {% for key in handler.application.configuration.preferred_lexers %}
+            <option value="{{ key }}"{% if selected == key %} selected="selected"{% end %}>{{ lexers[key] }}</option>
+        {% end %}
+        <optgroup disabled></optgroup>
+    {% end %}
+    {% for key, caption in lexers.items() %}
+    <option value="{{ key }}"{% if selected == key and key not in handler.application.configuration.preferred_lexers %} selected="selected"{% end %}>{{ caption }}</option>
+    {% end %}
+</select>

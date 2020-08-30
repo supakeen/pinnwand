@@ -15,13 +15,20 @@ import tornado.ioloop
 
 
 log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 @click.group()
+@click.option(
+    "--verbose",
+    "-v",
+    count=True,
+    help="Verbosity, passing more heightens the verbosity.",
+)
 @click.option("--configuration-path", default=None, help="Configuration file.")
-def main(configuration_path: Optional[str]) -> None:
+def main(verbose: int, configuration_path: Optional[str]) -> None:
     """Pinnwand pastebin software."""
+    logging.basicConfig(level=10 + (logging.FATAL - verbose * 10))
+
     from pinnwand import configuration
 
     if configuration_path:
@@ -60,15 +67,17 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(expiry=timedelta(days=1))
-    file = database.File(sys.stdin.read(), lexer=lexer)
+    paste = database.Paste(
+        utility.slug_create(), expiry=timedelta(days=1).seconds
+    )
+    file = database.File(paste.slug, sys.stdin.read(), lexer=lexer)
     paste.files.append(file)
 
     with database.session() as session:
         session.add(paste)
         session.commit()
 
-    log.info("add: paste created: %s", paste.slug)
+        log.info("add: paste created: %s", paste.slug)
 
 
 @main.command()
@@ -86,7 +95,7 @@ def delete(paste: str) -> None:
 
         if not paste_object:
             log.error("delete: unknown paste")
-            return
+            raise SystemExit(1)
 
         session.delete(paste_object)
         session.commit()
@@ -97,13 +106,13 @@ def delete(paste: str) -> None:
 @main.command()
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
-       database."""
+    database."""
     from pinnwand import database
 
     with database.session() as session:
         pastes = (
             session.query(database.Paste)
-            .filter(database.Paste.exp_date < datetime.now())
+            .filter(database.Paste.exp_date < datetime.utcnow())
             .all()
         )
 
@@ -113,3 +122,34 @@ def reap() -> None:
         session.commit()
 
         log.info("reap: removed %d pastes", len(pastes))
+
+
+@main.command()
+def resyntax() -> None:
+    """Rerun `pygments` over all files in the database to update their formatted
+    output."""
+    import pygments.lexers
+    from pygments_better_html import BetterHtmlFormatter
+
+    from pinnwand import database
+
+    with database.session() as session:
+        files = session.query(database.File).all()
+
+        for file in files:
+            if file.lexer == "autodetect":
+                lexer = utility.guess_language(raw, filename)
+                log.debug(f"resyntax: Language guessed as {lexer}")
+
+            lexer = pygments.lexers.get_lexer_by_name(lexer)
+            formatter = BetterHtmlFormatter(  # pylint: disable=no-member
+                linenos="table", cssclass="source"
+            )
+
+            formatted = pygments.highlight(self.raw, lexer, formatter)
+
+            file.fmt = formatted
+
+        session.commit()
+
+        log.info("resyntax: highlighted %d pastes", len(files))

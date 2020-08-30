@@ -17,9 +17,10 @@ repos:
       language: system
       entry: python -m flake8
       types: [python]
+      exclude: ^doc/conf.py
     - id: mypy
       name: mypy
       language: system
       entry: python -m mypy
       types: [python]
-      exclude: ^doc/conf.py
+      exclude: ^doc/conf.py|^test

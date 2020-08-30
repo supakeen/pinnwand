@@ -12,7 +12,10 @@
             <a href="/remove/{{ paste.removal }}">Remove now</a>.
         {% end %}
 
-        <a href="/repaste/{{ paste.slug }}">Repaste</a> this paste.
+        <a href="/repaste/{{ paste.slug }}">Repaste</a>, or
+        <a href="/download-archive/{{ paste.slug }}">download</a> this paste.
+
+        <button class="btn-link" id="toggle-word-wrap">Toggle word wrap</button>.
 
         Pasted through <em>{{ paste.src }}</em>.
         </p>
@@ -24,10 +27,14 @@
                 <div class="code">
                     {% raw file.fmt %}
                 </div>
+                <textarea class="copy-area">{{ file.raw }}</textarea>
                 <div class="meta">
                     Filename: {{ file.filename }}.
                     Size: {{ file.pretty_size }}.
-                    View <a href="/raw/{{ file.slug }}">raw</a> or <a href="/download/{{ file.slug }}">download</a> this file.
+                    View <a href="/raw/{{ file.slug }}">raw</a>, <button class="btn-link copy-button">copy</button>, <a href="/hex/{{ file.slug }}">hex</a>, or <a href="/download/{{ file.slug }}">download</a> this file.
+                    {% if handler.application.configuration.report_email %}
+                    <a href="mailto:{{ handler.application.configuration.report_email }}?subject=Pinnwand report (File ID: {{ file.slug }})">Report</a> this file.
+                    {% end %}
                 </div>
             </div>
             {% end %}

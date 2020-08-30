@@ -2,10 +2,10 @@ import datetime
 import logging
 import contextlib
 
+from datetime import timedelta
 from typing import Optional
 
 import pygments.lexers
-import pygments.formatters
 
 from sqlalchemy import (
     Integer,
@@ -19,6 +19,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+
+from pygments_better_html import BetterHtmlFormatter
 
 from pinnwand import configuration, error, utility
 
@@ -73,14 +75,14 @@ class Paste(Base):  # type: ignore
 
     def __init__(
         self,
-        expiry: datetime.timedelta = datetime.timedelta(days=7),
+        slug: str,
+        expiry: int = 604800,
         src: str = None,
-        auto_scale: bool = True,
     ) -> None:
         # Generate a paste_id and a removal_id
         # Unless someone proves me wrong that I need to check for collisions
         # my famous last words will be that the odds are astronomically small
-        self.slug = utility.slug_create(auto_scale=auto_scale)
+        self.slug = slug
         self.removal = utility.slug_create(auto_scale=False)
 
         self.pub_date = datetime.datetime.utcnow()
@@ -89,10 +91,7 @@ class Paste(Base):  # type: ignore
         self.src = src
 
         # The expires date is the pub_date with the delta of the expiry
-        if expiry:
-            self.exp_date = self.pub_date + expiry
-        else:
-            self.exp_date = None
+        self.exp_date = self.pub_date + timedelta(seconds=expiry)
 
     def __repr__(self) -> str:
         return f"<Paste(slug={self.slug})>"
@@ -114,10 +113,10 @@ class File(Base):  # type: ignore
 
     def __init__(
         self,
+        slug: str,
         raw: str,
         lexer: str = "text",
         filename: Optional[str] = None,
-        auto_scale: bool = True,
     ) -> None:
         # Start with some basic housekeeping related to size
         if len(raw) > configuration.paste_size:
@@ -134,9 +133,13 @@ class File(Base):  # type: ignore
 
         self.lexer = lexer
 
+        if lexer == "autodetect":
+            lexer = utility.guess_language(raw, filename)
+            log.debug(f"Language guessed as {lexer}")
+
         lexer = pygments.lexers.get_lexer_by_name(lexer)
-        formatter = pygments.formatters.HtmlFormatter(  # pylint: disable=no-member
-            linenos=True, cssclass="source"
+        formatter = BetterHtmlFormatter(  # pylint: disable=no-member
+            linenos="table", cssclass="source"
         )
 
         formatted = pygments.highlight(self.raw, lexer, formatter)
@@ -147,7 +150,7 @@ class File(Base):  # type: ignore
             )
 
         self.fmt = formatted
-        self.slug = utility.slug_create(auto_scale=auto_scale)
+        self.slug = slug
 
     @property
     def pretty_size(self) -> str:

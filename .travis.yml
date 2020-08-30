@@ -3,8 +3,12 @@ python:
 - "3.6"
 - "3.7"
 - "3.8"
+- "3.9-dev"
 install:
-- pip install poetry
+- pip install -U pip setuptools wheel
+- pip install -U poetry
 - poetry install
 script:
-- poetry run pytest
+- poetry run pytest --cov=pinnwand
+after_script:
+- bash <(curl -s https://codecov.io/bash)

@@ -1,3 +1,5 @@
+.. _autodoc:
+
 Autodoc
 #######
 
@@ -32,8 +34,8 @@ pinnwand.path
 .. automodule:: pinnwand.path
    :members:
 
-pinnwand.settings
-=================
+pinnwand.configuration
+======================
 
-.. automodule:: pinnwand.settings
+.. automodule:: pinnwand.configuration
    :members:

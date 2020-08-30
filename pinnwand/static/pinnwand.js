@@ -1,11 +1,63 @@
 window.addEventListener("load", function(event) {
+    var storage = window.localStorage;
+    var colorSchemeButton = document.getElementById("toggle-color-scheme");
+
+    if(storage.getItem("other-color") == "true") {
+        var html = document.querySelector("html");
+        html.classList.toggle("other-color");
+    }
+
+    if(colorSchemeButton != null) {
+        colorSchemeButton.addEventListener("click", function(event) {
+            if(storage.getItem("other-color") == "true") {
+                storage.setItem("other-color", "false");
+            } else {
+                storage.setItem("other-color", "true");
+            }
+
+            var html = document.querySelector("html");
+            html.classList.toggle("other-color");
+        });
+    }
+
     var bar = document.querySelector("section.paste-submit");
 
     if(!bar) {
+        // Not the new paste page.
+        var wordWrapButton = document.getElementById("toggle-word-wrap");
+        if(wordWrapButton != null) {
+            wordWrapButton.addEventListener("click", function(event) {
+                var codeBlocks = document.querySelectorAll("div.code");
+                for(var i = 0; i < codeBlocks.length; i++) {
+                    codeBlocks[i].classList.toggle("no-word-wrap");
+                }
+            });
+        }
+
+        var copyButtons = document.querySelectorAll("button.copy-button");
+
+        for(var i = 0; i < copyButtons.length; i++) {
+            var copyButton = copyButtons[i];
+
+            copyButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                var textarea = event.target.parentNode.parentNode.querySelector("textarea.copy-area");
+                var listener = (function(event) {
+                    event.preventDefault();
+                    event.clipboardData.setData("text/plain", textarea.value);
+                });
+
+                document.addEventListener('copy', listener);
+                document.execCommand('copy');
+                document.removeEventListener('copy', listener);
+            });
+        };
+
         return false;
     }
 
-    var removes = document.querySelectorAll("a.remove");
+    var removes = document.querySelectorAll("button.remove");
 
     for(var i = 0; i < removes.length; i++) {
         var remove = removes[i];
@@ -19,9 +71,9 @@ window.addEventListener("load", function(event) {
         });
     };
 
-    var but = document.createElement("a");
+    var but = document.createElement("button");
 
-    but.text = "Add another file.";
+    but.innerText = "Add another file.";
     but.className = "add";
     but.href = "#";
 
@@ -42,8 +94,7 @@ window.addEventListener("load", function(event) {
 function new_file_add() {
     var template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
-
-    template.querySelector("a.remove").addEventListener("click", function(event) {
+    template.querySelector("button.remove").addEventListener("click", function(event) {
         event.preventDefault();
 
         var section = event.target.parentNode.parentNode;

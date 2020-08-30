@@ -3,10 +3,11 @@
 {% block body %}
 <form action="/create" method="post" class="paste-create">
     <main class="page-create">
+        {% if handler.application.configuration.paste_help %}
         <section class="paste-help">
-            <p>Welcome to bpaste, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p>
-            <p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>
+            {% raw handler.application.configuration.paste_help %}
         </section>
+        {% end %}
         <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
         {% if message %}
         <div class="quick"><p>{{ message }}</p></div>
@@ -16,13 +17,9 @@
             {% for index, file in enumerate(paste.files) %}
             <section class="file-part">
                 <div class="file-meta">
-                    <select name="lexer">
-                        {% for key, caption in lexers_available.items() %}
-                        <option value="{{ key }}"{% if file.lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
-                        {% end %}
-                    </select>
+                    {% module Template("part/lexer-select.html", selected=file.lexer, lexers=lexers_available) %}
                     <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
-                    {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
+                    {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
                 </div>
                 <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste.">{{ file.raw }}</textarea>
             </section>
@@ -31,13 +28,9 @@
         {% for index, lexer in enumerate(lexers) %}
         <section class="file-part">
             <div class="file-meta">
-                <select name="lexer">
-                    {% for key, caption in lexers_available.items() %}
-                    <option value="{{ key }}"{% if lexer == key %} selected="selected"{% end %}>{{ caption }}</option>
-                    {% end %}
-                </select>
+                {% module Template("part/lexer-select.html", selected=lexer, lexers=lexers_available) %}
                 <input name="filename" placeholder="Filename (optional)">
-                {% if index > 0 %}<a href="#" class="remove">Remove this file</a>{% end %}
+                {% if index > 0 %}<button class="remove">Remove this file</button>{% end %}
             </div>
             <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
         </section>
@@ -46,8 +39,9 @@
         <section class="paste-submit">
             <button type="submit">Paste!</button>
             <select name="expiry">
-                <option value="1day">Expiry (1 day)</option>
-                <option value="1week">1 week</option>
+                {% for expiry in expiries %}
+                <option value="{{ expiry }}">Expiry ({{ expiry }})</option>
+                {% end %}
             </select>
             <input type="checkbox" name="long"> Use a longer URI
         </section>
@@ -55,13 +49,9 @@
 </form>
 <section class="file-template">
     <div class="file-meta">
-        <select name="lexer">
-            {% for key, caption in lexers_available.items() %}
-            <option value="{{ key }}"{% if lexers[0] == key %} selected="selected"{% end %}>{{ caption }}</option>
-            {% end %}
-        </select>
+        {% module Template("part/lexer-select.html", selected=lexers[0], lexers=lexers_available) %}
         <input name="filename" placeholder="Filename (optional)">
-        <a href="#" class="remove">Remove this file</a>
+        <button class="remove">Remove this file</button>
     </div>
     <textarea required name="raw" autofocus="true" spellcheck="false" placeholder="Enter code to paste."></textarea>
 </section>
