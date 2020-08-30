@@ -75,29 +75,25 @@ function make_indent(event) {
 		var start = this.selectionStart;
         var end = this.selectionEnd;
 		var v = this.value;
-		if (start == end)
-		{
+		if (start == end) {
 		    this.value = v.slice(0, start) + " ".repeat(4) + v.slice(start);
-		    this.selectionStart = start+4;
-		    this.selectionEnd = start+4;
+		    this.selectionStart = start + 4;
+		    this.selectionEnd = start + 4;
 		    return;
 		}
 
 		var selectedLines = [];
 		var inSelection = false;
 		var lineNumber = 0;
-		for (var i = 0; i < v.length; i++)
-		{
-		    if (i == start)
-		    {
-			inSelection = true;
-			selectedLines.push(lineNumber);
+		for (var i = 0; i < v.length; i++) {
+		    if (i == start) {
+                inSelection = true;
+                selectedLines.push(lineNumber);
 		    }
 		    if (i >= end)
-			inSelection = false;
+                inSelection = false;
 
-		    if (v[i] == "\n")
-		    {
+		    if (v[i] == "\n") {
 			lineNumber++;
 			if (inSelection)
 			    selectedLines.push(lineNumber);
@@ -106,7 +102,7 @@ function make_indent(event) {
 		var lines = v.split("\n");
 		for (var i = 0; i < selectedLines.length; i++)
 		{
-		    lines[selectedLines[i]] = "    " + lines[selectedLines[i]];
+		    lines[selectedLines[i]] = " ".repeat(4) + lines[selectedLines[i]];
 		}
 
 		this.value = lines.join("\n");
@@ -116,21 +112,19 @@ function make_indent(event) {
 		event.preventDefault();
 
 		var start = this.selectionStart;
+		var end = this.selectionEnd;
         var v = this.value;
         var thisLine = "";
         var indentation = 1;
-        for (var i = start-2; i >= 0 && v[i] != "\n"; i--)
-        {
+        for (var i = start-1; i >= 0 && v[i] != "\n"; i--) {
             thisLine = v[i] + thisLine;
         }
-        for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++)
-        {
-
+        for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
             indentation++;
         }
-        this.value = v.slice(0, start) + "\n" + " ".repeat(indentation) + v.slice(start);
+        this.value = v.slice(0, start) + "\n" + " ".repeat(indentation-1) + v.slice(start);
         this.selectionStart = start + indentation;
-        this.selectionEnd = start + indentation;
+        this.selectionEnd = end + indentation;
 
 	}
 }
