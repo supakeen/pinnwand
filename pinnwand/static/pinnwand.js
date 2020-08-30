@@ -80,18 +80,19 @@ window.addEventListener("load", function(event) {
     but.addEventListener("click", function(event) {
         event.preventDefault();
 
-        new_file_add();
+        add_new_file();
     })
 
     bar.appendChild(but);
 
     /// textarea indent
-    var textarea = document.querySelector('section.file-part textarea');
-    textarea.onkeydown = make_indent;
-
+    let textareas = document.querySelectorAll('section.file-part textarea');
+    for(let i = 0; i < textareas.length; i++) {
+        textareas[i].addEventListener("keydown", indent_textarea);
+    }
 });
 
-function new_file_add() {
+function add_new_file() {
     var template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
     template.querySelector("button.remove").addEventListener("click", function(event) {
@@ -102,6 +103,8 @@ function new_file_add() {
         document.querySelector("main.page-create").removeChild(section);
     });
 
+    template.querySelector("textarea").addEventListener("keydown", indent_textarea);
+
     document.querySelector("main.page-create").insertBefore(
         template,
         document.querySelector("section.paste-submit")
@@ -109,7 +112,7 @@ function new_file_add() {
 }
 
 
-function make_indent(event) {
+function indent_textarea(event) {
 
 	//var selector = document.querySelector("div.file-meta select[name='lexer']") // select the `select` under the file-meta div
 	var selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']") // select the `select` under the file-meta div
