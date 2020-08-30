@@ -73,42 +73,64 @@ function make_indent(event) {
 	if (keyCode == 9) { // check if a `tab` is pressed
 		event.preventDefault();
 		var start = this.selectionStart;
-		var end = this.selectionEnd;
+        var end = this.selectionEnd;
+		var v = this.value;
+		if (start == end)
+		{
+		    this.value = v.slice(0, start) + " ".repeat(4) + v.slice(start);
+		    this.selectionStart = start+4;
+		    this.selectionEnd = start+4;
+		    return;
+		}
 
-		// set textarea value to: text before caret + tab + text after caret
-		val = this.value;
+		var selectedLines = [];
+		var inSelection = false;
+		var lineNumber = 0;
+		for (var i = 0; i < v.length; i++)
+		{
+		    if (i == start)
+		    {
+			inSelection = true;
+			selectedLines.push(lineNumber);
+		    }
+		    if (i >= end)
+			inSelection = false;
 
-		// replace `tab` with 4 `space`
-		this.value = val.substring(0, start) + " ".repeat(4) ; //+ val.substring(start);
-		
-		// put caret at right position again
-		//this.selectionEnd = start + 4;
-		// it works even without setting the selection end,
-		// which makes me uncomfotable not knowing why
-	}
+		    if (v[i] == "\n")
+		    {
+			lineNumber++;
+			if (inSelection)
+			    selectedLines.push(lineNumber);
+		    }
+		}
+		var lines = v.split("\n");
+		for (var i = 0; i < selectedLines.length; i++)
+		{
+		    lines[selectedLines[i]] = "    " + lines[selectedLines[i]];
+		}
+
+		this.value = lines.join("\n");
+
+		}
 	else if (keyCode == 13) { // check if an `enter` is pressed
 		event.preventDefault();
 
-		// the idea here is to trim the text in the `textarea`
-		// trim it and split it by newlines and then
-		// get the last line and check the number of spaces in the line
-		// before a nonspace character appear
-		var data = this.value;
-		var text_lines = data.trim().split("\n")
-		var last_line = text_lines[text_lines.length-1]
-		var indent = 0;
-		for(i=0; i < last_line.length; i++) {
-			if ( last_line[i] == ' ' ) indent++;
-			else break;
-		}
-
 		var start = this.selectionStart;
-		var end = this.selectionEnd;
+        var v = this.value;
+        var thisLine = "";
+        var indentation = 1;
+        for (var i = start-2; i >= 0 && v[i] != "\n"; i--)
+        {
+            thisLine = v[i] + thisLine;
+        }
+        for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++)
+        {
 
-		// match the indent of the previous line and
-		// add that amount of space to the start of the new line
-		this.value = data.substr(0, start) + "\n" + " ".repeat(indent); // + data.substr(start)
-		this.selectionEnd += indent;
+            indentation++;
+        }
+        this.value = v.slice(0, start) + "\n" + " ".repeat(indentation) + v.slice(start);
+        this.selectionStart = start + indentation;
+        this.selectionEnd = start + indentation;
 
 	}
 }
