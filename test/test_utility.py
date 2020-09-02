@@ -1,10 +1,10 @@
 import pytest
 
-from pinnwand import utility, database
+from pinnwand import utility, database, configuration
 
 
 def test_expiries() -> None:
-    assert len(utility.expiries) == 2
+    assert len(configuration.expiries) == 2
 
 
 def test_guess_language() -> None:
