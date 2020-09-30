@@ -498,6 +498,8 @@ class Remove(Base):
 
 
 class RestructuredTextPage(Base):
+    """Render a given file as RestructuredText."""
+
     def initialize(self, file: str) -> None:
         self.file = file
 
@@ -518,6 +520,8 @@ class RestructuredTextPage(Base):
 
 
 class Logo(Base):
+    """Render an image file at the logo path."""
+
     def initialize(self, path: str) -> None:
         self.path = path
 
