@@ -80,9 +80,7 @@ function indent_textarea(event) {
 		}
 
 		this.value = lines.join("\n");
-
-		}
-	else if (keyCode == 13) {
+    } else if (keyCode == 13) {
 		event.preventDefault();
 
 		var start = this.selectionStart;
@@ -90,16 +88,18 @@ function indent_textarea(event) {
         var v = this.value;
         var thisLine = "";
         var indentation = 1;
+
         for (var i = start-1; i >= 0 && v[i] != "\n"; i--) {
             thisLine = v[i] + thisLine;
         }
+
         for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
             indentation++;
         }
+
         this.value = v.slice(0, start) + "\n" + " ".repeat(indentation-1) + v.slice(start);
         this.selectionStart = start + indentation;
         this.selectionEnd = end + indentation;
-
 	}
 }
 
