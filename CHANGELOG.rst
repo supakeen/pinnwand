@@ -9,6 +9,7 @@ v1.2.3 (unreleased)
 Fixes to packaging and build setup.
 
 * Use poetry-core as build-backend (#101)
+* Remove dependency on ``poetry-dynamic-versioning`` as it breaks build.
 
 v1.2.2 (20200829)
 *****************
