@@ -31,10 +31,6 @@ pytest-cov = "^2.8"
 pre-commit = "^1.20"
 flake8 = "^3.7"
 mypy = "^0.740.0"
-poetry-dynamic-versioning = "^0.3.0"
-
-[tool.poetry-dynamic-versioning]
-enable = true
 
 [tool.black]
 line-length = 80
@@ -58,6 +54,5 @@ exclude = '''
 pinnwand = 'pinnwand.__main__:main'
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
