@@ -243,6 +243,7 @@ td.linenos {
     background: var(--color0);
     padding: 0 .25rem;
     opacity: .5;
+    cursor: pointer;
 }
 
 div.code {
@@ -256,6 +257,7 @@ div.code:hover td.linenos {
 
 td.code {
     padding-left: .5rem;
+    width: 100%;
 }
 
 pre {
@@ -365,6 +367,10 @@ div.code.no-word-wrap .sourcetable td.code code {
 
 textarea.copy-area {
     display: none;
+}
+
+.highlighted {
+    background-color: rgba(255,223,93,0.2);
 }
 
 .hll { background-color: #ffffcc }

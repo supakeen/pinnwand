@@ -12,6 +12,7 @@ More quality of life and code quality changes.
 * Add a ``resyntax`` command to rerun lexer over all pastes (#70)
 * Paste expiry options now come from the configuration file (#53)
 * Convert tabs/enters to indentation, contributed by millefalcon_ (#90)
+* Add line highlighting (#39)
 
 v1.2.2 (20200829)
 *****************
