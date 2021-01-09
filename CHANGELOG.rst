@@ -13,8 +13,8 @@ More quality of life and code quality changes.
 * Paste expiry options now come from the configuration file (#53)
 * Convert tabs/enters to indentation, contributed by millefalcon_ (#90)
 
-v1.2.3 (unreleased)
-*******************
+v1.2.3 (20210109)
+*****************
 Fixes to packaging and build setup.
 
 * Use poetry-core as build-backend (#101)
