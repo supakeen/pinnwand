@@ -4,8 +4,8 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.2.3 (unreleased)
-*******************
+v1.2.3 (20210109)
+*****************
 Fixes to packaging and build setup.
 
 * Use poetry-core as build-backend (#101)
