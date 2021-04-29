@@ -31,10 +31,6 @@ pytest-cov = "^2.8"
 pre-commit = "^1.20"
 flake8 = "^3.7"
 mypy = "^0.740.0"
-poetry-dynamic-versioning = "^0.3.0"
-
-[tool.poetry-dynamic-versioning]
-enable = true
 
 [tool.black]
 line-length = 80
