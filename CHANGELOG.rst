@@ -12,6 +12,14 @@ More quality of life and code quality changes.
 * Add a ``resyntax`` command to rerun lexer over all pastes (#70)
 * Paste expiry options now come from the configuration file (#53)
 * Convert tabs/enters to indentation, contributed by millefalcon_ (#90)
+* Add line highlighting, contributed by erlliam_ (#39)
+
+v1.2.3 (20210109)
+*****************
+Fixes to packaging and build setup.
+
+* Use poetry-core as build-backend (#101)
+* Remove dependency on ``poetry-dynamic-versioning`` as it breaks build.
 
 v1.2.2 (20200829)
 *****************
@@ -110,3 +118,4 @@ changelog created.
 .. _mweinelt: https://github.com/mweinelt
 .. _Bruce1347: https://github.com/Bruce1347
 .. _millefalcon: https://github.com/millefalcon
+.. _erlliam: https://github.com/erlliam

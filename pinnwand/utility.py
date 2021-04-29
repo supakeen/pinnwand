@@ -21,7 +21,13 @@ log = logging.getLogger(__name__)
 
 def list_languages() -> Dict[str, str]:
     # Start with converting the pygments lexers index into a dict.
-    lexers = {lexer[1][0]: lexer[0] for lexer in get_all_lexers()}
+    lexers = {
+        lexer[1][0]: lexer[0]
+        for lexer in get_all_lexers()
+        # Guard against the lexer format in Pygments not being all that
+        # consistent.
+        if len(lexer) > 1 and len(lexer[1])
+    }
 
     # Add autodetection option
     lexers["autodetect"] = "Autodetect"
