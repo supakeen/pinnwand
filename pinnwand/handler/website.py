@@ -49,6 +49,14 @@ class Base(tornado.web.RequestHandler):
                     status_code=429,
                     pagetitle="error",
                 )
+            elif type_ == error.SpamError:
+                self.set_status(451)
+                self.render(
+                    "error.html",
+                    text=str(exc),
+                    status_code=429,
+                    pagetitle="error",
+                )
             else:
                 self.render(
                     "error.html",

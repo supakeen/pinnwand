@@ -25,3 +25,4 @@ ratelimit = {
         "refill": 1,
     },
 }
+spamscore = 50

@@ -22,7 +22,7 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 from pygments_better_html import BetterHtmlFormatter
 
-from pinnwand import configuration, error, utility
+from pinnwand import configuration, error, utility, defensive
 
 
 log = logging.getLogger(__name__)
@@ -128,6 +128,9 @@ class File(Base):  # type: ignore
         self.chg_date = datetime.datetime.utcnow()
 
         self.raw = raw
+
+        if defensive.spamscore(raw) > configuration.spamscore:
+            raise error.SpamError(f"Text exceeds spam score.")
 
         self.filename = filename
 

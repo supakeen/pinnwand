@@ -13,6 +13,7 @@ More quality of life and code quality changes.
 * Paste expiry options now come from the configuration file (#53)
 * Convert tabs/enters to indentation, contributed by millefalcon_ (#90)
 * Add line highlighting, contributed by erlliam_ (#39)
+* Implement naive defensive measures (ratelimiting) (#98)
 
 v1.2.3 (20210109)
 *****************

@@ -55,3 +55,6 @@ ratelimit.create.refill = 1
 ratelimit.delete.capacity = 2
 ratelimit.delete.consume = 2
 ratelimit.delete.refill = 1
+
+# Spamscore
+spamscore = 50

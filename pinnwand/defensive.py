@@ -52,3 +52,26 @@ def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
         return True
 
     return False
+
+
+def spamscore(text: str) -> int:
+    """Give a naive spamscore for some text, spam to pinnwand instances seems
+    to mostly consist of lists of links so we count the link count vs the total
+    text in the paste.
+
+    This will then give a value 0-100, which can be used with a configuration
+    option to deny pastes over a certain percentage."""
+
+    # TODO Is this a good URL regex?
+    match = re.compile(
+        r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+    )
+
+    text_size = len(text)
+    link_size = sum(len(link) for link in match.findall(text))
+
+    score = int((link_size / text_size) * 100)
+
+    log.debug("spamscore: rated at %r score", score)
+
+    return score
