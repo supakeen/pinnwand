@@ -61,13 +61,13 @@ def test_add():
     runner = CliRunner()
 
     result = runner.invoke(command.main, ["add"])
-    assert result.exit_code == 0  # XXX bug, no stdin should not paste
+    assert result.exit_code == 1
 
     result = runner.invoke(command.main, ["add", "--lexer"])
     assert result.exit_code == 2
 
     result = runner.invoke(command.main, ["add", "--lexer", "python"])
-    assert result.exit_code == 0  # XXX bug, no stdin should not paste
+    assert result.exit_code == 1
 
     result = runner.invoke(command.main, ["add", "--lexer", "cheese-is-nice"])
     assert result.exit_code == 0  # XXX bug, unknown lexer

@@ -119,6 +119,11 @@ class File(Base):  # type: ignore
         filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
+        if not len(raw):
+            raise error.ValidationError(
+                f"Empty pastes are not allowed"
+            )
+
         if len(raw) > configuration.paste_size:
             raise error.ValidationError(
                 f"Text exceeds size limit {configuration.paste_size//1024} (kB)"
