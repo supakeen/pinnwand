@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import utility, database, error, configuration
+from pinnwand import utility, database, error, configuration, defensive
 
 
 log = logging.getLogger(__name__)
@@ -22,11 +22,17 @@ class Base(tornado.web.RequestHandler):
 
 class Lexer(Base):
     async def get(self) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         self.write(utility.list_languages())
 
 
 class Expiry(Base):
     async def get(self) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         self.write(
             {
                 name: str(timedelta(seconds=delta))
@@ -43,6 +49,9 @@ class Paste(Base):
         raise tornado.web.HTTPError(405)
 
     async def post(self) -> None:
+        if defensive.ratelimit(self.request, area="create"):
+            raise error.RatelimitError()
+
         try:
             data = tornado.escape.json_decode(self.request.body)
         except json.decoder.JSONDecodeError:

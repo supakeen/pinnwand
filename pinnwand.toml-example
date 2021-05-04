@@ -42,3 +42,16 @@ paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to 
 expiries.1hour = 3600
 expiries.1day = 86400
 expiries.1week = 604800
+
+# Ratelimits
+ratelimit.read.capacity = 100
+ratelimit.read.consume = 1
+ratelimit.read.refill = 2
+
+ratelimit.create.capacity = 2
+ratelimit.create.consume = 2
+ratelimit.create.refill = 1
+
+ratelimit.delete.capacity = 2
+ratelimit.delete.consume = 2
+ratelimit.delete.refill = 1

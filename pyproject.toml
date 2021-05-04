@@ -22,6 +22,7 @@ click = "^7.0"
 docutils = "^0.16"
 toml = "^0.10.0"
 pygments-better-html = "^0.1.0"
+token-bucket = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

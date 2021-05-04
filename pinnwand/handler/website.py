@@ -9,7 +9,7 @@ from datetime import datetime
 import docutils.core
 import tornado.web
 
-from pinnwand import database, path, utility, error, configuration
+from pinnwand import database, path, utility, error, configuration, defensive
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +41,14 @@ class Base(tornado.web.RequestHandler):
                     status_code=400,
                     pagetitle="error",
                 )
+            elif type_ == error.RatelimitError:
+                self.set_status(429)
+                self.render(
+                    "error.html",
+                    text=str(exc),
+                    status_code=429,
+                    pagetitle="error",
+                )
             else:
                 self.render(
                     "error.html",
@@ -63,6 +71,9 @@ class Create(Base):
     async def get(self, lexers: str = "") -> None:
         """Render the new paste form, optionally have a lexer preselected from
         the URL."""
+
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
 
         lexers_available = utility.list_languages()
         lexers_selected = [
@@ -101,6 +112,9 @@ class Create(Base):
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
+
+        if defensive.ratelimit(self.request, area="create"):
+            raise error.RatelimitError()
 
         if lexer not in utility.list_languages():
             log.info("Paste.post: a paste was submitted with an invalid lexer")
@@ -150,6 +164,9 @@ class CreateAction(Base):
 
     def post(self) -> None:  # type: ignore
         """POST handler for the 'web' side of things."""
+
+        if defensive.ratelimit(self.request, area="create"):
+            raise error.RatelimitError()
 
         expiry = self.get_body_argument("expiry")
 
@@ -228,6 +245,9 @@ class Repaste(Base):
         """Render the new paste form, optionally have a lexer preselected from
         the URL."""
 
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -256,6 +276,10 @@ class Show(Base):
 
     async def get(self, slug: str) -> None:  # type: ignore
         """Fetch paste from database by slug and render the paste."""
+
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -322,6 +346,9 @@ class FileRaw(Base):
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and show it in the plain."""
 
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             file = (
                 session.query(database.File)
@@ -352,6 +379,9 @@ class FileHex(Base):
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and show it in hex."""
 
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             file = (
                 session.query(database.File)
@@ -381,6 +411,9 @@ class PasteDownload(Base):
 
     async def get(self, paste_id: str) -> None:  # type: ignore
         """Get all files from the database and download them as a zipfile."""
+
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
 
         with database.session() as session:
             paste = (
@@ -428,6 +461,9 @@ class FileDownload(Base):
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and download it in the plain."""
 
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             file = (
                 session.query(database.File)
@@ -470,6 +506,9 @@ class Remove(Base):
         """Look up if the user visiting this page has the removal id for a
         certain paste. If they do they're authorized to remove the paste."""
 
+        if defensive.ratelimit(self.request, area="delete"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -504,6 +543,9 @@ class RestructuredTextPage(Base):
         self.file = file
 
     async def get(self) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         try:
             with open(path.page / self.file) as f:
                 html = docutils.core.publish_parts(

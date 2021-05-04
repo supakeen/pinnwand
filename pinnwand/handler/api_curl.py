@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import utility, database, configuration
+from pinnwand import utility, database, configuration, error, defensive
 
 
 log = logging.getLogger(__name__)
@@ -18,6 +18,11 @@ class Create(tornado.web.RequestHandler):
         raise tornado.web.HTTPError(400)
 
     def post(self) -> None:
+        if defensive.ratelimit(self.request, area="create"):
+            self.set_status(429)
+            self.write("Enhance your calm, you have exceeded the ratelimit.")
+            return
+
         lexer = self.get_body_argument("lexer", "text")
         raw = self.get_body_argument("raw", "", strip=False)
         expiry = self.get_body_argument("expiry", "1day")

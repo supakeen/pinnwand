@@ -8,3 +8,20 @@ preferred_lexers = []  # type: ignore
 logo_path = None
 report_email = None
 expiries = {"1day": 86400, "1week": 604800}
+ratelimit = {
+    "read": {
+        "capacity": 100,
+        "consume": 1,
+        "refill": 2,
+    },
+    "create": {
+        "capacity": 2,
+        "consume": 2,
+        "refill": 1,
+    },
+    "delete": {
+        "capacity": 2,
+        "consume": 2,
+        "refill": 1,
+    },
+}

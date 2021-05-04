@@ -3,3 +3,10 @@ class ValidationError(ValueError):
     has unacceptable data aboard."""
 
     pass
+
+
+class RatelimitError(ValueError):
+    """This exception is used to indicate that a user has surpassed their
+    ratelimit for a certain action."""
+
+    pass

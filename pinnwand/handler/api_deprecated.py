@@ -10,7 +10,7 @@ import tornado.escape
 
 from tornado.escape import url_escape
 
-from pinnwand import database, utility, error, configuration
+from pinnwand import database, utility, error, configuration, defensive
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +42,14 @@ class Base(tornado.web.RequestHandler):
                     status_code=400,
                     pagetitle="error",
                 )
+            elif type_ == error.RatelimitError:
+                self.set_status(429)
+                self.render(
+                    "error.html",
+                    text=str(exc),
+                    status_code=429,
+                    pagetitle="error",
+                )
             else:
                 self.render(
                     "error.html",
@@ -61,6 +69,9 @@ class Show(Base):
     """Show a paste on the deprecated API."""
 
     async def get(self, slug: str) -> None:  # type: ignore
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -104,6 +115,9 @@ class Create(Base):
         raise tornado.web.HTTPError(405)
 
     async def post(self) -> None:
+        if defensive.ratelimit(self.request, area="create"):
+            raise error.RatelimitError()
+
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
@@ -156,6 +170,9 @@ class Remove(Base):
         return
 
     async def post(self) -> None:
+        if defensive.ratelimit(self.request, area="delete"):
+            raise error.RatelimitError()
+
         with database.session() as session:
             paste = (
                 session.query(database.Paste)
@@ -187,6 +204,9 @@ class Lexer(Base):
     """List lexers through the deprecated API."""
 
     async def get(self) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         self.write(utility.list_languages())
 
 
@@ -194,6 +214,9 @@ class Expiry(Base):
     """List expiries through the deprecated API."""
 
     async def get(self) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
         self.write(
             {
                 name: str(timedelta(seconds=delta))

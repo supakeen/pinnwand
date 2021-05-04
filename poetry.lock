@@ -440,6 +440,14 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "token-bucket"
+version = "0.2.0"
+description = "Very fast implementation of the token bucket algorithm."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -514,7 +522,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4"
-content-hash = "78f662e7c4bde13c90143c0fede6079ed08c1157510e1e1f56703e2147cd10c4"
+content-hash = "d992d23a8ce105e2b035129a44be674583679290c2cd75342fb01fa75dbaae83"
 
 [metadata.files]
 appdirs = [
@@ -852,6 +860,10 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.11-cp39-cp39-win32.whl", hash = "sha256:e7d76312e904aa4ea221a92c0bc2e299ad46e4580e2d72ca1f7e6d31dce5bfab"},
     {file = "SQLAlchemy-1.4.11-cp39-cp39-win_amd64.whl", hash = "sha256:4a2e7f037d3ca818d6d0490e3323fd451545f580df30d62b698da2f247015a34"},
     {file = "SQLAlchemy-1.4.11.tar.gz", hash = "sha256:4ad4044eb86fbcbdff2106e44f479fbdac703d77860b3e19988c8a8786e73061"},
+]
+token-bucket = [
+    {file = "token_bucket-0.2.0-py2.py3-none-any.whl", hash = "sha256:e25aec9cce401447f3588a70d5c45336d460d4fac90f20156bbda26f83fc1aae"},
+    {file = "token_bucket-0.2.0.tar.gz", hash = "sha256:76305d9dbe875d3b033b5bf208cc2cf78c003129378108ab1bae919a42b108da"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
