@@ -62,6 +62,38 @@ with. Here's an example file::
   # Email used for file reporting. If the value is not None then a href with a mailto link will be added to every paste page thus allowing the users to report pastes that may need removal.
   report_email = "maintainer@example.com"
 
+  # Expiries are given by a name and their duration in seconds, if you want to do
+  # 'forever' set a really large number...
+  expiries.1hour = 3600
+  expiries.1day = 86400
+  expiries.1week = 604800
+  
+  # These are application level ratelimits, if you use proxies for your pinnwand
+  # instance you should set limits there as well. These limits describe a token
+  # bucket and are per-IP. 
+  #
+  # The capacity is how many tokens there are available, the consumption is how
+  # many tokens are used by an action and the refill is how many tokens are added
+  # per second. So the read bucket below allows a burst of a 100 reads then another
+  # 2 per second.
+  ratelimit.read.capacity = 100
+  ratelimit.read.consume = 1
+  ratelimit.read.refill = 2
+  
+  ratelimit.create.capacity = 2
+  ratelimit.create.consume = 2
+  ratelimit.create.refill = 1
+  
+  ratelimit.delete.capacity = 2
+  ratelimit.delete.consume = 2
+  ratelimit.delete.refill = 1
+  
+  # pinnwand uses a naive anti-spam measure where a regex is ran over the text
+  # that is pasted. It then checks how large a percentage of the incoming bytes
+  # consist of links. If that percentage is larger than the number below the
+  # paste is denied. Set to a 100 to disable.
+  spamscore = 50
+
 Options
 *******
 
@@ -130,3 +162,77 @@ An email address that allows users to report a paste that may need removal or
 edition.
 
 Default: ``None``
+
+expiries
+========
+Several expiries exist, these are shown in the drop down by name and are used
+for reaping pastes by the `reap` subcommand. They are denoted in seconds and
+the keys are free to choose.
+
+expiries.1hour
+^^^^^^^^^^^^^^
+Default: `3600`
+
+expiries.1day
+^^^^^^^^^^^^^
+Default: `86400`
+
+expiries.1week
+^^^^^^^^^^^^^^
+Default: `604800`
+
+ratelimit
+=========
+These are application level ratelimits, if you use proxies for your pinnwand
+instance you should set limits there as well. These limits describe a token
+bucket and are per-IP. 
+
+The capacity is how many tokens there are available, the consumption is how
+many tokens are used by an action and the refill is how many tokens are added
+per second. So the read bucket below allows a burst of a 100 reads then another
+2 per second.
+
+ratelimit.read.capacity
+^^^^^^^^^^^^^^^^^^^^^^^
+Default: `100`
+
+ratelimit.read.consume
+^^^^^^^^^^^^^^^^^^^^^^
+Default: `1`
+
+ratelimit.read.refill
+^^^^^^^^^^^^^^^^^^^^^
+Default: `1`
+
+ratelimit.create.capacity
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Default: `2`
+
+ratelimit.create.consume
+^^^^^^^^^^^^^^^^^^^^^^^^
+Default: `2`
+
+ratelimit.create.refill
+^^^^^^^^^^^^^^^^^^^^^^^
+Default: `1`
+
+ratelimit.delete.capacity
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Default: `2`
+
+ratelimit.delete.consume
+^^^^^^^^^^^^^^^^^^^^^^^^
+Default: `2`
+
+ratelimit.delete.refill
+^^^^^^^^^^^^^^^^^^^^^^^
+Default: `1`
+
+spamscore
+=========
+pinnwand uses a naive anti-spam measure where a regex is ran over the text
+that is pasted. It then checks how large a percentage of the incoming bytes
+consist of links. If that percentage is larger than the number below the
+paste is denied. Set to a 100 to disable.
+
+Default: `50`

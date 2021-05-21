@@ -37,13 +37,25 @@ footer = 'View <a href="//github.com/supakeen/pinnwand" target="_BLANK">source c
 # empty no help text will be shown.
 paste_help = "<p>Welcome to pinnwand, this site is a pastebin. It allows you to share code with others. If you write code in the text area below and press the paste button you will be given a link you can share with others so they can view your code as well.</p><p>People with the link can view your pasted code, only you can remove your paste and it expires automatically. Note that anyone could guess the URI to your paste so don't rely on it being private.</p>"
 
+# Email used for file reporting. If the value is not None then a href with a mailto
+# link will be added to every paste page thus allowing the users to report pastes
+# that may need removal.
+report_email = "maintainer@example.com"
+
 # Expiries are given by a name and their duration in seconds, if you want to do
 # 'forever' set a really large number...
 expiries.1hour = 3600
 expiries.1day = 86400
 expiries.1week = 604800
 
-# Ratelimits
+# These are application level ratelimits, if you use proxies for your pinnwand
+# instance you should set limits there as well. These limits describe a token
+# bucket and are per-IP. 
+#
+# The capacity is how many tokens there are available, the consumption is how
+# many tokens are used by an action and the refill is how many tokens are added
+# per second. So the read bucket below allows a burst of a 100 reads then another
+# 2 per second.
 ratelimit.read.capacity = 100
 ratelimit.read.consume = 1
 ratelimit.read.refill = 2
@@ -56,5 +68,8 @@ ratelimit.delete.capacity = 2
 ratelimit.delete.consume = 2
 ratelimit.delete.refill = 1
 
-# Spamscore
+# pinnwand uses a naive anti-spam measure where a regex is ran over the text
+# that is pasted. It then checks how large a percentage of the incoming bytes
+# consist of links. If that percentage is larger than the number below the
+# paste is denied. Set to a 100 to disable.
 spamscore = 50
