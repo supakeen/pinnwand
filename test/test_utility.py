@@ -79,7 +79,7 @@ def test_guess_language() -> None:
     """,
             "doc.rst",
         )
-        == "rst"
+        == "restructuredtext"
     )
 
     # markdown
@@ -93,7 +93,7 @@ def test_guess_language() -> None:
     """,
             "doc.md",
         )
-        == "md"
+        == "markdown"
     )
 
 
