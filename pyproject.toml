@@ -25,7 +25,7 @@ pygments-better-html = "^0.1.0"
 token-bucket = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 coverage = "^4.5"
 black = { version = "*", allow-prereleases = true }
 pytest-cov = "^2.8"
