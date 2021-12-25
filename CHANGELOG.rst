@@ -4,6 +4,15 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.4.0 (unreleased)
+*******************
+Focus on prettier pages and ease of development.
+
+* A `Containerfile` is now provided by default. This allows developers to build
+  a container.
+* If only a single file is pasted the code area for this single file is now
+  larger.
+
 v1.3.0 (20210522)
 *****************
 More quality of life and code quality changes.

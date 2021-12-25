@@ -23,7 +23,7 @@
     <div class="file-container">
         <div class="files">
             {% for file in paste.files %}
-            <div class="file-show" id="{{ file.slug }}" class="lang-{{ file.lexer }} code{% if not linenos %} nolinenos{% end %}">
+            <div id="{{ file.slug }}" class="file-show lang-{{ file.lexer }} code{% if not linenos %} nolinenos{% end %} {% if len(paste.files) == 1 %}single{% end %}">
                 <div class="code">
                     {% raw file.fmt %}
                 </div>
