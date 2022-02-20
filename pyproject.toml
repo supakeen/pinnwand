@@ -14,24 +14,24 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6,<4"
-tornado = "^6.0"
+python = ">=3.7,<4"
+tornado = "^6.1"
 pygments = "^2.4"
-sqlalchemy = "^1.3"
-click = "^7.0"
-docutils = "^0.16"
+sqlalchemy = "^1.4"
+click = "^8.0"
+docutils = "^0.18"
 toml = "^0.10.0"
 pygments-better-html = "^0.1.0"
-token-bucket = "^0.2.0"
+token-bucket = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-coverage = "^4.5"
+pytest = "^7.0"
+coverage = "^6.3"
 black = { version = "*", allow-prereleases = true }
-pytest-cov = "^2.8"
+pytest-cov = "^3.0"
 pre-commit = "^1.20"
-flake8 = "^3.7"
-mypy = "^0.740.0"
+flake8 = "^4.0"
+mypy = "^0.931.0"
 
 [tool.black]
 line-length = 80
