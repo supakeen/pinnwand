@@ -59,7 +59,7 @@ Here's an example with the ``requests`` library that ticks all the above boxes::
   ...             ],
   ...     }
   ... ).json()
-  {'link': 'http://localhost:8000/74', 'removal': 'http://localhost:8000/remove/KYXQLPZQEWV2L4YZM7NYGTR7TY'}a
+  {'link': 'http://localhost:8000/74', 'removal': 'http://localhost:8000/remove/KYXQLPZQEWV2L4YZM7NYGTR7TY'}
 
 To remove a paste a ``GET`` request to the ``removal`` URL returned is
 sufficient.
