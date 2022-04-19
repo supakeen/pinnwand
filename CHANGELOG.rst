@@ -13,6 +13,12 @@ Focus on prettier pages and ease of development.
 * If only a single file is pasted the code area for this single file is now
   larger.
 
+v1.3.1 (20220220)
+*****************
+Bumping some major dependencies to make packaging easier.
+
+* Update major versions of many dependencies.
+
 v1.3.0 (20210522)
 *****************
 More quality of life and code quality changes.
