@@ -2,10 +2,10 @@
 name = "pinnwand"
 version = "1.4.0"
 description = "Straightforward pastebin software."
-authors = ["supakeen <cmdr@supakeen.com>"]
+authors = ["Simon de Vlieger <cmdr@supakeen.com>"]
 license = "MIT"
 readme = "README.rst"
-keywords = ["pastebin"]
+keywords = ["pastebin", "python", "tornado"]
 repository = "https://github.com/supakeen/pinnwand"
 classifiers = [
   "License :: OSI Approved :: MIT License",

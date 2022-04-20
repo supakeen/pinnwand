@@ -3,4 +3,4 @@ Authors
 
 pinnwand authors in alphabetical order:
 
-* supakeen <cmdr@supakeen.com>
+* Simon de Vlieger <cmdr@supakeen.com>
