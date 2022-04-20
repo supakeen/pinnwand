@@ -12,6 +12,7 @@ Focus on prettier pages and ease of development.
   a container.
 * If only a single file is pasted the code area for this single file is now
   larger.
+* Update major versions of some dependencies.
 
 v1.3.1 (20220220)
 *****************
