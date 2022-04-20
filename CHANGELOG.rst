@@ -13,6 +13,7 @@ Focus on prettier pages and ease of development.
 * If only a single file is pasted the code area for this single file is now
   larger.
 * Update major versions of some dependencies.
+* Replace the `toml` dependency with the maintained `tomli`.
 
 v1.3.1 (20220220)
 *****************
