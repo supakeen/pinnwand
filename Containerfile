@@ -10,4 +10,6 @@ RUN python3 -m venv venv
 RUN venv/bin/pip install -U pip
 RUN venv/bin/pip install -r requirements.txt
 
+EXPOSE 8000
+
 CMD ["venv/bin/python3", "-m", "pinnwand", "http"]
