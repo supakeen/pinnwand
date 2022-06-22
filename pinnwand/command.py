@@ -132,13 +132,14 @@ def resyntax() -> None:
     from pygments_better_html import BetterHtmlFormatter
 
     from pinnwand import database
+    from pinnwand import utility
 
     with database.session() as session:
         files = session.query(database.File).all()
 
         for file in files:
             if file.lexer == "autodetect":
-                lexer = utility.guess_language(raw, filename)
+                lexer = utility.guess_language(file.raw, file.filename)
                 log.debug(f"resyntax: Language guessed as {lexer}")
 
             lexer = pygments.lexers.get_lexer_by_name(lexer)
@@ -146,7 +147,7 @@ def resyntax() -> None:
                 linenos="table", cssclass="source"
             )
 
-            formatted = pygments.highlight(self.raw, lexer, formatter)
+            formatted = pygments.highlight(file.raw, lexer, formatter)
 
             file.fmt = formatted
 

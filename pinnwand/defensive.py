@@ -38,7 +38,7 @@ def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
         ratelimit_area[area] = {}
 
     # TODO handle valueerror as validationerror?
-    address = ipaddress.ip_address(request.remote_ip)
+    address = ipaddress.ip_address(str(request.remote_ip))
 
     if address not in ratelimit_area[area]:
         ratelimit_area[area][address] = token_bucket.Limiter(

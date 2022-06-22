@@ -27,8 +27,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install mypy
-        pip install types-backports types-requests types-setuptools types-toml types-pygments
+        pip install types-docutils mypy
     - name: Check with mypy
-      # for now only run on a few files to avoid slipping backward
-      run: mypy
+      run: mypy pinnwand/

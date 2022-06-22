@@ -120,9 +120,7 @@ class File(Base):  # type: ignore
     ) -> None:
         # Start with some basic housekeeping related to size
         if not len(raw):
-            raise error.ValidationError(
-                f"Empty pastes are not allowed"
-            )
+            raise error.ValidationError(f"Empty pastes are not allowed")
 
         if len(raw) > configuration.paste_size:
             raise error.ValidationError(

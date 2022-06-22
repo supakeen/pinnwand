@@ -35,7 +35,7 @@ def list_languages() -> Dict[str, str]:
     # Since dicts are sorted since Python 3.7 (and 3.6 per implementation
     # detail) and the Pygments ordering is a bit inane we sort and turn back
     # into a dict here.
-    return dict(sorted(lexers.items(), key=lambda x: x[1]))
+    return dict(sorted(lexers.items(), key=lambda x: x[1]))  # type: ignore
 
 
 GUESS_LANG_OVERRIDES = {"as3": "yaml", "python2": "python"}
