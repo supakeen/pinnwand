@@ -1,4 +1,9 @@
-FROM python
+FROM registry.fedoraproject.org/fedora-minimal:36
+
+RUN \
+    microdnf install -y \
+        python3-pip && \
+        microdnf clean all
 
 COPY pinnwand /usr/app/pinnwand
 COPY requirements.txt /usr/app/requirements.txt
