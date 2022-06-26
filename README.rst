@@ -23,6 +23,9 @@ pinnwand
 .. image:: https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/supakeen/pinnwand
 
+.. image:: https://quay.io/repository/supakeen/pinnwand/status
+    :target: https://quay.io/repository/supakeen/pinnwand
+
 About
 =====
 
