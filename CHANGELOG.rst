@@ -15,6 +15,10 @@ Focus on prettier pages and ease of development.
 * Update major versions of some dependencies.
 * Replace the `toml` dependency with the maintained `tomli`.
 
+v1.3.2 (20220711)
+*****************
+Changing some dependencies to make packaging easier.
+
 v1.3.1 (20220220)
 *****************
 Bumping some major dependencies to make packaging easier.
