@@ -1,4 +1,4 @@
-.. image:: https://pinnwand.readthedocs.io/en/latest/_static/logo-readme.png
+.. image:: https://pinnwand.readthedocs.io/en/latest/_static/logo-doc.png
     :width: 950px
     :align: center
 
