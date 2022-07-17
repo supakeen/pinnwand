@@ -29,25 +29,27 @@ Enter text, click "Paste", easy enough.
 
 steck
 -----
-[steck](https://supakeen.com/project/steck) is a command line client to pinnwand instances::
+[steck](https://supakeen.com/project/steck) is a command line client to pinnwand instances:
 
-  € pip install --user steck
-  ...
-  € steck paste *
-  You are about to paste the following 7 files. Do you want to continue?
-   - LICENSE
-   - mypy.ini
-   - poetry.lock
-   - pyproject.toml
-   - README.rst
-   - requirements.txt
-   - steck.py
+```
+€ pip install --user steck
+...
+€ steck paste *
+You are about to paste the following 7 files. Do you want to continue?
+- LICENSE
+- mypy.ini
+- poetry.lock
+- pyproject.toml
+- README.rst
+- requirements.txt
+- steck.py
 
-  Continue? [y/N] y
+Continue? [y/N] y
 
-  Completed paste.
-  View link:    https://localhost:8000/W5
-  Removal link: https://localhost:8000/remove/TS2AFFIEHEWUBUV5HLKNAUZFEI
+Completed paste.
+View link:    https://localhost:8000/W5
+Removal link: https://localhost:8000/remove/TS2AFFIEHEWUBUV5HLKNAUZFEI
+```
 
 curl
 ----
