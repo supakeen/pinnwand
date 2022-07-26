@@ -32,10 +32,13 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
     from pinnwand import configuration
 
     if configuration_path:
-        import tomli
+        try:
+            import tomllib as toml
+        except ImportError:
+            import tomli as toml
 
         with open(configuration_path, "rb") as file:
-            configuration_file = tomli.load(file)
+            configuration_file = toml.load(file)
 
             for key, value in configuration_file.items():
                 setattr(configuration, key, value)
