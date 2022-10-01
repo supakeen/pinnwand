@@ -35,7 +35,7 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
         try:
             import tomllib as toml
         except ImportError:
-            import tomli as toml # type: ignore # see https://github.com/python/mypy/issues/1153
+            import tomli as toml  # type: ignore # see https://github.com/python/mypy/issues/1153
 
         with open(configuration_path, "rb") as file:
             configuration_file = toml.load(file)
