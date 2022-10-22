@@ -1,0 +1,9 @@
+[Unit]
+Description=pinnwand pastebin reap
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=1h
+
+[Install]
+WantedBy=timers.target

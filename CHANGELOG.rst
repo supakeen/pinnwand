@@ -14,6 +14,7 @@ Focus on prettier pages and ease of development.
   larger.
 * Update major versions of some dependencies.
 * Replace the `toml` dependency with the maintained `tomli`.
+* Provide example systemd service and timer file for reaping expired pastes.
 
 v1.3.2 (20220711)
 *****************
