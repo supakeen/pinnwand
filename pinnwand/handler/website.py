@@ -1,15 +1,14 @@
-import logging
 import binascii
 import io
+import logging
 import zipfile
-
-from typing import Any
 from datetime import datetime
+from typing import Any
 
 import docutils.core
 import tornado.web
 
-from pinnwand import database, path, utility, error, configuration, defensive
+from pinnwand import configuration, database, defensive, error, path, utility
 
 log = logging.getLogger(__name__)
 

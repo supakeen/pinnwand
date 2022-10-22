@@ -1,29 +1,18 @@
+import contextlib
 import datetime
 import logging
-import contextlib
-
 from datetime import timedelta
 from typing import Optional
 
 import pygments.lexers
-
-from sqlalchemy import (
-    Integer,
-    Column,
-    String,
-    DateTime,
-    Text,
-    ForeignKey,
-    create_engine,
-)
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.orm.session import Session
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
-
 from pygments_better_html import BetterHtmlFormatter
+from sqlalchemy import (Column, DateTime, ForeignKey, Integer, String, Text,
+                        create_engine)
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm.session import Session
 
-from pinnwand import configuration, error, utility, defensive
-
+from pinnwand import configuration, defensive, error, utility
 
 log = logging.getLogger(__name__)
 

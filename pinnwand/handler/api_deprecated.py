@@ -1,16 +1,14 @@
 import json
 import logging
-
+from datetime import datetime, timedelta
 from typing import Any
 from urllib.parse import urljoin
-from datetime import datetime, timedelta
 
-import tornado.web
 import tornado.escape
-
+import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import database, utility, error, configuration, defensive
+from pinnwand import configuration, database, defensive, error, utility
 
 log = logging.getLogger(__name__)
 

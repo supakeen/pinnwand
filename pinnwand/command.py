@@ -2,17 +2,13 @@
 a HTTP server, add and remove paste, initialize the database and reap expired
 pastes."""
 
-import sys
 import logging
-
+import sys
 from datetime import datetime, timedelta
-
 from typing import Optional
 
 import click
-
 import tornado.ioloop
-
 
 log = logging.getLogger(__name__)
 
@@ -63,8 +59,7 @@ def http(port: int) -> None:
 @click.option("--lexer", default="text", help="Lexer to use.")
 def add(lexer: str) -> None:
     """Add a paste to pinnwand's database from stdin."""
-    from pinnwand import database
-    from pinnwand import utility
+    from pinnwand import database, utility
 
     if lexer not in utility.list_languages():
         log.error("add: unknown lexer")
@@ -134,8 +129,7 @@ def resyntax() -> None:
     import pygments.lexers
     from pygments_better_html import BetterHtmlFormatter
 
-    from pinnwand import database
-    from pinnwand import utility
+    from pinnwand import database, utility
 
     with database.session() as session:
         files = session.query(database.File).all()

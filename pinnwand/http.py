@@ -1,12 +1,11 @@
 import logging
 import secrets
 import zipfile
-
 from typing import Any, List
 
 import tornado.web
 
-from pinnwand import path, configuration, handler
+from pinnwand import configuration, handler, path
 
 log = logging.getLogger(__name__)
 

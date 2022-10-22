@@ -1,15 +1,12 @@
+import ipaddress
 import logging
 import re
-import ipaddress
-
 from typing import Dict, Union
 
 import token_bucket
-
 from tornado.httputil import HTTPServerRequest
 
-from pinnwand import error, configuration
-
+from pinnwand import configuration, error
 
 log = logging.getLogger(__name__)
 

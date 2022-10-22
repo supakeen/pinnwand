@@ -1,7 +1,7 @@
 """Shorthands for paths for templates, static assets, etc."""
-from pinnwand import configuration
-
 import pathlib
+
+from pinnwand import configuration
 
 base = pathlib.Path(__file__).parent
 

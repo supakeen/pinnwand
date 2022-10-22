@@ -1,15 +1,12 @@
-import logging
 import json
-
+import logging
 from datetime import timedelta
 from typing import Any
-
 from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import utility, database, error, configuration, defensive
-
+from pinnwand import configuration, database, defensive, error, utility
 
 log = logging.getLogger(__name__)
 
