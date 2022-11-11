@@ -181,7 +181,7 @@ div.file-show div.code {
   padding: .5rem; }
 
 div.file-show.single div.code {
-  min-height: 50vw; }
+  min-height: 60vh; }
 
 div.file-show div.meta {
   background-color: var(--color1);
