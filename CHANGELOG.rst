@@ -15,6 +15,8 @@ Focus on prettier pages and ease of development.
 * Update major versions of some dependencies.
 * Replace the `toml` dependency with the maintained `tomli`.
 * Provide example systemd service and timer file for reaping expired pastes.
+* The CSS is now generated from SASS, this means that you need `sassc`
+  installed if you want to change/rebuild assets.
 
 v1.3.2 (20220711)
 *****************
