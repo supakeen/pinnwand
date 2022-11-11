@@ -73,7 +73,7 @@ class Paste(Base):  # type: ignore
         self,
         slug: str,
         expiry: int = 604800,
-        src: str = None,
+        src: Optional[str] = None,
     ) -> None:
         # Generate a paste_id and a removal_id
         # Unless someone proves me wrong that I need to check for collisions
