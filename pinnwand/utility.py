@@ -5,8 +5,11 @@ from base64 import b32encode
 from os import urandom
 from typing import Any, Dict, List, Optional
 
-from pygments.lexers import (get_all_lexers, guess_lexer,
-                             guess_lexer_for_filename)
+from pygments.lexers import (
+    get_all_lexers,
+    guess_lexer,
+    guess_lexer_for_filename,
+)
 
 from pinnwand import database
 
