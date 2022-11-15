@@ -102,8 +102,8 @@ class File(Base):  # type: ignore
 
     lexer = Column(String(250))
 
-    raw = Column(Text(configuration.paste_size))
-    fmt = Column(Text(configuration.paste_size))
+    raw = Column(Text)
+    fmt = Column(Text)
 
     filename = Column(String(250))
 
