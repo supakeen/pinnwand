@@ -1,9 +1,0 @@
-[Unit]
-Description=pinnwand pastebin reap
-
-[Service]
-ExecStart=/home/youruser/virtual-environment/bin/pinnwand --configuration-path /home/youruser/pinnwand.toml reap
-Restart=always
-
-[Install]
-WantedBy=multi-user.target

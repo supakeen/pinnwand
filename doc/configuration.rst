@@ -166,8 +166,8 @@ Default: ``None``
 expiries
 ========
 Several expiries exist, these are shown in the drop down by name and are used
-for reaping pastes by the `reap` subcommand. They are denoted in seconds and
-the keys are free to choose.
+for reaping pastes. They are denoted in seconds and the keys are free to choose.
+
 
 expiries.1hour
 ^^^^^^^^^^^^^^

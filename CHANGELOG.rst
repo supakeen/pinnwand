@@ -6,7 +6,8 @@ a little more complex.
 
 v1.4.0 (unreleased)
 *******************
-Focus on prettier pages and ease of development.
+Focus on prettier pages, ease of development, and more defensive posturing. The
+`reap` subcommand is now deprecated and instead ran in-process.
 
 * A `Containerfile` is now provided by default. This allows developers to build
   a container.
@@ -17,6 +18,9 @@ Focus on prettier pages and ease of development.
 * Provide example systemd service and timer file for reaping expired pastes.
 * The CSS is now generated from SASS, this means that you need `sassc`
   installed if you want to change/rebuild assets.
+* The `reap` subcommand is deprecated and will be removed in `1.6`, it now
+  runs when the `http` subcommand is running every 1800 seconds instead. The
+  example files for `reap` have been removed as well.
 
 v1.3.2 (20220711)
 *****************

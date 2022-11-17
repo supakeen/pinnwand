@@ -4,6 +4,7 @@ import re
 from base64 import b32encode
 from os import urandom
 from typing import Any, Dict, List, Optional
+from datetime import datetime
 
 from pygments.lexers import (
     get_all_lexers,
@@ -177,3 +178,27 @@ def filename_clean(filename: str) -> str:
 
     # Replace anything that could be misinterpreted by an operating system
     return re.sub(r"[^A-Za-z0-9-_]", "", filename)
+
+
+def reap() -> None:
+    """Delete all pastes that are past their expiry date in pinnwand's
+    database."""
+
+    with database.session() as session:
+        pastes = (
+            session.query(database.Paste)
+            .filter(database.Paste.exp_date < datetime.utcnow())
+            .all()
+        )
+
+        for paste in pastes:
+            session.delete(paste)
+
+        session.commit()
+
+        log.info("reap: removed %d pastes", len(pastes))
+
+
+async def async_reap() -> None:
+    """Just the asynchronous definition of `reap`, note: not async."""
+    reap()

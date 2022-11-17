@@ -49,9 +49,18 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 def http(port: int) -> None:
     """Run pinnwand's HTTP server."""
     from pinnwand.http import make_application
+    from pinnwand import utility
+
+    # Reap expired pastes on startup (we might've been shut down for a while)
+    utility.reap()
+
+    # Schedule reaping every 1800 seconds
+    reap_task = tornado.ioloop.PeriodicCallback(utility.async_reap, 1_800_000)
+    reap_task.start()
 
     application = make_application()
     application.listen(port, xheaders=True)
+
     tornado.ioloop.IOLoop.current().start()
 
 
@@ -106,20 +115,11 @@ def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
     database."""
     from pinnwand import database
+    from pinnwand import utility
 
-    with database.session() as session:
-        pastes = (
-            session.query(database.Paste)
-            .filter(database.Paste.exp_date < datetime.utcnow())
-            .all()
-        )
+    log.warning("reap: this command is deprecated and will be removed in 1.6")
 
-        for paste in pastes:
-            session.delete(paste)
-
-        session.commit()
-
-        log.info("reap: removed %d pastes", len(pastes))
+    utility.reap()
 
 
 @main.command()
