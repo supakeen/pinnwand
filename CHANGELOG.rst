@@ -9,6 +9,10 @@ v1.4.0 (unreleased)
 Focus on prettier pages, ease of development, and more defensive posturing. The
 `reap` subcommand is now deprecated and instead ran in-process.
 
+A big change is the fact that you can now configure ``pinnwand`` through
+environment variables, this makes running in containerized systems a fair bit
+easier.
+
 * A `Containerfile` is now provided by default. This allows developers to build
   a container.
 * If only a single file is pasted the code area for this single file is now
@@ -21,6 +25,9 @@ Focus on prettier pages, ease of development, and more defensive posturing. The
 * The `reap` subcommand is deprecated and will be removed in `1.6`, it now
   runs when the `http` subcommand is running every 1800 seconds instead. The
   example files for `reap` have been removed as well.
+* ``pinnwand`` can now be configured through environment variables, these
+  start with `PINNWAND_` and are all upper case, then the prefix is removed
+  and the key lowercased. This *overwrites* any previously set value.
 
 v1.3.2 (20220711)
 *****************

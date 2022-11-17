@@ -2,8 +2,8 @@
 
 Configuration
 #############
-``pinnwand`` is configured in two ways, one is by arguments and the other is
-through a configuration file.
+``pinnwand`` is configured in three ways, one is by arguments and the other is
+through a configuration file and the last is by environment variables.
 
 The options available are dependent on the command you're running. You can
 always pass the ``--configuration-path`` argument to ``pinnwand``.
@@ -14,6 +14,9 @@ Here is a quick example::
 
 The ``http`` subcommand takes a separate argument ``--port`` to override
 the default listening port (8000).
+
+Any value in this file can be overridden by passing `PINNWAND_DATABASE_URI` in
+the environment (for example).
 
 File
 ****

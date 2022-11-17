@@ -4,6 +4,7 @@ pastes."""
 
 import logging
 import sys
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -27,6 +28,7 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
     from pinnwand import configuration
 
+    # First check if we have a configuration path
     if configuration_path:
         try:
             import tomllib as toml
@@ -38,6 +40,16 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
             for key, value in configuration_file.items():
                 setattr(configuration, key, value)
+
+    # Or perhaps we have configuration in the environment, these are prefixed
+    # with PINNWAND_ and all upper case, remove the prefix, convert to
+    # lowercase.
+    for key, value in os.environ.items():
+        if key.startswith("PINNWAND_"):
+            key = key.removeprefix("PINNWAND_")
+            key = key.lower()
+
+            setattr(configuration, key, value)
 
     from pinnwand import database
 
