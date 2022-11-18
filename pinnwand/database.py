@@ -6,15 +6,8 @@ from typing import Optional
 
 import pygments.lexers
 from pygments_better_html import BetterHtmlFormatter
-from sqlalchemy import (
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-    create_engine,
-)
+from sqlalchemy import (Column, DateTime, ForeignKey, Integer, String, Text,
+                        create_engine)
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.orm.session import Session

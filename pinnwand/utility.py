@@ -2,15 +2,12 @@ import logging
 import math
 import re
 from base64 import b32encode
+from datetime import datetime
 from os import urandom
 from typing import Any, Dict, List, Optional
-from datetime import datetime
 
-from pygments.lexers import (
-    get_all_lexers,
-    guess_lexer,
-    guess_lexer_for_filename,
-)
+from pygments.lexers import (get_all_lexers, guess_lexer,
+                             guess_lexer_for_filename)
 
 from pinnwand import database
 

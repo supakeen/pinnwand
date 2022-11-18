@@ -4,8 +4,8 @@ pastes."""
 
 import ast
 import logging
-import sys
 import os
+import sys
 from datetime import timedelta
 from typing import Optional
 
@@ -68,8 +68,8 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 @click.option("--port", default=8000, help="Port to listen to.")
 def http(port: int) -> None:
     """Run pinnwand's HTTP server."""
-    from pinnwand.http import make_application
     from pinnwand import utility
+    from pinnwand.http import make_application
 
     # Reap expired pastes on startup (we might've been shut down for a while)
     utility.reap()
