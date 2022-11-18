@@ -2,6 +2,7 @@
 a HTTP server, add and remove paste, initialize the database and reap expired
 pastes."""
 
+import ast
 import logging
 import sys
 import os
@@ -48,6 +49,13 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
         if key.startswith("PINNWAND_"):
             key = key.removeprefix("PINNWAND_")
             key = key.lower()
+
+            try:
+                value = ast.literal_eval(value)
+            except ValueError:
+                # When `ast.literal_eval` can't parse the value into another
+                # type we take it at string value
+                pass
 
             setattr(configuration, key, value)
 
