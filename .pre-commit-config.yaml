@@ -24,3 +24,9 @@ repos:
       entry: python -m mypy
       types: [python]
       exclude: ^doc/conf.py|^test
+    - id: isort
+      name: isort
+      language: system
+      entry: python -m isort
+      types: [python]
+      exclude: ^doc/conf.py|^test

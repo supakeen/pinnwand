@@ -32,7 +32,8 @@ pytest-cov = "^3.0"
 pre-commit = "^2.18"
 flake8 = "^4.0"
 mypy = "^0.942"
-types-docutils = "^0.18.3"
+types-docutils = "^0.19.1.1"
+isort = "^5.10.1"
 
 [tool.black]
 line-length = 80

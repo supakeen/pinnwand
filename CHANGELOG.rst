@@ -28,6 +28,7 @@ easier.
 * ``pinnwand`` can now be configured through environment variables, these
   start with `PINNWAND_` and are all upper case, then the prefix is removed
   and the key lowercased. This *overwrites* any previously set value.
+* `isort` was added to `pre-commit` checks.
 
 v1.3.2 (20220711)
 *****************
