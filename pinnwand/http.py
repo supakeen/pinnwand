@@ -1,6 +1,5 @@
 import logging
 import secrets
-import zipfile
 from typing import Any, List
 
 import tornado.web

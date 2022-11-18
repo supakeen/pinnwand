@@ -116,7 +116,7 @@ class File(Base):  # type: ignore
     ) -> None:
         # Start with some basic housekeeping related to size
         if not len(raw):
-            raise error.ValidationError(f"Empty pastes are not allowed")
+            raise error.ValidationError("Empty pastes are not allowed")
 
         if len(raw) > configuration.paste_size:
             raise error.ValidationError(
@@ -129,7 +129,7 @@ class File(Base):  # type: ignore
         self.raw = raw
 
         if defensive.spamscore(raw) > configuration.spamscore:
-            raise error.SpamError(f"Text exceeds spam score.")
+            raise error.SpamError("Text exceeds spam score.")
 
         self.filename = filename
 

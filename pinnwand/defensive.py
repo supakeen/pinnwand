@@ -6,7 +6,7 @@ from typing import Dict, Union
 import token_bucket
 from tornado.httputil import HTTPServerRequest
 
-from pinnwand import configuration, error
+from pinnwand import configuration
 
 log = logging.getLogger(__name__)
 

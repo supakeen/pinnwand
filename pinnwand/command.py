@@ -6,7 +6,7 @@ import ast
 import logging
 import sys
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional
 
 import click
@@ -134,7 +134,6 @@ def delete(paste: str) -> None:
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
     database."""
-    from pinnwand import database
     from pinnwand import utility
 
     log.warning("reap: this command is deprecated and will be removed in 1.6")
