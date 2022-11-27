@@ -16,7 +16,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install black codespell
     - name: Check with black
-      run: black --check .
+      run: black --check src/pinnwand
   mypy:
     runs-on: ubuntu-latest
     steps:
@@ -29,4 +29,4 @@ jobs:
         pip install -r requirements.txt
         pip install types-docutils mypy
     - name: Check with mypy
-      run: mypy pinnwand/
+      run: mypy src/pinnwand
