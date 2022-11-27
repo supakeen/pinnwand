@@ -25,7 +25,7 @@ click = "^8.1"
 docutils = "^0.19"
 pygments-better-html = "^0.1.4"
 token-bucket = "^0.3.0"
-tomli = "^2.0.1"
+tomli = { version = "^2.0.1", python = "<3.11" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2"

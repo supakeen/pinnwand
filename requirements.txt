@@ -122,7 +122,7 @@ sqlalchemy==1.4.44 ; python_version >= "3.7" and python_version < "4" \
 token-bucket==0.3.0 ; python_version >= "3.7" and python_version < "4" \
     --hash=sha256:6df24309e3cf5b808ae5ef714a3191ec5b54f48c34ef959e4882eef140703369 \
     --hash=sha256:979571c99db2ff9e651f2b2146a62b2ebadf7de6c217a8781698282976cb675f
-tomli==2.0.1 ; python_version >= "3.7" and python_version < "4" \
+tomli==2.0.1 ; python_version >= "3.7" and python_version < "3.11" \
     --hash=sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc \
     --hash=sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f
 tornado==6.2 ; python_version >= "3.7" and python_version < "4" \
