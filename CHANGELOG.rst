@@ -13,6 +13,9 @@ A big change is the fact that you can now configure ``pinnwand`` through
 environment variables, this makes running in containerized systems a fair bit
 easier.
 
+For _packagers_, if you previously shipped timer units for `reap` you can remove
+them from your packages in this new version.
+
 * A `Containerfile` is now provided by default. This allows developers to build
   a container.
 * If only a single file is pasted the code area for this single file is now
