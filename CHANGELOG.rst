@@ -32,6 +32,8 @@ them from your packages in this new version.
   start with `PINNWAND_` and are all upper case, then the prefix is removed
   and the key lowercased. This *overwrites* any previously set value.
 * `isort` was added to `pre-commit` checks.
+* The package layout has been changed to a src-layout, if you are running tests
+  with a `pytest < 7` you will need the additional `pytest-srcpaths` plugin.
 
 v1.3.2 (20220711)
 *****************

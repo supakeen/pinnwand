@@ -12,6 +12,9 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
 ]
+packages = [
+    { include = "pinnwand", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4"
@@ -55,6 +58,9 @@ exclude = '''
 '''
 [tool.poetry.scripts]
 pinnwand = 'pinnwand.__main__:main'
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
 
 [build-system]
 requires = ["poetry-core"]

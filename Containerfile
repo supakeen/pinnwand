@@ -5,7 +5,7 @@ RUN \
         python3-pip && \
         microdnf clean all
 
-COPY pinnwand /usr/app/pinnwand
+COPY src/pinnwand /usr/app/pinnwand
 COPY requirements.txt /usr/app/requirements.txt
 
 WORKDIR /usr/app
