@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 from datetime import timedelta
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import click
 import tornado.ioloop
@@ -31,10 +31,15 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
     # First check if we have a configuration path
     if configuration_path:
-        try:
+        if (
+            TYPE_CHECKING
+        ):  # lie to mypy, see https://github.com/python/mypy/issues/1153
             import tomllib as toml
-        except ImportError:
-            import tomli as toml  # type: ignore # see https://github.com/python/mypy/issues/1153
+        else:
+            try:
+                import tomllib as toml
+            except ImportError:
+                import tomli as toml
 
         with open(configuration_path, "rb") as file:
             configuration_file = toml.load(file)
