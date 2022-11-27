@@ -34,6 +34,7 @@ them from your packages in this new version.
 * `isort` was added to `pre-commit` checks.
 * The package layout has been changed to a src-layout, if you are running tests
   with a `pytest < 7` you will need the additional `pytest-srcpaths` plugin.
+* Configuration examples have moved to the `etc/` subdirectory.
 
 v1.3.2 (20220711)
 *****************
