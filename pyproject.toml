@@ -63,33 +63,42 @@ pinnwand = 'pinnwand.__main__:main'
 pythonpath = ["src"]
 
 [tool.mypy]
-# Specify the target platform details in config, so your developers are
-# free to run mypy on Windows, Linux, or macOS and get consistent
-# results.
 python_version = "3.6"
 platform = "linux"
-
-# flake8-mypy expects the two following for sensible formatting
 show_column_numbers = true
-
-# show error messages from unrelated files
 follow_imports = "normal"
-
-# suppress errors about unsatisfied imports
 ignore_missing_imports = true
-
-# be strict
 disallow_untyped_calls = true
 warn_return_any = true
 strict_optional = true
 warn_no_return = true
 warn_redundant_casts = true
 warn_unused_ignores = true
-
-# The following are off by default.  Flip them on if you feel
-# adventurous.
 disallow_untyped_defs = true
 check_untyped_defs = true
+
+[tool.pylint]
+extension-pkg-whitelist = ["lxml"]
+ignore = ["CVS"]
+jobs = 1
+persistent = "yes"
+suggestion-mode = "yes"
+unsafe-load-any-extension = "no"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+        "raw-checker-failed",
+        "bad-inline-option",
+        "locally-disabled",
+        "file-ignored",
+        "suppressed-message",
+        "useless-suppression",
+        "deprecated-pragma",
+        "invalid-name",
+        "line-too-long"
+]
+
+enable = "c-extension-no-member"
 
 [build-system]
 requires = ["poetry-core"]
