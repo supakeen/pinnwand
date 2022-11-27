@@ -4,8 +4,8 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.4.0 (unreleased)
-*******************
+v1.4.0 (20221127)
+*****************
 Focus on prettier pages, ease of development, and more defensive posturing. The
 `reap` subcommand is now deprecated and instead ran in-process.
 
