@@ -37,6 +37,10 @@ mypy = "^0.991"
 types-docutils = "^0.19.1.1"
 isort = "^5.10.1"
 
+[tool.poetry.group.dev.dependencies]
+bandit = "^1.7.4"
+pip-audit = "^2.4.6"
+
 [tool.black]
 line-length = 80
 target_version = ["py36"]

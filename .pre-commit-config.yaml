@@ -24,3 +24,9 @@ repos:
       entry: python -m isort
       types: [python]
       exclude: ^doc/conf.py|^test
+    - id: bandit
+      name: bandit
+      language: system
+      entry: python -m bandit
+      types: [python]
+      exclude: ^doc/conf.py|^test
