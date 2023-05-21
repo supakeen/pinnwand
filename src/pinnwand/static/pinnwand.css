@@ -200,7 +200,8 @@ td.linenos {
 
 div.code {
   font-size: 1.2rem;
-  overflow-x: auto; }
+  overflow-x: auto;
+  tab-size: 4; }
   div.code:hover td.linenos {
     opacity: .75; }
 
