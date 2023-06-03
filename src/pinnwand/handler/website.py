@@ -211,7 +211,7 @@ class CreateAction(Base):
                 next(slug_context), configuration.expiries[expiry], "web"
             )
 
-            for (lexer, raw, filename) in zip(lexers, raws, filenames):
+            for lexer, raw, filename in zip(lexers, raws, filenames):
                 paste.files.append(
                     database.File(
                         next(slug_context),
