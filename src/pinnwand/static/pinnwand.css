@@ -171,7 +171,7 @@ header nav ul {
     display: inline-block;
     vertical-align: middle; }
     header nav ul li img.logo {
-      width: 3rem; }
+      height: 5rem; }
 
 div.file-show {
   margin-top: .5rem; }
