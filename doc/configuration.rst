@@ -41,7 +41,11 @@ with. Here's an example file::
   # names here have to be the identifiers used by pygments, not the human names.
   # If empty no preferred lexers are shown.
   preferred_lexers = []
-  
+
+  # The lexer selected by default when creating a new paste.
+  # Similar to preferred_lexers, only supports lexer identifiers used by pygments.
+  default_selected_lexer = "text"
+
   # Logo path, used to render your logo. If left out the default logo will be
   # used. This file must be a png file.
   # logo_path = "/path/to/a/file.png"
@@ -122,6 +126,12 @@ Leaving this list empty will not show any preferred lexers. The lexer names
 in this list must be supported by pygments.
 
 Default: ``[]``.
+
+default_selected_lexer
+======================
+The lexer that is selected by default when creating a new paste.
+
+Default: ``text``
 
 logo_path
 =========
