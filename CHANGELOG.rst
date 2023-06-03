@@ -13,6 +13,7 @@ v1.5.0 (unreleased)
 * Make environment variable parsing better by accepting `SyntaxError` by ChrisLovering_.
 * Allow selecting the default lexer in configuration by ChrisLovering_.
 * Ctrl+S now submits pastes by ChrisLovering_.
+* `pdm` is now used as the build backend and package solution.
 
 v1.4.0 (20221127)
 *****************
