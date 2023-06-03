@@ -16,3 +16,5 @@ jobs:
     uses: ./.github/workflows/test.yaml
   vuln:
     uses: ./.github/workflows/vuln.yaml
+  build-push:
+    uses: ./.github/workflows/build.yaml

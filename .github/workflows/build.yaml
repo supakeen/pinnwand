@@ -1,0 +1,83 @@
+name: Build & Deploy
+
+on:
+  workflow_call:
+
+jobs:
+  build-base:
+    name: Build & push base image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate docker image metadata
+        uses: docker/metadata-action@v4
+        id: meta
+        with:
+            images: ghcr.io/supakeen/pinnwand
+            tags: |
+                type=ref,event=tag,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+                type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Containerfile
+          target: base
+          push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') }}
+          cache-from: type=registry,ref=ghcr.io/supakeen/pinnwand:latest
+          cache-to: type=inline
+          tags: ${{ steps.meta.outputs.tags }}
+
+  build-additional-images:
+    name: Build & push additional images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container-stage: ["psql","mysql"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate docker image metadata
+        uses: docker/metadata-action@v4
+        id: meta
+        with:
+          images: ghcr.io/supakeen/pinnwand
+          tags: |
+              type=ref,event=tag,suffix=-${{ matrix.container-stage }},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+              type=raw,value=latest-${{ matrix.container-stage }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Containerfile
+          target: ${{ matrix.container-stage }}
+          push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') }}
+          cache-from: type=registry,ref=ghcr.io/supakeen/pinnwand:latest-${{ matrix.container-stage }}
+          cache-to: type=inline
+          tags: ${{ steps.meta.outputs.tags }}
