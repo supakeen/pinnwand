@@ -3,6 +3,18 @@ let indents = {
     "python2": " ".repeat(4),
 };
 
+document.addEventListener('keydown', e => {
+    if ((e.ctrlKey && !e.altKey) && e.key === 's') {
+        let submitButton = document.querySelector("button#pasteSubmit");
+        // Only trigger on pages that have a submit button
+        if (submitButton) {
+            // Prevent the Save dialog from opening
+            e.preventDefault();
+            submitButton.click();
+        }
+    }
+});
+
 window.addEventListener("load", (event) => {
     setupColorScheme();
 
