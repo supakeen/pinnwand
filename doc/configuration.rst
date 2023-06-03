@@ -39,6 +39,7 @@ with. Here's an example file::
   # Preferred lexers. This list of lexers will appear on top of the dropdown
   # on the website allowing you to preselect commonly used lexers. Note that the
   # names here have to be the identifiers used by pygments, not the human names.
+  # The keys returned by /api/v1/lexer are an exhaustive list of supported lexers.
   # If empty no preferred lexers are shown.
   preferred_lexers = []
   
