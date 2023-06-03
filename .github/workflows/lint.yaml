@@ -1,32 +1,25 @@
 name: Linters
 
 on:
-  push:
-  pull_request:
+  workflow_call:
 
 jobs:
-  black:
+  lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install black codespell
+        pip install -r requirements.txt
+        pip install black codespell types-docutils mypy
+
     - name: Check with black
       run: black --check src/pinnwand
-#  mypy:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Set up Python
-#      uses: actions/setup-python@v2
-#    - name: Install dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install -r requirements.txt
-#        pip install types-docutils mypy
-#    - name: Check with mypy
-#      run: mypy src/pinnwand
+
+    # - name: Check with mypy
+    #   run: mypy src/pinnwand
