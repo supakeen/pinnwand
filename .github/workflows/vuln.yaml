@@ -1,31 +1,24 @@
 name: Vulnerability Scanners
 
 on:
-  push:
-  pull_request:
+  workflow_call:
 
 jobs:
   bandit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install bandit
+        pip install bandit pip-audit
+
     - name: Check with bandit
       run: bandit -r src/pinnwand
-  pip-audit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pip-audit
+
     - name: Check with pip-audit
       run: pip-audit --requirement requirements.txt
