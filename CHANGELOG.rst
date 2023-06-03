@@ -7,6 +7,12 @@ a little more complex.
 v1.5.0 (unreleased)
 *******************
 * Change the tab size in the HTML to be 4.
+* List lexer endpoint in configuration by ChrisLovering_.
+* Reorder Containerfile to optimise caching by ChrisLovering_.
+* Logo is now limited on height, allowing for banner-style logos by ChrisLovering_.
+* Make environment variable parsing better by accepting `SyntaxError` by ChrisLovering_.
+* Allow selecting the default lexer in configuration by ChrisLovering_.
+* Ctrl+S now submits pastes by ChrisLovering_.
 
 v1.4.0 (20221127)
 *****************
@@ -166,3 +172,4 @@ changelog created.
 .. _Bruce1347: https://github.com/Bruce1347
 .. _millefalcon: https://github.com/millefalcon
 .. _erlliam: https://github.com/erlliam
+.. _ChrisLovering: https://github.com/ChrisLovering
