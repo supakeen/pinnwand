@@ -5,7 +5,7 @@ let indents = {
 
 document.addEventListener('keydown', e => {
     if ((e.ctrlKey && !e.altKey) && e.key === 's') {
-        let submitButton = document.querySelector("button#pasteSubmit");
+        let submitButton = document.querySelector("button");
         // Only trigger on pages that have a submit button
         if (submitButton) {
             // Prevent the Save dialog from opening
