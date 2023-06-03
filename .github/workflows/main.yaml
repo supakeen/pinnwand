@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  release:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yaml
+  test:
+    uses: ./.github/workflows/test.yaml
+  vuln:
+    uses: ./.github/workflows/vuln.yaml
