@@ -11,7 +11,7 @@ a little more complex.
 
 Prerequisites
 =============
-* Python >= 3.7
+* Python >= 3.8
 * Tornado
 * sqlalchemy
 * click
