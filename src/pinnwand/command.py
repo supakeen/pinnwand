@@ -57,7 +57,7 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
             try:
                 value = ast.literal_eval(value)
-            except ValueError:
+            except (ValueError, SyntaxError):
                 # When `ast.literal_eval` can't parse the value into another
                 # type we take it at string value
                 pass
