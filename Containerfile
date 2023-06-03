@@ -5,15 +5,16 @@ RUN \
         python3-pip && \
         microdnf clean all
 
-COPY src/pinnwand /usr/app/pinnwand
-COPY requirements.txt /usr/app/requirements.txt
-
 WORKDIR /usr/app
 
 RUN python3 -m venv venv
-
 RUN venv/bin/pip install -U pip
+
+COPY requirements.txt /usr/app/requirements.txt
 RUN venv/bin/pip install -r requirements.txt
+
+# Copy the source code in last to optimise rebuilding the image
+COPY src/pinnwand /usr/app/pinnwand
 
 EXPOSE 8000
 
