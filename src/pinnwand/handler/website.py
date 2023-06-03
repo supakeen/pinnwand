@@ -87,9 +87,8 @@ class Create(Base):
             lexer for lexer in lexers.split("+") if lexer.strip()
         ]
 
-        # Our default lexer is just that, text
         if not lexers_selected:
-            lexers_selected = ["text"]
+            lexers_selected = [configuration.default_selected_lexer]
 
         # Make sure all lexers are available
         if not all(lexer in lexers_available for lexer in lexers_selected):
