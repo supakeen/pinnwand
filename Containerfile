@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:36 AS base
+FROM registry.fedoraproject.org/fedora-minimal:38 AS base
 
 RUN \
     microdnf install -y \
