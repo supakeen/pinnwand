@@ -27,6 +27,19 @@ when the process exits.
 To supply a persistent database, see the :ref:`configuration` bit of the
 documentation.
 
+As a container
+**************
+Containers are published on the GitHub Container Registry, you can run `pinnwand`
+from a container:
+
+  .. code:
+
+  docker run -p 8000:8000 ghcr.io/supakeen/pinnwand:latest
+
+You can use :ref:`configuration` through environment variables to configure the
+instance. If you want to run against `mysql` or `postgresql` then containers are
+provided with the drivers installed: `pinnwand-psql` and `pinnwand-mysql`.
+
 Running on boot
 ***************
 If you wish to run ``pinnwand`` as an actual service there's a few more things
