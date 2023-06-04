@@ -2,7 +2,7 @@
 
 # pinnwand
 
-[![](https://travis-ci.org/supakeen/pinnwand.svg?branch=master)](https://travis-ci.org/supakeen/pinnwand) [![](https://readthedocs.org/projects/pinnwand/badge/?version=latest)](https://pinnwand.readthedocs.io/en/latest/) [![](https://pinnwand.readthedocs.io/en/latest/_static/license.svg)](https://github.com/supakeen/pinnwand/blob/master/LICENSE) [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black) [![](https://img.shields.io/pypi/v/pinnwand)](https://pypi.org/project/pinnwand) [![](https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg)](https://codecov.io/gh/supakeen/pinnwand) [![](https://quay.io/repository/supakeen/pinnwand/status)](https://quay.io/repository/supakeen/pinnwand)
+[![](https://readthedocs.org/projects/pinnwand/badge/?version=latest)](https://pinnwand.readthedocs.io/en/latest/) [![](https://pinnwand.readthedocs.io/en/latest/_static/license.svg)](https://github.com/supakeen/pinnwand/blob/master/LICENSE) [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black) [![](https://img.shields.io/pypi/v/pinnwand)](https://pypi.org/project/pinnwand) [![](https://codecov.io/gh/supakeen/pinnwand/branch/master/graph/badge.svg)](https://codecov.io/gh/supakeen/pinnwand) [![](https://quay.io/repository/supakeen/pinnwand/status)](https://quay.io/repository/supakeen/pinnwand)
 
 ## About
 
