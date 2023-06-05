@@ -5,7 +5,7 @@ Welcome to the documentation of the ``pinnwand`` pastebin software.
 
 Introduction
 ============
-``pinnwand`` is a straightforward pastebin written for Python 3.6 and up
+``pinnwand`` is a straightforward pastebin written for Python 3.8 and up
 using the Tornado_ web framework and the sqlalchemy_ ORM. It uses the awesome
 pygments_ library for its syntax highlighting.
 
