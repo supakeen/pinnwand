@@ -14,7 +14,7 @@ v1.5.0 (unreleased)
 * Allow selecting the default lexer in configuration by ChrisLovering_.
 * Ctrl+S now submits pastes by ChrisLovering_.
 * `pdm` is now used as the build backend and package solution.
-* Containers are now published by CI to [ghcr](https://ghcr.io/supakeen/pinnwand) by ChrisLovering_.
+* Containers are now published by CI to GHCR_ by ChrisLovering_.
 
 v1.4.0 (20221127)
 *****************
@@ -175,3 +175,4 @@ changelog created.
 .. _millefalcon: https://github.com/millefalcon
 .. _erlliam: https://github.com/erlliam
 .. _ChrisLovering: https://github.com/ChrisLovering
+.. _GHCR: https://ghcr.io/supakeen/pinnwand
