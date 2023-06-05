@@ -29,7 +29,7 @@ Enter text, click "Paste", easy enough.
 
 steck
 -----
-[steck](https://supakeen.com/project/steck) is a command line client to pinnwand instances:
+[steck](https://github.com/supakeen/steck) is a command line client to pinnwand instances:
 
 ```
 € pip install --user steck

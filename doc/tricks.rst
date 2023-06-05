@@ -30,5 +30,5 @@ can paste files with::
   Removal URL: http://localhost:8000/remove/Z4SAXX5Y7QU2NQUT7KCQX4ZGQU
 
 
-.. _homepage: https://supakeen.com/project/steck
+.. _homepage: https://github.com/supakeen/steck
 .. _github: https://github.com/supakeen/steck
