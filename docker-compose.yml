@@ -1,0 +1,9 @@
+version: '3.3'
+
+services:
+  pinnwand:
+    image: pinnwand:latest
+    container_name: pinnwand
+    restart: always
+    ports:
+      - 1377:8000
