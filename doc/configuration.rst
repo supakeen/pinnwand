@@ -216,7 +216,7 @@ Default: `1`
 
 ratelimit.read.refill
 ^^^^^^^^^^^^^^^^^^^^^
-Default: `1`
+Default: `2`
 
 ratelimit.create.capacity
 ^^^^^^^^^^^^^^^^^^^^^^^^^
