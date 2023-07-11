@@ -116,3 +116,5 @@ dmypy.json
 
 .vscode
 .pdm-python
+
+.idea
