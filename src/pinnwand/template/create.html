@@ -8,6 +8,9 @@
             {% raw handler.application.configuration.paste_help %}
         </section>
         {% end %}
+        <section class="file-drop" id="file-drop">
+            Drop files here
+        </section>
         <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
         {% if message %}
         <div class="quick"><p>{{ message }}</p></div>

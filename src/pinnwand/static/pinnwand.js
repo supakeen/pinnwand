@@ -25,7 +25,8 @@ window.addEventListener("load", (event) => {
     }
 });
 
-function add_new_file() {
+
+function add_new_file(file) {
     let template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
     template.querySelector("button.remove").addEventListener("click", (event) => {
@@ -42,6 +43,13 @@ function add_new_file() {
         template,
         document.querySelector("section.paste-submit")
     );
+
+    if (file !== undefined) {
+        const {filename, content} = file
+        template.querySelector("input[name='filename']").value = filename;
+        template.querySelector("textarea[name='raw']").value = content;
+        template.querySelector("select[name='lexer']").value = 'autodetect';
+    }
 }
 
 
@@ -171,6 +179,8 @@ function setupShowPage() {
 }
 
 function setupCreatePage() {
+    setupFileDrop();
+
     let removes = document.querySelectorAll("button.remove"),
         bar = document.querySelector("section.paste-submit");
 
@@ -203,6 +213,42 @@ function setupCreatePage() {
     let textareas = document.querySelectorAll('section.file-part textarea');
     for(let i = 0; i < textareas.length; i++) {
         textareas[i].addEventListener("keydown", indent_textarea);
+    }
+}
+
+function setupFileDrop() {
+    const filedrop = document.getElementById('file-drop');
+
+    filedrop.addEventListener('dragenter', handleDragEnter, false);
+    filedrop.addEventListener('dragover', handleDragOver, false);
+    filedrop.addEventListener('dragleave', handleDragLeave, false);
+    filedrop.addEventListener('drop', handleDrop, false);
+
+    function handleDragEnter(event) {
+        event.preventDefault();
+        filedrop.classList.add('dragover');
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    function handleDragLeave(event) {
+        filedrop.classList.remove('dragover');
+    }
+
+    async function handleDrop(event) {
+        event.preventDefault();
+        filedrop.classList.remove('dragover');
+
+        const files = event.dataTransfer.files;
+
+        for (let file of files) {
+            add_new_file({
+                filename: file.name,
+                content: await file.text()
+            })
+        }
     }
 }
 
