@@ -9,7 +9,7 @@ from pinnwand import configuration, handler, path
 log = logging.getLogger(__name__)
 
 
-def make_application() -> tornado.web.Application:
+def make_application(debug: bool = False) -> tornado.web.Application:
     pages: List[Any] = [
         (r"/", handler.website.Create),
         (r"/\+(.*)", handler.website.Create),
@@ -85,6 +85,7 @@ def make_application() -> tornado.web.Application:
         cookie_secret=secrets.token_hex(),
         static_path=path.static,
         xheaders=True,
+        debug=debug,
     )
 
     app.configuration = configuration  # type: ignore

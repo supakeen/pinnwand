@@ -71,7 +71,13 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
 @main.command()
 @click.option("--port", default=8000, help="Port to listen to.")
-def http(port: int) -> None:
+@click.option(
+    "--debug",
+    is_flag=True,
+    default=False,
+    help="To start tornado server in debug mode or not",
+)
+def http(port: int, debug: bool) -> None:
     """Run pinnwand's HTTP server."""
     from pinnwand import utility
     from pinnwand.http import make_application
@@ -83,7 +89,7 @@ def http(port: int) -> None:
     reap_task = tornado.ioloop.PeriodicCallback(utility.async_reap, 1_800_000)
     reap_task.start()
 
-    application = make_application()
+    application = make_application(debug)
     application.listen(port, xheaders=True)
 
     tornado.ioloop.IOLoop.current().start()
