@@ -9,7 +9,8 @@
         </section>
         {% end %}
         <section class="file-drop" id="file-drop">
-            Drop files here
+            Drop files&nbsp;<a id="file-upload" class="file-upload" onclick="document.getElementById('file-input').click();">or click here</a>&nbsp;to upload files
+            <input id="file-input" type="file" name="file-input" style="display: none;" multiple/>
         </section>
         <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
         {% if message %}

@@ -237,11 +237,13 @@ function setupCreatePage() {
 
 function setupFileDrop() {
     const filedrop = document.getElementById('file-drop');
+    const fileInput = document.getElementById('file-input');
 
     filedrop.addEventListener('dragenter', handleDragEnter, false);
     filedrop.addEventListener('dragover', handleDragOver, false);
     filedrop.addEventListener('dragleave', handleDragLeave, false);
     filedrop.addEventListener('drop', handleDrop, false);
+    fileInput.addEventListener('change', handleFilePick);
 
     function handleDragEnter(event) {
         event.preventDefault();
@@ -261,12 +263,22 @@ function setupFileDrop() {
         filedrop.classList.remove('dragover');
 
         const files = event.dataTransfer.files;
+        await handleFiles(files);
+    }
 
+    async function handleFilePick(event) {
+        const files = event.target.files;
+        await handleFiles(files);
+        // Reset input to blank state, otherwise we will double upload next time this triggers.
+        fileInput.value = null;
+    }
+
+    async function handleFiles(files) {
         for (let file of files) {
             upload_file({
                 filename: file.name,
                 content: await file.text()
-            })
+            });
         }
     }
 }
