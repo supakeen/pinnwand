@@ -47,6 +47,10 @@ a:hover {
   background-color: var(--color3);
   color: var(--color1); }
 
+a.file-upload {
+  text-decoration: underline var(--color3);
+}
+
 button.btn-link {
   background: none;
   border: none;
