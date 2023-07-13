@@ -26,7 +26,18 @@ window.addEventListener("load", (event) => {
 });
 
 
-function add_new_file(file) {
+function getFirstEmptyFilePartSection() {
+    for (let node of document.querySelectorAll("section.file-part")) {
+        if (
+            (node.querySelector("input[name='filename']").value === '')
+            && (node.querySelector("textarea[name='raw']").value === '')
+        ) {
+            return node
+        }
+    }
+}
+
+function add_new_file() {
     let template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
     template.querySelector("button.remove").addEventListener("click", (event) => {
@@ -44,13 +55,21 @@ function add_new_file(file) {
         document.querySelector("section.paste-submit")
     );
 
-    if (file !== undefined) {
-        const {filename, content} = file
-        template.querySelector("input[name='filename']").value = filename;
-        template.querySelector("textarea[name='raw']").value = content;
-        template.querySelector("select[name='lexer']").value = 'autodetect';
-    }
+    return template;
 }
+
+function upload_file(file) {
+    let filePartSectionToUse = getFirstEmptyFilePartSection();
+    if (filePartSectionToUse === undefined) {
+        filePartSectionToUse  = add_new_file();
+    }
+
+    const {filename, content} = file
+    filePartSectionToUse.querySelector("input[name='filename']").value = filename;
+    filePartSectionToUse.querySelector("textarea[name='raw']").value = content;
+    filePartSectionToUse.querySelector("select[name='lexer']").value = 'autodetect';
+}
+
 
 
 function indent_textarea(event) {
@@ -244,7 +263,7 @@ function setupFileDrop() {
         const files = event.dataTransfer.files;
 
         for (let file of files) {
-            add_new_file({
+            upload_file({
                 filename: file.name,
                 content: await file.text()
             })
