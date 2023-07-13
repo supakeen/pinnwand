@@ -210,6 +210,7 @@ function setupCreatePage() {
 
 let fileTableBodies;
 let hashChangedByClick = false;
+let highlightLineSpecification = {};
 
 window.addEventListener("DOMContentLoaded", () => {
     fileTableBodies = document.querySelectorAll("table.sourcetable tbody");
@@ -230,6 +231,8 @@ function onHashChange(event) {
     let newUrl = new URL(event.newURL);
     highlightLine({ hash: oldUrl.hash, scrollIntoView: false });
     highlightLine({ hash: newUrl.hash, scrollIntoView: !hashChangedByClick });
+    // Sync internal state with the new ground truth
+    highlightLineSpecification = getHighlightSpecificationFromHash(newUrl.hash);
     hashChangedByClick = false;
 }
 
@@ -245,7 +248,26 @@ function addEventListenerToFileTableBodies() {
                 lineNumber = t.dataset.lineNumber;
             }
             if (lineNumber) {
-                setFileLineHash(fileIndex + 1, parseInt(lineNumber, 10));
+                let clickedLineIndex = parseInt(lineNumber, 10) - 1;
+                let shiftKey = event.shiftKey;
+
+                let existingStartIndex;
+                let existingEndIndex;
+
+                if (highlightLineSpecification[fileIndex] !== undefined) {
+                    [existingStartIndex, existingEndIndex] = highlightLineSpecification[fileIndex];
+                }
+
+                if (existingStartIndex !== undefined && existingEndIndex !== undefined && shiftKey) {
+                    // Extend highlighted line range forward or backward
+                    let startIndex = Math.min(clickedLineIndex, existingStartIndex);
+                    let endIndex = Math.max(clickedLineIndex, existingEndIndex);
+                    highlightLineSpecification[fileIndex] = [startIndex, endIndex];
+                } else {
+                    // Single click, override the highlighted line for that file
+                    highlightLineSpecification[fileIndex] = [clickedLineIndex, clickedLineIndex];
+                }
+                updateFileLineHash();
                 hashChangedByClick = true;
             }
         });
@@ -253,37 +275,61 @@ function addEventListenerToFileTableBodies() {
 }
 
 function highlightLine({ hash, scrollIntoView }) {
-    let { fileIndex, lineIndex } = getFileLineIndexFromHash(hash);
-    if (fileIndex === null || fileIndex >= fileTableBodies.length) {
-        return;
-    }
-    let tableRows = fileTableBodies[fileIndex].children;
-    if (lineIndex >= tableRows.length) {
-        return;
-    }
-    let tableRow = tableRows[lineIndex];
-    let code = tableRow.querySelector("td.code");
-    code.classList.toggle("highlighted");
+    let highlightSpecification = getHighlightSpecificationFromHash(hash);
+    let codeToScrollTo;
+
+    Object.entries(highlightSpecification).forEach(
+        ([fileIndex, [startIndex, endIndex]]) => {
+            if (fileIndex >= fileTableBodies.length) {
+                return
+            }
+            let tableRows = fileTableBodies[fileIndex].children;
+            for (let index = startIndex; index <= Math.min(endIndex, tableRows.length); index++){
+                let tableRow = tableRows[index];
+                let code = tableRow.querySelector("td.code");
+                code.classList.toggle("highlighted");
+                codeToScrollTo = codeToScrollTo ?? code;
+            }
+        }
+    )
+
     if (scrollIntoView) {
-        code.scrollIntoView();
+        codeToScrollTo.scrollIntoView();
     }
 }
 
-function getFileLineIndexFromHash(hash) {
-    let splitHash = hash.substring(1).split("L");
-    let [ fileIndex, lineIndex ] = splitHash.map((x) => {
-        return parseInt(x, 10) - 1;
-    });
-    if (isNaN(fileIndex) || isNaN(lineIndex)
-            || fileIndex < 0 || lineIndex < 0) {
-        return { fileIndex: null, lineIndex: null };
-    } else {
-        return { fileIndex, lineIndex };
+function getHighlightSpecificationFromHash(hash) {
+    // Supported format:
+    //  - 1L2        [First file, select line 2 only]
+    //  - 1L2-L3     [First file, select line 2 to line 3 only]
+    // Highlight for many files can be defined using comma-separated style:
+    // e.g. 1L2-L3,2L3-L4
+    // The last specification for the same file take precedence.
+    // Returns a mapping of fileNumber -> [startIndex, endIndex]
+    const regex = /(?<fileNumber>\d+)L(?<startLine>\d+)(?:-L(?<endLine>\d+))?/g;
+    const matches = Array.from(hash.matchAll(regex));
+
+    const result = {};
+    for (const match of matches) {
+        const fileNumber = parseInt(match.groups.fileNumber) - 1;
+        const startLine = parseInt(match.groups.startLine) - 1;
+        const endLine = match.groups.endLine ? parseInt(match.groups.endLine) - 1: startLine;
+        result[fileNumber] = [startLine, endLine];
     }
+
+    return result;
 }
 
-function setFileLineHash(fileNumber, lineNumber) {
-    window.location.hash = `${fileNumber}L${lineNumber}`;
+function updateFileLineHash() {
+    window.location.hash = Object.entries(highlightLineSpecification).map(
+        ([fileIndex, [startIndex, endIndex]]) => {
+            return `${parseInt(fileIndex) + 1}L${parseInt(startIndex) + 1}-L${parseInt(endIndex) + 1}`
+        }
+    ).reduce(
+        (prev, curr) => {
+            return prev.concat(",", curr)
+        }
+    );
 }
 
 })();
