@@ -16,6 +16,7 @@ v1.5.0 (unreleased)
 * `pdm` is now used as the build backend and package solution.
 * Containers are now published by CI to GHCR_ by ChrisLovering_.
 * Add line range(s) highlight support.
+* Add file upload (drag-and-drop or file picker) support.
 
 v1.4.0 (20221127)
 *****************
