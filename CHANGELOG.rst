@@ -15,6 +15,7 @@ v1.5.0 (unreleased)
 * Ctrl+S now submits pastes by ChrisLovering_.
 * `pdm` is now used as the build backend and package solution.
 * Containers are now published by CI to GHCR_ by ChrisLovering_.
+* Add line range(s) highlight support.
 
 v1.4.0 (20221127)
 *****************
