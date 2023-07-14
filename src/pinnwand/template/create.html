@@ -8,10 +8,6 @@
             {% raw handler.application.configuration.paste_help %}
         </section>
         {% end %}
-        <section class="file-drop" id="file-drop">
-            Drop files&nbsp;<a id="file-upload" class="file-upload" onclick="document.getElementById('file-input').click();">or click here</a>&nbsp;to upload files
-            <input id="file-input" type="file" name="file-input" style="display: none;" multiple/>
-        </section>
         <input type="hidden" name="_xsrf" value="{{ handler.xsrf_token }}">
         {% if message %}
         <div class="quick"><p>{{ message }}</p></div>
@@ -48,6 +44,10 @@
                 {% end %}
             </select>
             <input type="checkbox" name="long"> Use a longer URI
+        </section>
+        <section class="file-drop" id="file-drop">
+            Drop files&nbsp;<a id="file-upload" class="file-upload" onclick="document.getElementById('file-input').click();">or click here</a>&nbsp;to upload files
+            <input id="file-input" type="file" name="file-input" style="display: none;" multiple/>
         </section>
     </main>
 </form>
