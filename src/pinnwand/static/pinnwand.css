@@ -139,7 +139,9 @@ section.file-part div.file-meta {
 
 section.paste-submit {
   background-color: var(--color1);
-  padding: .5rem; }
+  padding: .5rem;
+  margin-bottom: .5rem;
+}
 
 div.file-meta button,
 section.paste-submit button {
