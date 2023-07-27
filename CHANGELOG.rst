@@ -4,8 +4,8 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.5.0 (unreleased)
-*******************
+v1.5.0 (20230727)
+*****************
 * Change the tab size in the HTML to be 4.
 * List lexer endpoint in configuration by ChrisLovering_.
 * Reorder Containerfile to optimise caching by ChrisLovering_.
