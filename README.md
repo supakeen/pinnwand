@@ -123,14 +123,14 @@ Unit tests are run by pytest by default when executing (the browser tests will b
 ```
 € pytest
 ```
-If you'd like to run browser tests you need to pass the `--browser` option to the pytest command.
+If you'd like to run browser tests you need to pass the `--e2e` option to the pytest command.
 ```
-€ pytest --browser
+€ pytest --e2e
 ```
 The browser tests are executed by [Playwright](https://playwright.dev/python/docs/intro).
 The tests by default will be run in the headless mode. 
 But it's possible to run them in the headed mode as well to be able to observe the execution of the tests.
-For that, you just need to pass the `--headed` option to the `pytest --browser` command:
+For that, you just need to pass the `--headed` option to the `pytest --e2e` command:
 ```
-€ pytest --browser --headed
+€ pytest --e2e --headed
 ```
