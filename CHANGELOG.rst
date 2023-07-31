@@ -4,6 +4,10 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.6.0 (unreleased)
+*******************
+* Added an initial browser test suite by nekhvoya_.
+
 v1.5.0 (20230727)
 *****************
 * Change the tab size in the HTML to be 4.
@@ -178,3 +182,4 @@ changelog created.
 .. _erlliam: https://github.com/erlliam
 .. _ChrisLovering: https://github.com/ChrisLovering
 .. _GHCR: https://ghcr.io/supakeen/pinnwand
+.. _nekhvoya: https://github.com/nekhvoya
