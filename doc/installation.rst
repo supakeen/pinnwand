@@ -38,7 +38,7 @@ from a container:
 
 You can use :ref:`configuration` through environment variables to configure the
 instance. If you want to run against `mysql` or `postgresql` then containers are
-provided with the drivers installed: `pinnwand-psql` and `pinnwand-mysql`.
+provided with the drivers installed: `pinnwand:<version>-psql` and `pinnwand:<version>-mysql`.
 
 Running on boot
 ***************
