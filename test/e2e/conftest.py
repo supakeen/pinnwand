@@ -1,11 +1,12 @@
-from typing import Generator
-import pytest
+import logging
 import subprocess
 import sys
-import logging
-from playwright.sync_api import Page
 from test.e2e.env_config import PORT
 from test.e2e.pageobjects.create_paste_page import CreatePastePage
+from typing import Generator
+
+import pytest
+from playwright.sync_api import Page
 
 log = logging.getLogger(__name__)
 

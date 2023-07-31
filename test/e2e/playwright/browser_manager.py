@@ -1,6 +1,7 @@
-from playwright.sync_api import Page, Playwright
 import logging
 from test.e2e.env_config import is_headless
+
+from playwright.sync_api import Page, Playwright
 
 log = logging.getLogger(__name__)
 

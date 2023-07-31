@@ -1,6 +1,6 @@
 import pytest
 
-from pinnwand import utility, database, configuration
+from pinnwand import configuration, database, utility
 
 
 def test_expiries() -> None:

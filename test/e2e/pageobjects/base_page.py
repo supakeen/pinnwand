@@ -1,5 +1,6 @@
-from playwright.sync_api import Page, Locator, expect
 import logging
+
+from playwright.sync_api import Locator, Page, expect
 
 log = logging.getLogger(__name__)
 

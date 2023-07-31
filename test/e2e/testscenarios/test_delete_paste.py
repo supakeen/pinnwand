@@ -1,9 +1,10 @@
-from playwright.sync_api import Page, Playwright
-import pytest
-from test.e2e.pageobjects.create_paste_page import CreatePastePage
-from test.e2e.pageobjects.view_paste_page import ViewPastePage
-from test.e2e.pageobjects.error_page import ErrorPage
 from test.e2e.conftest import create_paste_page
+from test.e2e.pageobjects.create_paste_page import CreatePastePage
+from test.e2e.pageobjects.error_page import ErrorPage
+from test.e2e.pageobjects.view_paste_page import ViewPastePage
+
+import pytest
+from playwright.sync_api import Page, Playwright
 
 
 @pytest.mark.e2e
