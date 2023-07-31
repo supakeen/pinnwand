@@ -112,3 +112,25 @@ History
 =======
 This pastebin has quite a long history which isn't reflected entirely in its
 repository.
+
+Testing
+=======
+There are 2 types of tests available to verify that the application still works correctly after the changes:
+* unit test
+* browser e2e tests
+
+Unit tests are run by pytest by default when executing (the browser tests will be skipped)
+```
+€ pytest
+```
+If you'd like to run browser tests you need to pass the `--browser` option to the pytest command.
+```
+€ pytest --browser
+```
+The browser tests are executed by [Playwright](https://playwright.dev/python/docs/intro).
+The tests by default will be run in the headless mode. 
+But it's possible to run them in the headed mode as well to be able to observe the execution of the tests.
+For that, you just need to pass the `--headed` option to the `pytest --browser` command:
+```
+€ pytest --browser --headed
+```
