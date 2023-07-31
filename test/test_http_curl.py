@@ -1,8 +1,8 @@
-import urllib.parse
 import re
+import urllib.parse
 
-import tornado.web
 import tornado.testing
+import tornado.web
 
 from pinnwand import configuration
 
@@ -10,8 +10,7 @@ configuration.ratelimit["read"]["capacity"] = 2**64 - 1
 configuration.ratelimit["create"]["capacity"] = 2**64 - 1
 configuration.ratelimit["delete"]["capacity"] = 2**64 - 1
 
-from pinnwand import http
-from pinnwand import database
+from pinnwand import database, http
 
 
 class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
