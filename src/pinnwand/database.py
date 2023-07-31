@@ -15,8 +15,12 @@ from sqlalchemy import (
     Text,
     create_engine,
 )
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import (
+    declarative_base,
+    relationship,
+    sessionmaker,
+)
 from sqlalchemy.orm.session import Session
 
 from pinnwand import configuration, defensive, error, utility
