@@ -18,6 +18,7 @@ class CreatePastePage(BasePage):
         self.paste_input = page.locator(".file-part textarea")
         self.submit_button = page.locator(".paste-submit button[type=submit]")
         self.add_another_paste_button = page.locator("button.add")
+        self.file_input = page.locator("#file-input")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -34,6 +35,10 @@ class CreatePastePage(BasePage):
     def click_add_another_file_button(self):
         log.info("Clicking Add Another Paste Button")
         self.add_another_paste_button.click()
+
+    def add_file_to_file_input(self, file_paths):
+        log.info("Adding file for uploading")
+        self.file_input.set_input_files(file_paths)
 
     # Step sequences
     def paste_random_text(self, paste_number=0):
