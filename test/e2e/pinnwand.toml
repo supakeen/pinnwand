@@ -1,0 +1,11 @@
+ratelimit.read.capacity = 200
+ratelimit.read.consume = 1
+ratelimit.read.refill = 10
+
+ratelimit.create.capacity = 200
+ratelimit.create.consume = 1
+ratelimit.create.refill = 10
+
+ratelimit.delete.capacity = 200
+ratelimit.delete.consume = 1
+ratelimit.delete.refill = 10

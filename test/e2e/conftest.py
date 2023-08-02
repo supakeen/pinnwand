@@ -4,7 +4,6 @@ import sys
 from test.e2e.env_config import PORT
 from test.e2e.pageobjects.create_paste_page import CreatePastePage
 from typing import Generator
-
 import pytest
 from playwright.sync_api import Page
 
@@ -16,7 +15,16 @@ def application() -> Generator[None, None, None]:
     # Before All
     log.info(f"Starting Pinnwand application on port {PORT}")
     proc = subprocess.Popen(
-        [sys.executable, "-m", "pinnwand", "http", "--port", str(PORT)]
+        [
+            sys.executable,
+            "-m",
+            "pinnwand",
+            "--configuration-path",
+            "test/e2e/pinnwand.toml",
+            "http",
+            "--port",
+            str(PORT),
+        ]
     )
     yield
     # After All
