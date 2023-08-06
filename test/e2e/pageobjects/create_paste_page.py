@@ -2,6 +2,7 @@ import logging
 import string
 from test.e2e.env_config import BASE_URL
 from test.e2e.pageobjects.base_page import BasePage
+from test.e2e.utils.file_utils import extract_file_name
 
 from playwright.sync_api import Page, expect
 
@@ -19,6 +20,7 @@ class CreatePastePage(BasePage):
         self.submit_button = page.locator(".paste-submit button[type=submit]")
         self.add_another_paste_button = page.locator("button.add")
         self.file_input = page.locator("#file-input")
+        self.file_drop_section = "#file-drop"
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -39,6 +41,26 @@ class CreatePastePage(BasePage):
     def add_file_to_file_input(self, file_paths):
         log.info("Adding file for uploading")
         self.file_input.set_input_files(file_paths)
+
+    def drag_and_drop_file(self, *files):
+        def get_file_contents(file):
+            file.seek(0)
+            return {
+                "file_name": extract_file_name(file.name),
+                "file_content": file.read().decode(),
+            }
+
+        file_contents = list(map(get_file_contents, files))
+
+        self.page.evaluate(
+            """([files, dropAreaSelector]) => {
+            var dataTransfer = new DataTransfer();
+            files.forEach(file => dataTransfer.items.add(new File([file.file_content.toString('hex')], file.file_name, { type: 'text/plain' })));
+            var event = new DragEvent("drop", { dataTransfer: dataTransfer });
+            document.querySelector(dropAreaSelector).dispatchEvent(event);
+        }""",
+            [file_contents, self.file_drop_section],
+        )
 
     # Step sequences
     def paste_random_text(self, paste_number=0):
