@@ -3,6 +3,7 @@ import string
 from test.e2e.env_config import BASE_URL
 from test.e2e.pageobjects.base_page import BasePage
 from test.e2e.utils.file_utils import extract_file_name
+from test.e2e.constants import Theme
 
 from playwright.sync_api import Page, expect
 
@@ -21,6 +22,8 @@ class CreatePastePage(BasePage):
         self.add_another_paste_button = page.locator("button.add")
         self.file_input = page.locator("#file-input")
         self.file_drop_section = "#file-drop"
+        self.root = page.locator("html")
+        self.theme_toggle = page.locator("#toggle-color-scheme")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -62,6 +65,12 @@ class CreatePastePage(BasePage):
             [file_contents, self.file_drop_section],
         )
 
+    def click_toggle_theme(self):
+        self.theme_toggle.click()
+
+    def reload(self):
+        self.page.reload()
+
     # Step sequences
     def paste_random_text(self, paste_number=0):
         paste_text = string.ascii_letters + string.digits
@@ -81,3 +90,16 @@ class CreatePastePage(BasePage):
             self.paste_input,
             f"Paste Input was not empty on {self.page_name}",
         ).to_be_empty()
+
+    def should_have_theme(self, theme):
+        expect(
+            self.root, f"{self.page_name} didn't have theme {theme.name}"
+        ).to_have_class(theme.value["class"])
+        expect(
+            self.root,
+            f"{self.page_name} had incorrect font color for theme {theme.name}",
+        ).to_have_css("color", theme.value["font"])
+        expect(
+            self.root,
+            f"{self.page_name} had incorrect background color for theme {theme.name}",
+        ).to_have_css("background-color", theme.value["background"])
