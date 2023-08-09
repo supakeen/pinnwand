@@ -61,6 +61,8 @@ jobs:
     - name: Install pinnwand
       run: pip install pinnwand -e.
 
+    - name: Install clipboard mechanism
+      run: sudo apt-get install xclip
+
     - name: Run e2e tests
-      run: |
-        pytest --e2e --log-cli-level=INFO test/e2e
+      run: xvfb-run pytest --e2e --log-cli-level=INFO test/e2e

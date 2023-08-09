@@ -46,6 +46,8 @@ class CreatePastePage(BasePage):
         self.file_input.set_input_files(file_paths)
 
     def drag_and_drop_file(self, *files):
+        log.info("Dragging files to the Drag-And-Drop section")
+
         def get_file_contents(file):
             file.seek(0)
             return {
@@ -66,9 +68,11 @@ class CreatePastePage(BasePage):
         )
 
     def click_toggle_theme(self):
+        log.info("Clicking Toggle Theme button")
         self.theme_toggle.click()
 
     def reload(self):
+        log.info("Reloading %s", self.page_name)
         self.page.reload()
 
     # Step sequences
