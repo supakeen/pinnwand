@@ -10,8 +10,8 @@ class BrowserManager:
     def __init__(self, playwright: Playwright) -> None:
         self.playwright = playwright
 
-    def create_new_context(self) -> Page:
+    def create_new_context(self, headless=is_headless()) -> Page:
         log.info("creating new browser context")
-        browser = self.playwright.chromium.launch(headless=is_headless())
+        browser = self.playwright.chromium.launch(headless=headless)
         context = browser.new_context()
         return context.new_page()

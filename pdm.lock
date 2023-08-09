@@ -6,7 +6,7 @@ groups = ["default", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:376de58be30a7a29b0ed1995e04757bde7a790ecb1f3b19aaad34fe362d595a4"
+content_hash = "sha256:0fca867971f5b79aecf5954b36ee849f223d8fc0944b8cc0eb756de47f117a31"
 
 [[package]]
 name = "bandit"
@@ -829,12 +829,12 @@ files = [
 
 [[package]]
 name = "pygments"
-version = "2.15.1"
+version = "2.16.1"
 requires_python = ">=3.7"
 summary = "Pygments is a syntax highlighting package written in Python."
 files = [
-    {file = "Pygments-2.15.1-py3-none-any.whl", hash = "sha256:db2db3deb4b4179f399a09054b023b6a586b76499d36965813c71aa8ed7b5fd1"},
-    {file = "Pygments-2.15.1.tar.gz", hash = "sha256:8ace4d3c1dd481894b2005f560ead0f9f19ee64fe983366be1a21e171d12775c"},
+    {file = "Pygments-2.16.1-py3-none-any.whl", hash = "sha256:13fc09fa63bc8d8671a6d247e1eb303c4b343eaee81d861f3404db2935653692"},
+    {file = "Pygments-2.16.1.tar.gz", hash = "sha256:1daff0494820c69bc8941e407aa20f577374ee88364ee10a98fdbe0aece96e29"},
 ]
 
 [[package]]
@@ -851,12 +851,20 @@ files = [
 
 [[package]]
 name = "pyparsing"
-version = "3.1.0"
+version = "3.1.1"
 requires_python = ">=3.6.8"
 summary = "pyparsing module - Classes and methods to define and execute parsing grammars"
 files = [
-    {file = "pyparsing-3.1.0-py3-none-any.whl", hash = "sha256:d554a96d1a7d3ddaf7183104485bc19fd80543ad6ac5bdb6426719d766fb06c1"},
-    {file = "pyparsing-3.1.0.tar.gz", hash = "sha256:edb662d6fe322d6e990b1594b5feaeadf806803359e3d4d42f11e295e588f0ea"},
+    {file = "pyparsing-3.1.1-py3-none-any.whl", hash = "sha256:32c7c0b711493c72ff18a981d24f28aaf9c1fb7ed5e9667c9e84e3db623bdbfb"},
+    {file = "pyparsing-3.1.1.tar.gz", hash = "sha256:ede28a1a32462f5a9705e07aea48001a08f7cf81a021585011deba701581a0db"},
+]
+
+[[package]]
+name = "pyperclip"
+version = "1.8.2"
+summary = "A cross-platform clipboard module for Python. (Only handles plain text for now.)"
+files = [
+    {file = "pyperclip-1.8.2.tar.gz", hash = "sha256:105254a8b04934f0bc84e9c24eb360a591aaf6535c9def5f29d92af107a9bf57"},
 ]
 
 [[package]]
@@ -907,8 +915,8 @@ files = [
 
 [[package]]
 name = "pytest-playwright"
-version = "0.3.3"
-requires_python = ">=3.7"
+version = "0.4.2"
+requires_python = ">=3.8"
 summary = "A pytest wrapper with fixtures for Playwright to automate web browsers"
 dependencies = [
     "playwright>=1.18",
@@ -917,8 +925,8 @@ dependencies = [
     "python-slugify<9.0.0,>=6.0.0",
 ]
 files = [
-    {file = "pytest-playwright-0.3.3.tar.gz", hash = "sha256:9bf79c633c97dd1405308b8d3600e6c8c2a200a733e2f36c5a150ba4701936f8"},
-    {file = "pytest_playwright-0.3.3-py3-none-any.whl", hash = "sha256:83a896b1b28bfaa081ca9ea27229a06a114e106e2e62fb3d5f06544748fbc1fe"},
+    {file = "pytest-playwright-0.4.2.tar.gz", hash = "sha256:9e9622e5507f8d27a3c7fd07aadcf43122f0086b69d1b3e6728995c8dbc0e44f"},
+    {file = "pytest_playwright-0.4.2-py3-none-any.whl", hash = "sha256:68dd0069e2dbf8e6024c6237d51d0277626687d94ba0dd387cea2a94ae4005b9"},
 ]
 
 [[package]]
@@ -988,7 +996,7 @@ files = [
 
 [[package]]
 name = "rich"
-version = "13.5.0"
+version = "13.5.2"
 requires_python = ">=3.7.0"
 summary = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 dependencies = [
@@ -997,8 +1005,8 @@ dependencies = [
     "typing-extensions<5.0,>=4.0.0; python_version < \"3.9\"",
 ]
 files = [
-    {file = "rich-13.5.0-py3-none-any.whl", hash = "sha256:996670a7618ccce27c55ba6fc0142e6e343773e11d34c96566a17b71b0e6f179"},
-    {file = "rich-13.5.0.tar.gz", hash = "sha256:62c81e88dc078d2372858660e3d5566746870133e51321f852ccc20af5c7e7b2"},
+    {file = "rich-13.5.2-py3-none-any.whl", hash = "sha256:146a90b3b6b47cac4a73c12866a499e9817426423f57c5a66949c086191a8808"},
+    {file = "rich-13.5.2.tar.gz", hash = "sha256:fb9d6c0a0f643c99eed3875b5377a184132ba9be4d61516a55273d3554d75a39"},
 ]
 
 [[package]]
