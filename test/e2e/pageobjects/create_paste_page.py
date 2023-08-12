@@ -3,8 +3,6 @@ import string
 from test.e2e.env_config import BASE_URL
 from test.e2e.pageobjects.base_page import BasePage
 from test.e2e.utils.file_utils import extract_file_name
-from test.e2e.constants import Theme
-
 from playwright.sync_api import Page, expect
 
 log = logging.getLogger(__name__)
