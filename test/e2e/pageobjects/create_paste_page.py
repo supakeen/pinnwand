@@ -1,8 +1,8 @@
 import logging
-import string
 from test.e2e.env_config import BASE_URL
 from test.e2e.pageobjects.base_page import BasePage
 from test.e2e.utils.file_utils import extract_file_name
+from test.e2e.utils.string_utils import random_string
 from playwright.sync_api import Page, expect
 
 log = logging.getLogger(__name__)
@@ -75,7 +75,7 @@ class CreatePastePage(BasePage):
 
     # Step sequences
     def paste_random_text(self, paste_number=0):
-        paste_text = string.ascii_letters + string.digits
+        paste_text = random_string()
         self.type_paste(paste_text, paste_number)
         self.should_have_value_in_paste_input(paste_text, paste_number)
         return paste_text
