@@ -19,10 +19,12 @@ class ViewPastePage(BasePage):
         self.download_archive_button = self.page.locator(
             ".paste-meta"
         ).get_by_role("link", name="download")
+        self.repaste_button = page.get_by_role("link", name="Repaste")
+        self.remove_now_button = page.get_by_role("link", name="Remove now")
 
     def click_remove_now_button(self):
         log.info("Clicking Remove Now Button")
-        self.page.get_by_role("link", name="Remove now").click()
+        self.remove_now_button.click()
 
     def click_copy_button(self, related_paste_number=0):
         log.info("Clicking Copy Button")
@@ -55,6 +57,10 @@ class ViewPastePage(BasePage):
         with self.page.expect_download() as downloaded_info:
             self.click_download_archive_button()
         return downloaded_info.value
+
+    def click_repaste_button(self):
+        log.info("Clicking Repaste Button")
+        self.repaste_button.click()
 
     # Expectations
     def should_have_pasted_text(self, text, paste_number=0):
