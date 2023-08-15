@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 class CreatePastePage(BasePage):
     def __init__(self, page: Page) -> None:
         super().__init__(
-            page, page.locator(".file-part textarea"), "Create Paste Page"
+            page, page.locator(".page-create"), "Create Paste Page"
         )
         self.page = page
         self.url = BASE_URL
@@ -79,6 +79,14 @@ class CreatePastePage(BasePage):
         self.type_paste(paste_text, paste_number)
         self.should_have_value_in_paste_input(paste_text, paste_number)
         return paste_text
+
+    def repaste_by_adding_random_text(self, paste_number=0):
+        pasted_text = self.paste_input.nth(paste_number).text_content()
+        added_text = random_string(100)
+        repasted_text = added_text + pasted_text
+        self.type_paste(added_text, paste_number)
+        self.should_have_value_in_paste_input(repasted_text, paste_number)
+        return repasted_text
 
     # Expectations
     def should_have_value_in_paste_input(self, value, paste_number=0):
