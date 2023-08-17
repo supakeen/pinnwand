@@ -65,4 +65,4 @@ jobs:
       run: sudo apt-get install xclip
 
     - name: Run e2e tests
-      run: xvfb-run pytest --e2e --log-cli-level=INFO test/e2e
+      run: xvfb-run pytest --e2e test/e2e
