@@ -20,8 +20,7 @@ class CreatePastePage(BasePage):
         self.add_another_paste_button = page.locator("button.add")
         self.file_input = page.locator("#file-input")
         self.file_drop_section = "#file-drop"
-        self.root = page.locator("html")
-        self.theme_toggle = page.locator("#toggle-color-scheme")
+        self.remove_file_button = page.locator("button.remove")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -65,13 +64,13 @@ class CreatePastePage(BasePage):
             [file_contents, self.file_drop_section],
         )
 
-    def click_toggle_theme(self):
-        log.info("Clicking Toggle Theme button")
-        self.theme_toggle.click()
-
     def reload(self):
         log.info("Reloading %s", self.page_name)
         self.page.reload()
+
+    def click_remove_file_button(self, paste_number=0):
+        log.info("Clicking Remove File button")
+        self.remove_file_button.nth(paste_number - 1).click()
 
     # Step sequences
     def paste_random_text(self, paste_number=0):
@@ -95,21 +94,14 @@ class CreatePastePage(BasePage):
             f"Paste Input had incorrect value on {self.page_name}",
         ).to_have_value(value)
 
+    def should_not_have_value_in_paste_input(self, pasted_text):
+        assert pasted_text not in map(
+            lambda locator: locator.get_attribute("value"),
+            self.paste_input.all(),
+        ), f"Value was displayed in Paste input on {self.page_name}"
+
     def should_have_no_value_in_paste_input(self):
         expect(
             self.paste_input,
             f"Paste Input was not empty on {self.page_name}",
         ).to_be_empty()
-
-    def should_have_theme(self, theme):
-        expect(
-            self.root, f"{self.page_name} didn't have theme {theme.name}"
-        ).to_have_class(theme.value["class"])
-        expect(
-            self.root,
-            f"{self.page_name} had incorrect font color for theme {theme.name}",
-        ).to_have_css("color", theme.value["font"])
-        expect(
-            self.root,
-            f"{self.page_name} had incorrect background color for theme {theme.name}",
-        ).to_have_css("background-color", theme.value["background"])

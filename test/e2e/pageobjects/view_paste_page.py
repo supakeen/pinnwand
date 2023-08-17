@@ -68,3 +68,8 @@ class ViewPastePage(BasePage):
             self.source.nth(paste_number),
             f"Pasted text was incorrect on {self.page_name}",
         ).to_have_text(text)
+
+    def should_not_have_pasted_text(self, pasted_text):
+        assert (
+            pasted_text not in self.source.all_text_contents()
+        ), f"Pasted text was displayed on {self.page_name}"
