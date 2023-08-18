@@ -20,6 +20,7 @@ window.addEventListener("load", (event) => {
 
     if(document.querySelector("section.paste-submit")) {
         setupCreatePage();
+        addRemoveButtons();
     } else {
         setupShowPage();
     }
@@ -37,16 +38,42 @@ function getFirstEmptyFilePartSection() {
     }
 }
 
-function add_new_file() {
+function addRemoveButtons() {
+    const tag = "button";
+    const className = "remove";
+    const label = "Remove this file";
+    const selector = `${tag}.${className}`;
+
+    const main = document.querySelector("main.page-create");
+
+    document.querySelectorAll('.file-part .file-meta').forEach(el => {
+        if (el.querySelector(selector)) {
+            return;
+        }
+        const removeButton = document.createElement(tag);
+        removeButton.innerText = label;
+        removeButton.className = className;
+        el.appendChild(removeButton);
+
+        removeButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            const section = event.target.parentNode.parentNode;
+            main.removeChild(section);
+
+            const fileInputs = document.querySelectorAll("section.file-part");
+
+            const fileParts = document.querySelectorAll('.file-part .file-meta');
+
+            if (fileParts.length < 2) {
+               document.querySelector(selector)?.remove();
+            }
+        });
+    });
+};
+
+function addNewFile() {
     let template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
-    template.querySelector("button.remove").addEventListener("click", (event) => {
-        event.preventDefault();
-
-        let section = event.target.parentNode.parentNode;
-
-        document.querySelector("main.page-create").removeChild(section);
-    });
 
     template.querySelector("textarea").addEventListener("keydown", indent_textarea);
 
@@ -54,14 +81,14 @@ function add_new_file() {
         template,
         document.querySelector("section.paste-submit")
     );
-
+    addRemoveButtons();
     return template;
 }
 
 function upload_file(file) {
     let filePartSectionToUse = getFirstEmptyFilePartSection();
     if (filePartSectionToUse === undefined) {
-        filePartSectionToUse  = add_new_file();
+        filePartSectionToUse  = addNewFile();
     }
 
     const {filename, content} = file
@@ -200,21 +227,6 @@ function setupShowPage() {
 function setupCreatePage() {
     setupFileDrop();
 
-    let removes = document.querySelectorAll("button.remove"),
-        bar = document.querySelector("section.paste-submit");
-
-    for(let i = 0; i < removes.length; i++) {
-        let remove = removes[i];
-
-        remove.addEventListener("click", (event) => {
-            event.preventDefault();
-
-            let section = event.target.parentNode.parentNode;
-
-            document.querySelector("main.page-create").removeChild(section);
-        });
-    };
-
     let but = document.createElement("button");
 
     but.innerText = "Add another file.";
@@ -223,11 +235,10 @@ function setupCreatePage() {
 
     but.addEventListener("click", function(event) {
         event.preventDefault();
-
-        add_new_file();
+        addNewFile();
     })
 
-    bar.appendChild(but);
+    document.querySelector("section.paste-submit").appendChild(but);
 
     let textareas = document.querySelectorAll('section.file-part textarea');
     for(let i = 0; i < textareas.length; i++) {
