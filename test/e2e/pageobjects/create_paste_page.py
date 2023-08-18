@@ -70,7 +70,7 @@ class CreatePastePage(BasePage):
 
     def click_remove_file_button(self, paste_number=0):
         log.info("Clicking Remove File button")
-        self.remove_file_button.nth(paste_number - 1).click()
+        self.remove_file_button.nth(paste_number).click()
 
     # Step sequences
     def paste_random_text(self, paste_number=0):
@@ -105,3 +105,9 @@ class CreatePastePage(BasePage):
             self.paste_input,
             f"Paste Input was not empty on {self.page_name}",
         ).to_be_empty()
+
+    def should_not_have_remove_file_button(self):
+        expect(
+            self.remove_file_button,
+            f"Remove This File button was present on {self.page_name}",
+        ).not_to_be_attached()
