@@ -481,3 +481,41 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
     def test_api_new_wrong_method(self) -> None:
         response = self.fetch("/api/v1/paste")
         assert response.code == 405
+
+
+    def test_api_detail_many_files(self) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {
+                            "name": "spam",
+                            "content": "a",
+                            "lexer": "c",
+                        },
+                    ]
+                    * 128,
+                }
+            ),
+        )
+
+        assert response.code == 200
+
+        data = json.loads(response.body)
+        name = data["link"].split("/")[-1]
+
+        response = self.fetch(
+            f"/api/v1/paste/{name}",
+            method="GET",
+        )
+
+        assert response.code == 200
+        data = json.loads(response.body)
+
+        assert len(data["files"]) == 128
+        assert data["files"][0]["name"] == "spam"
+        assert data["files"][0]["content"] == "a"
+        assert data["files"][0]["lexer"] == "c"
