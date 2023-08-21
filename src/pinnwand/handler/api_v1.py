@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 from urllib.parse import urljoin
 
@@ -122,3 +122,42 @@ class Paste(Base):
             url_removal = urljoin(url_request, f"/remove/{paste.removal}")
 
             self.write({"link": url_paste, "removal": url_removal})
+
+
+class PasteDetail(Base):
+    async def get(self, slug: str) -> None:
+        if defensive.ratelimit(self.request, area="read"):
+            raise error.RatelimitError()
+
+        with database.session() as session:
+            paste = (
+                session.query(database.Paste)
+                .filter(database.Paste.slug == slug)
+                .first()
+            )
+
+            if not paste:
+                raise tornado.web.HTTPError(404)
+
+            if paste.exp_date < datetime.utcnow():
+                session.delete(paste)
+                session.commit()
+
+                log.warn(
+                    "Show.get: paste was expired, is your cronjob running?"
+                )
+
+                raise tornado.web.HTTPError(404)
+
+            self.write(
+                {
+                    "files": [
+                        {
+                            "name": file.filename,
+                            "lexer": file.lexer,
+                            "content": file.raw,
+                        }
+                        for file in paste.files
+                    ],
+                }
+            )

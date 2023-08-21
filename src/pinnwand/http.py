@@ -44,6 +44,7 @@ def make_application(debug: bool = False) -> tornado.web.Application:
 
     pages += [
         (r"/api/v1/paste", handler.api_v1.Paste),
+        (r"/api/v1/paste/([A-Z2-7]+)(?:#.+)?", handler.api_v1.PasteDetail),
         (r"/api/v1/lexer", handler.api_v1.Lexer),
         (r"/api/v1/expiry", handler.api_v1.Expiry),
         (r"/json/new", handler.api_deprecated.Create),
