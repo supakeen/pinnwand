@@ -3,6 +3,7 @@ from playwright.sync_api import Page
 from test.e2e.pageobjects.create_paste_page import CreatePastePage
 from test.e2e.pageobjects.view_paste_page import ViewPastePage
 from test.e2e.pageobjects.preview_page import PreviewPage
+from test.e2e.utils.string_utils import convert_new_lines
 
 
 @pytest.mark.e2e
@@ -31,5 +32,5 @@ def test_hex_format(page: Page, create_paste_page: CreatePastePage):
     preview_page = PreviewPage(page)
     preview_page.should_be_opened()
 
-    hex_text = pasted_text.encode("utf-8").hex()
+    hex_text = convert_new_lines(pasted_text).encode("utf-8").hex()
     preview_page.should_have_content(hex_text)

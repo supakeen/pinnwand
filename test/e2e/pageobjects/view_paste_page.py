@@ -21,6 +21,11 @@ class ViewPastePage(BasePage):
         ).get_by_role("link", name="download")
         self.repaste_button = page.get_by_role("link", name="Repaste")
         self.remove_now_button = page.get_by_role("link", name="Remove now")
+        self.code_area = page.locator(".file-show div.code")
+        self.code_block = lambda paste_number: self.code_area.nth(
+            paste_number
+        ).locator(".sourcetable td.code code")
+        self.toggle_word_wrap_button = page.locator("#toggle-word-wrap")
 
     def click_remove_now_button(self):
         log.info("Clicking Remove Now Button")
@@ -62,6 +67,10 @@ class ViewPastePage(BasePage):
         log.info("Clicking Repaste Button")
         self.repaste_button.click()
 
+    def click_toggle_word_wrap_button(self):
+        log.info("Clicking Toggle Word Wrap Button")
+        self.toggle_word_wrap_button.click()
+
     # Expectations
     def should_have_pasted_text(self, text, paste_number=0):
         expect(
@@ -73,3 +82,15 @@ class ViewPastePage(BasePage):
         assert (
             pasted_text not in self.source.all_text_contents()
         ), f"Pasted text was displayed on {self.page_name}"
+
+    def should_have_wrapped_words(self, paste_number=0):
+        for code_block in self.code_block(paste_number).all():
+            expect(
+                code_block, f"Words were not wrapped on {self.page_name}"
+            ).to_have_css("white-space", "pre-wrap")
+
+    def should_not_have_wrapped_words(self, paste_number):
+        for code_block in self.code_block(paste_number).all():
+            expect(
+                code_block, f"Words were not wrapped on {self.page_name}"
+            ).to_have_css("white-space", "pre")
