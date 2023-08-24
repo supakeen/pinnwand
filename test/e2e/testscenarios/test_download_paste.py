@@ -5,6 +5,7 @@ from test.e2e.utils.file_utils import (
     verify_downloaded_file_contents,
     verify_downloaded_archive_contents,
 )
+from test.e2e.utils.string_utils import convert_new_lines
 import pytest
 from playwright.sync_api import Page
 
@@ -40,5 +41,7 @@ def test_download_archive(page: Page, create_paste_page: CreatePastePage):
 
     zip_download = view_paste_page.download_archive()
     verify_downloaded_archive_contents(
-        zip_download, first_pasted_text, second_pasted_text
+        zip_download,
+        convert_new_lines(first_pasted_text),
+        convert_new_lines(second_pasted_text),
     )
