@@ -71,6 +71,10 @@ class ViewPastePage(BasePage):
         log.info("Clicking Toggle Word Wrap Button")
         self.toggle_word_wrap_button.click()
 
+    def get_paste_slug(self):
+        log.info("Getting slug from paste url")
+        return self.page.url.split("/").pop()
+
     # Expectations
     def should_have_pasted_text(self, text, paste_number=0):
         expect(
@@ -94,3 +98,9 @@ class ViewPastePage(BasePage):
             expect(
                 code_block, f"Words were not wrapped on {self.page_name}"
             ).to_have_css("white-space", "pre")
+
+    def should_have_paste_slug_length(self, length):
+        actual_length = len(self.get_paste_slug())
+        assert (
+            actual_length == length
+        ), f"Length of paste slug was incorrect on {self.page_name}:\nActual: {actual_length}\nExpected: {length}"

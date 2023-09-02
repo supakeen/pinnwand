@@ -6,6 +6,8 @@ from pathlib import Path
 from zipfile import ZipFile
 import shutil
 
+config_path = os.path.join("test", "e2e", "pinnwand.toml")
+
 
 @contextmanager
 def create_random_file():

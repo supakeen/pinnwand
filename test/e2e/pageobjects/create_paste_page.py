@@ -21,6 +21,7 @@ class CreatePastePage(BasePage):
         self.file_input = page.locator("#file-input")
         self.file_drop_section = "#file-drop"
         self.remove_file_button = page.locator("button.remove")
+        self.use_longer_uri_checkbox = page.locator("input[name=long]")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -86,6 +87,14 @@ class CreatePastePage(BasePage):
         self.type_paste(added_text, paste_number)
         self.should_have_value_in_paste_input(repasted_text, paste_number)
         return repasted_text
+
+    def check_use_longer_uri(self):
+        log.info("Checking Use Longer URI checkbox")
+        self.use_longer_uri_checkbox.check()
+
+    def uncheck_use_longer_uri(self):
+        log.info("Unchecking Use Longer URI checkbox")
+        self.use_longer_uri_checkbox.uncheck()
 
     # Expectations
     def should_have_value_in_paste_input(self, value, paste_number=0):
