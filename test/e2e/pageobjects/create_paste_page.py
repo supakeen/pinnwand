@@ -1,9 +1,9 @@
 import logging
+from playwright.sync_api import Page, expect
 from test.e2e.env_config import BASE_URL
 from test.e2e.pageobjects.base_page import BasePage
 from test.e2e.utils.file_utils import extract_file_name
-from test.e2e.utils.string_utils import random_string
-from playwright.sync_api import Page, expect
+from test.e2e.utils.string_utils import random_string, random_letter_string
 
 log = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ class CreatePastePage(BasePage):
         self.file_drop_section = "#file-drop"
         self.remove_file_button = page.locator("button.remove")
         self.use_longer_uri_checkbox = page.locator("input[name=long]")
+        self.filename_input = page.locator("input[name=filename]")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -96,6 +97,16 @@ class CreatePastePage(BasePage):
         log.info("Unchecking Use Longer URI checkbox")
         self.use_longer_uri_checkbox.uncheck()
 
+    def set_random_filename(self, paste_number=0):
+        name = random_letter_string()
+        self.set_filename(name, paste_number)
+        self.should_have_value_in_filename_input(name, paste_number)
+        return name
+
+    def set_filename(self, name, paste_number=0):
+        log.info(f"Typing file name {name}")
+        self.filename_input.nth(paste_number).type(name)
+
     # Expectations
     def should_have_value_in_paste_input(self, value, paste_number=0):
         expect(
@@ -120,3 +131,9 @@ class CreatePastePage(BasePage):
             self.remove_file_button,
             f"Remove This File button was present on {self.page_name}",
         ).not_to_be_attached()
+
+    def should_have_value_in_filename_input(self, value, paste_number=0):
+        expect(
+            self.filename_input.nth(paste_number),
+            f"Filename Input had incorrect value on {self.page_name}",
+        ).to_have_value(value)

@@ -25,19 +25,57 @@ def extract_file_name(file_path):
     return Path(file_path).name
 
 
+def verify_downloaded_file_name(download, name):
+    verify_downloaded_file(
+        download, lambda file: extract_filename(file.name) == name
+    )
+
+
 def verify_downloaded_file_contents(download, text):
+    verify_downloaded_file(download, lambda file: file.read() == text)
+
+
+def verify_downloaded_file(download, assert_func):
     dir_path = tempfile.mkdtemp()
     file_path = download_path(dir_path, download)
     download.save_as(file_path)
     try:
         with open(file_path) as file:
-            assert file.read() == text
+            assert assert_func(file)
     finally:
         shutil.rmtree(dir_path)
 
 
 def verify_downloaded_archive_contents(
     archive_download, *args, match_all_args=True
+):
+    def assert_file_contents(file):
+        file_content = file.read().decode()
+        assert (
+            file_content in args
+        ), f"Unexpected content of file in archive {file_content}"
+
+    verify_downloaded_archive(
+        archive_download, assert_file_contents, args, match_all_args
+    )
+
+
+def verify_downloaded_archive_filenames(
+    archive_download, *args, match_all_args=True
+):
+    def assert_file_names(file):
+        filename = extract_filename(file.name)
+        assert (
+            filename in args
+        ), f"Unexpected name of file in archive {filename}"
+
+    verify_downloaded_archive(
+        archive_download, assert_file_names, args, match_all_args
+    )
+
+
+def verify_downloaded_archive(
+    archive_download, assert_func, *args, match_all_args=True
 ):
     dir_path = tempfile.mkdtemp()
     file_path = download_path(dir_path, archive_download)
@@ -51,13 +89,14 @@ def verify_downloaded_archive_contents(
                 ), "Number of files in downloaded archive was incorrect"
             for file_name in file_names:
                 with zip_file.open(file_name) as file:
-                    file_content = file.read().decode()
-                    assert (
-                        file_content in args
-                    ), f"Unexpected content of file in archive {file_content}"
+                    assert_func(file)
     finally:
         shutil.rmtree(dir_path)
 
 
 def download_path(download_dir_path, download):
     return os.path.join(download_dir_path, download.suggested_filename)
+
+
+def extract_filename(filename):
+    return Path(filename).stem.split("-")[0]
