@@ -99,9 +99,14 @@ class CreatePastePage(BasePage):
 
     def set_random_filename(self, paste_number=0):
         name = random_letter_string()
+        self.clear_filename(paste_number)
         self.set_filename(name, paste_number)
         self.should_have_value_in_filename_input(name, paste_number)
         return name
+
+    def clear_filename(self, paste_number=0):
+        log.info(f"Clearing file name input")
+        self.filename_input.nth(paste_number).clear()
 
     def set_filename(self, name, paste_number=0):
         log.info(f"Typing file name {name}")

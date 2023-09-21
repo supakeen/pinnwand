@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from zipfile import ZipFile
 import shutil
+import re
 
 config_path = os.path.join("test", "e2e", "pinnwand.toml")
 
@@ -25,14 +26,25 @@ def extract_file_name(file_path):
     return Path(file_path).name
 
 
-def verify_downloaded_file_name(download, name):
-    verify_downloaded_file(
-        download, lambda file: extract_filename(file.name) == name
-    )
+def verify_downloaded_file_name(download, name_regex):
+    def assert_file_name(file):
+        assert (
+            re.compile(name_regex).match(extract_filename(file.name)),
+            f"Name of file {file.name} was not {name_regex}",
+        )
+
+    verify_downloaded_file(download, assert_file_name)
 
 
 def verify_downloaded_file_contents(download, text):
-    verify_downloaded_file(download, lambda file: file.read() == text)
+    def assert_file_contents(file):
+        file_content = file.read()
+        assert (
+            file_content == text,
+            f"Contents of file was not equal to {text}",
+        )
+
+    verify_downloaded_file(download, assert_file_contents)
 
 
 def verify_downloaded_file(download, assert_func):
@@ -41,7 +53,7 @@ def verify_downloaded_file(download, assert_func):
     download.save_as(file_path)
     try:
         with open(file_path) as file:
-            assert assert_func(file)
+            assert_func(file)
     finally:
         shutil.rmtree(dir_path)
 
@@ -56,7 +68,10 @@ def verify_downloaded_archive_contents(
         ), f"Unexpected content of file in archive {file_content}"
 
     verify_downloaded_archive(
-        archive_download, assert_file_contents, args, match_all_args
+        archive_download,
+        assert_file_contents,
+        *args,
+        match_all_args=match_all_args,
     )
 
 
@@ -65,12 +80,16 @@ def verify_downloaded_archive_filenames(
 ):
     def assert_file_names(file):
         filename = extract_filename(file.name)
-        assert (
-            filename in args
+        assert any(
+            re.compile(name_regex).match(extract_filename(file.name))
+            for name_regex in args
         ), f"Unexpected name of file in archive {filename}"
 
     verify_downloaded_archive(
-        archive_download, assert_file_names, args, match_all_args
+        archive_download,
+        assert_file_names,
+        *args,
+        match_all_args=match_all_args,
     )
 
 
@@ -99,4 +118,4 @@ def download_path(download_dir_path, download):
 
 
 def extract_filename(filename):
-    return Path(filename).stem.split("-")[0]
+    return Path(filename).stem
