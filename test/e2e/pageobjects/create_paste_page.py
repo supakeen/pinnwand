@@ -23,6 +23,8 @@ class CreatePastePage(BasePage):
         self.remove_file_button = page.locator("button.remove")
         self.use_longer_uri_checkbox = page.locator("input[name=long]")
         self.filename_input = page.locator("input[name=filename]")
+        self.filetype_select = page.locator("select[name=lexer]")
+        self.selected_option = page.locator("option[selected]")
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -112,6 +114,10 @@ class CreatePastePage(BasePage):
         log.info(f"Typing file name {name}")
         self.filename_input.nth(paste_number).type(name)
 
+    def set_filetype(self, value, paste_number=0):
+        log.info(f"Typing file type {value}")
+        self.filetype_select.nth(paste_number).select_option(value)
+
     # Expectations
     def should_have_value_in_paste_input(self, value, paste_number=0):
         expect(
@@ -142,3 +148,9 @@ class CreatePastePage(BasePage):
             self.filename_input.nth(paste_number),
             f"Filename Input had incorrect value on {self.page_name}",
         ).to_have_value(value)
+
+    def should_have_selected_filetype(self, filetype, paste_number=0):
+        assert (
+            self.selected_option.nth(paste_number).text_content() == filetype,
+            f"Incorrect option was selected in Filetype Select on {self.page_name}",
+        )
