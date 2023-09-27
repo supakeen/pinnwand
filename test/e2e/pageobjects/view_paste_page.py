@@ -21,7 +21,8 @@ class ViewPastePage(BasePage):
         ).get_by_role("link", name="download")
         self.repaste_button = page.get_by_role("link", name="Repaste")
         self.remove_now_button = page.get_by_role("link", name="Remove now")
-        self.code_area = page.locator(".file-show div.code")
+        self.pasted_file = page.locator(".file-show")
+        self.code_area = self.pasted_file.locator("div.code")
         self.code_block = lambda paste_number: self.code_area.nth(
             paste_number
         ).locator(".sourcetable td.code code")
@@ -93,7 +94,7 @@ class ViewPastePage(BasePage):
                 code_block, f"Words were not wrapped on {self.page_name}"
             ).to_have_css("white-space", "pre-wrap")
 
-    def should_not_have_wrapped_words(self, paste_number):
+    def should_not_have_wrapped_words(self, paste_number=0):
         for code_block in self.code_block(paste_number).all():
             expect(
                 code_block, f"Words were not wrapped on {self.page_name}"
@@ -104,3 +105,10 @@ class ViewPastePage(BasePage):
         assert (
             actual_length == length
         ), f"Length of paste slug was incorrect on {self.page_name}:\nActual: {actual_length}\nExpected: {length}"
+
+    def should_have_paste_formatting(self, value, paste_number=0):
+        assert (
+            f"lang-{value}"
+            in self.pasted_file.nth(paste_number).get_attribute("class"),
+            f"Formatting of pasted file was incorrect on {self.page_name}",
+        )
