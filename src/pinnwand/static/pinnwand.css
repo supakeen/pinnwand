@@ -144,7 +144,8 @@ section.paste-submit {
 }
 
 div.file-meta button,
-section.paste-submit button {
+section.paste-submit button,
+.copyurl {
   box-sizing: border-box;
   border: 0.0625rem solid var(--color3);
   padding: .4rem 1.4rem;
@@ -156,7 +157,8 @@ section.paste-submit button {
   text-align: center; }
 
 div.file-meta button:hover,
-section.paste-submit button:hover {
+section.paste-submit button:hover,
+.copyurl:hover {
   color: var(--color3);
   background: var(--color1);
   border: 0.0625rem solid var(--color3); }

@@ -221,6 +221,12 @@ function setupShowPage() {
         });
     };
 
+    let shareButton = document.getElementById("copyurl-btn");
+
+    shareButton.addEventListener("click", function(event) {
+        navigator.clipboard.writeText(window.location.href);
+    });
+
     return false;
 }
 
