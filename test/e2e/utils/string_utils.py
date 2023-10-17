@@ -3,7 +3,7 @@ import string
 
 
 def random_string(size=1000) -> str:
-    return "".join(
+    return random.choice(string.ascii_letters).join(
         [
             random.choice(
                 string.ascii_letters
