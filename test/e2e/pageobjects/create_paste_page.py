@@ -156,10 +156,17 @@ class CreatePastePage(BasePage):
             f"Incorrect option was selected in Filetype Select on {self.page_name}",
         )
 
+    def should_have_paste_inputs(self, number_of_paste_inputs):
+        assert (
+            len(self.paste_input.all()) == number_of_paste_inputs,
+            f"{self.page_name} had incorrect number of Paste Inputs",
+        )
+
 
 class RemovalConfirmationModal:
     def __init__(self, page: Page) -> None:
         self.page = page
+        self.modal_locator = page.locator("#removal-confirmation")
         self.confirm_button = page.locator(".confirm")
         self.cancel_button = page.locator(".cancel")
 
@@ -170,3 +177,13 @@ class RemovalConfirmationModal:
     def cancel(self):
         log.info("Clicking Cancel button")
         self.cancel_button.click()
+
+    def should_be_displayed(self):
+        expect(
+            self.modal_locator, f"Removal Confirmation modal was not displayed"
+        ).to_be_visible()
+
+    def should_not_be_displayed(self):
+        expect(
+            self.modal_locator, f"Removal Confirmation modal was displayed"
+        ).not_to_be_visible()
