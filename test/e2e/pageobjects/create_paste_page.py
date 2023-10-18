@@ -25,6 +25,7 @@ class CreatePastePage(BasePage):
         self.filename_input = page.locator("input[name=filename]")
         self.filetype_select = page.locator("select[name=lexer]")
         self.selected_option = page.locator("option[selected]")
+        self.removal_confirmation_modal = RemovalConfirmationModal(page)
 
     def open(self):
         log.info(f"Opening Pinnwand at {self.url}")
@@ -154,3 +155,18 @@ class CreatePastePage(BasePage):
             self.selected_option.nth(paste_number).text_content() == filetype,
             f"Incorrect option was selected in Filetype Select on {self.page_name}",
         )
+
+
+class RemovalConfirmationModal:
+    def __init__(self, page: Page) -> None:
+        self.page = page
+        self.confirm_button = page.locator(".confirm")
+        self.cancel_button = page.locator(".cancel")
+
+    def confirm(self):
+        log.info("Clicking Confirm button")
+        self.confirm_button.click()
+
+    def cancel(self):
+        log.info("Clicking Cancel button")
+        self.cancel_button.click()
