@@ -16,6 +16,8 @@ def test_remove_file(page: Page, create_paste_page: CreatePastePage):
     third_pasted_text = create_paste_page.paste_random_text(paste_number=2)
 
     create_paste_page.click_remove_file_button(paste_number=1)
+    create_paste_page.removal_confirmation_modal.confirm()
+
     create_paste_page.should_have_value_in_paste_input(
         first_pasted_text, paste_number=0
     )
@@ -62,6 +64,8 @@ def test_remove_file_while_repasting(
     create_paste_page.should_be_opened()
 
     create_paste_page.click_remove_file_button(paste_number=2)
+    create_paste_page.removal_confirmation_modal.confirm()
+
     create_paste_page.should_not_have_value_in_paste_input(third_file_content)
     create_paste_page.click_submit()
 
@@ -87,6 +91,7 @@ def test_remove_first_file(page: Page, create_paste_page: CreatePastePage):
         )
 
     create_paste_page.click_remove_file_button(paste_number=0)
+    create_paste_page.removal_confirmation_modal.confirm()
 
     create_paste_page.should_have_value_in_paste_input(
         second_file_content, paste_number=0
@@ -123,6 +128,7 @@ def test_remove_first_file_while_repasting(
     create_paste_page.should_be_opened()
 
     create_paste_page.click_remove_file_button(paste_number=0)
+    create_paste_page.removal_confirmation_modal.confirm()
     create_paste_page.should_not_have_value_in_paste_input(first_pasted_text)
     create_paste_page.should_have_value_in_paste_input(
         second_pasted_text, paste_number=0

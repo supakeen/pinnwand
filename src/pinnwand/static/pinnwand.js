@@ -46,7 +46,12 @@ function addRemoveButtons() {
 
     const main = document.querySelector("main.page-create");
 
-    document.querySelectorAll('.file-part .file-meta').forEach(el => {
+    const fileParts = document.querySelectorAll('.file-part .file-meta');
+    if (fileParts.length < 2) {
+        return;
+    }
+
+    fileParts.forEach(el => {
         if (el.querySelector(selector)) {
             return;
         }
@@ -55,17 +60,29 @@ function addRemoveButtons() {
         removeButton.className = className;
         el.appendChild(removeButton);
 
+        const removeSection = (section) => {
+            main.removeChild(section);
+            const fileParts = document.querySelectorAll('.file-part .file-meta');
+            if (fileParts.length < 2) {
+                document.querySelector(selector)?.remove();
+            }
+        };
+
         removeButton.addEventListener("click", (event) => {
             event.preventDefault();
             const section = event.target.parentNode.parentNode;
-            main.removeChild(section);
-
-            const fileInputs = document.querySelectorAll("section.file-part");
-
-            const fileParts = document.querySelectorAll('.file-part .file-meta');
-
-            if (fileParts.length < 2) {
-               document.querySelector(selector)?.remove();
+            const sectionContent = section.querySelector('textarea').value;
+            if (sectionContent) {
+                const popover = document.querySelector("#removal-confirmation");
+                popover.querySelector(".confirm").focus();
+                popover.showPopover();
+                popover.querySelector(".cancel").addEventListener("click", (event) => event.target.parentNode.parentNode.hidePopover());
+                popover.querySelector(".confirm").addEventListener("click", (event) => {
+                    event.target.parentNode.parentNode.hidePopover();
+                    removeSection(section);
+                });
+            } else {
+                removeSection(section);
             }
         });
     });
