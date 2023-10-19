@@ -73,12 +73,12 @@ function addRemoveButtons() {
             const section = event.target.parentNode.parentNode;
             const sectionContent = section.querySelector('textarea').value;
             if (sectionContent) {
-                const popover = document.querySelector("#removal-confirmation");
+                const popover = document.querySelector(".confirmation-popover");
+                popover.removeAttribute("hidden");
                 popover.querySelector(".confirm").focus();
-                popover.showPopover();
-                popover.querySelector(".cancel").addEventListener("click", (event) => event.target.parentNode.parentNode.hidePopover());
+                popover.querySelector(".cancel").addEventListener("click", (event) => event.target.parentNode.parentNode.setAttribute("hidden", true));
                 popover.querySelector(".confirm").addEventListener("click", (event) => {
-                    event.target.parentNode.parentNode.hidePopover();
+                    event.target.parentNode.parentNode.setAttribute("hidden", true);
                     removeSection(section);
                 });
             } else {
