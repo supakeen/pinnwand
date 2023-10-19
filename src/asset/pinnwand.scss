@@ -442,6 +442,12 @@ textarea.copy-area {
     border: .0625rem solid var(--color3);
     background-color: var(--color0);
     color: var(--color2);
+    position: fixed;
+    overflow: auto;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    inset: 0;
 }
 
 .hll { background-color: #ffffcc }

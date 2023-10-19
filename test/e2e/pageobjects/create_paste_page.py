@@ -166,7 +166,7 @@ class CreatePastePage(BasePage):
 class RemovalConfirmationModal:
     def __init__(self, page: Page) -> None:
         self.page = page
-        self.modal_locator = page.locator("#removal-confirmation")
+        self.modal_locator = page.locator(".confirmation-popover")
         self.confirm_button = page.locator(".confirm")
         self.cancel_button = page.locator(".cancel")
 
