@@ -1,2 +1,8 @@
 venv
 doc
+test
+
+.github
+.git
+.pre-commit-config.yaml
+.readthedocs.yaml
