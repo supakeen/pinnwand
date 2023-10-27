@@ -45,6 +45,9 @@ dev = [
 requires = ["pdm-pep517>=1.0"]
 build-backend = "pdm.pep517.api"
 
+[project.scripts]
+pinnwand = 'pinnwand.__main__:main'
+
 [tool.black]
 line-length = 80
 target_version = ["py36"]
@@ -63,8 +66,6 @@ exclude = '''
   | dist
 )/
 '''
-[tool.poetry.scripts]
-pinnwand = 'pinnwand.__main__:main'
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
