@@ -65,4 +65,11 @@ jobs:
       run: sudo apt-get install xclip
 
     - name: Run e2e tests
-      run: xvfb-run pytest --e2e test/e2e
+      run: xvfb-run pytest --e2e test/e2e --html=test/e2e/report/index.html --self-contained-html
+
+    - name: Publish test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-report
+        path: test/e2e/report/
