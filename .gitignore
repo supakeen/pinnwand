@@ -118,3 +118,6 @@ dmypy.json
 .pdm-python
 
 .idea
+
+
+test/e2e/report/
