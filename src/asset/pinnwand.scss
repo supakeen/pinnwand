@@ -176,8 +176,27 @@ section.paste-submit {
     margin-bottom: .5rem;
 }
 
-div.file-meta button,
-section.paste-submit button,
+div.file-meta button.remove,
+section.paste-submit button.add {
+    margin: 0 .5rem 0 0;
+    padding: .4rem 1.4rem;
+    float: right;
+    background: var(--color1);
+    color: var(--color3);
+    border: .0625rem solid var(--color3);
+    cursor: pointer;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+div.file-meta button.remove:hover,
+section.paste-submit button.add:hover {
+    color: var(--color1);
+    background: var(--color3);
+    border: .0625rem solid var(--color1);
+}
+
+section.paste-submit button[type=submit],
 button.confirm {
     box-sizing: border-box;
     border: .0625rem solid var(--color3);
@@ -190,8 +209,7 @@ button.confirm {
     text-align: center;
 }
 
-div.file-meta button:hover,
-section.paste-submit button:hover,
+section.paste-submit button[type=submit]:hover,
 button.confirm:hover {
     color: var(--color3);
     background: var(--color1);
@@ -369,11 +387,6 @@ div.file-container {
 article h1 {
     margin-top: 0;
     margin-bottom: .5rem;
-}
-
-button.remove, button.add {
-    margin: 0 .5rem 0 0;
-    float: right;
 }
 
 .source {
