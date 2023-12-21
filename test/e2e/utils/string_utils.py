@@ -3,16 +3,14 @@ import string
 
 
 def random_string(size=1000) -> str:
-    return random.choice(string.ascii_letters) + "".join(
-        [
-            random.choice(
-                string.ascii_letters
-                + string.digits
-                + string.punctuation
-                + " \n\t"
-            )
-            for i in range(size)
-        ]
+    return (
+        "".join(
+            [
+                random.choice(string.ascii_letters + string.digits + " \n\t")
+                for i in range(size)
+            ]
+        )
+        + string.punctuation
     )
 
 
