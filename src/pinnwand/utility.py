@@ -1,4 +1,3 @@
-import logging
 import math
 import re
 from base64 import b32encode
@@ -12,9 +11,9 @@ from pygments.lexers import (
     guess_lexer_for_filename,
 )
 
-from pinnwand import database
+from pinnwand import database, logger
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 def list_languages() -> Dict[str, str]:

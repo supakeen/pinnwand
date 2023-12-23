@@ -1,6 +1,5 @@
 import binascii
 import io
-import logging
 import zipfile
 from datetime import datetime
 from typing import Any
@@ -8,9 +7,9 @@ from typing import Any
 import docutils.core
 import tornado.web
 
-from pinnwand import configuration, database, defensive, error, path, utility
+from pinnwand import configuration, database, defensive, error, logger, path, utility
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 class Base(tornado.web.RequestHandler):

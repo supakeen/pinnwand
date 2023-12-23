@@ -1,12 +1,11 @@
-import logging
 import secrets
 from typing import Any, List
 
 import tornado.web
 
-from pinnwand import configuration, handler, path
+from pinnwand import configuration, handler, logger, path
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 def make_application(debug: bool = False) -> tornado.web.Application:

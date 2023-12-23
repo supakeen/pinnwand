@@ -1,11 +1,10 @@
-import logging
 from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, database, defensive, utility
+from pinnwand import configuration, database, defensive, logger, utility
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 class Create(tornado.web.RequestHandler):
