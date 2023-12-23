@@ -7,7 +7,15 @@ from typing import Any
 import docutils.core
 import tornado.web
 
-from pinnwand import configuration, database, defensive, error, logger, path, utility
+from pinnwand import (
+    configuration,
+    database,
+    defensive,
+    error,
+    logger,
+    path,
+    utility,
+)
 
 log = logger.get_logger(__name__)
 
