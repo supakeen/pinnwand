@@ -1,6 +1,5 @@
 import contextlib
 import datetime
-import logging
 from datetime import timedelta
 from typing import Optional
 
@@ -23,9 +22,9 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.orm.session import Session
 
-from pinnwand import configuration, defensive, error, utility
+from pinnwand import configuration, defensive, error, logger, utility
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 _engine = create_engine(configuration.database_uri)
 _session = sessionmaker(bind=_engine)

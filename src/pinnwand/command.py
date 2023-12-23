@@ -9,10 +9,12 @@ import sys
 from datetime import timedelta
 from typing import TYPE_CHECKING, Optional
 
+from pinnwand import logger
+
 import click
 import tornado.ioloop
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 @click.group()

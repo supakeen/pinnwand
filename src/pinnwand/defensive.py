@@ -1,14 +1,13 @@
 import ipaddress
-import logging
 import re
 from typing import Dict, Union
 
 import token_bucket
 from tornado.httputil import HTTPServerRequest
 
-from pinnwand import configuration
+from pinnwand import configuration, logger
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 ratelimit_area: Dict[

@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import datetime, timedelta
 from typing import Any
 from urllib.parse import urljoin
@@ -8,9 +7,9 @@ import tornado.escape
 import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import configuration, database, defensive, error, utility
+from pinnwand import configuration, database, defensive, error, logger, utility
 
-log = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 class Base(tornado.web.RequestHandler):
