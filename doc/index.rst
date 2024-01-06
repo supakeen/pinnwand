@@ -26,7 +26,7 @@ Installation
 ============
 You can install ``pinnwand`` from PyPI_ by running pip_ as follows:
 
-  .. code:
+.. code-block::
 
   pip install pinnwand
 
