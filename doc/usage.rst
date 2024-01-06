@@ -65,6 +65,14 @@ To remove a paste a ``GET`` request to the ``removal`` URL returned is
 sufficient.
 
 
+/api/v1/paste/([A-Z2-7]+)(?:#.+)?
+--------------------------------
+Used to retrieve the paste with the given ID.
+
+  >>> requests.get("http://localhost:8000/api/v1/paste/74").json()
+  {"files": [{"name": "spam", "lexer": "python", "content": "eggs"}]}
+
+
 /api/v1/lexer
 -------------
 An endpoint to list all lexers available in the ``pinnwand`` instance whose
