@@ -9,14 +9,14 @@ that your other projects or even your operating system depend on.
 
 For a Debian based distribution installation would look like this:
 
-  .. code:
+.. code-block::
 
   python3 -m venv virtual-environment
   virtual-environment/bin/pip install pinnwand
 
 After this you can run ``pinnwand`` in the following way:
 
-  .. code:
+.. code-block::
 
   virtual-environment/bin/pinnwand http
 
@@ -32,7 +32,7 @@ As a container
 Containers are published on the GitHub Container Registry, you can run `pinnwand`
 from a container:
 
-  .. code:
+.. code-block::
 
   docker run -p 8000:8000 ghcr.io/supakeen/pinnwand:latest
 
