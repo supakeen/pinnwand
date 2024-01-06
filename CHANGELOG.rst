@@ -135,7 +135,7 @@ lower priority.
 v1.1.1 (20200602)
 *****************
 *The traditional bugfix release for the previous release. No real bugs here
-but something to prevent CSS changes from not being loaded.
+but something to prevent CSS changes from not being loaded.*
 
 * Prevent browsers from aggressively caching (#74)
 
