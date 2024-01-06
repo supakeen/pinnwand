@@ -91,7 +91,7 @@ class Show(Base):
                 session.delete(paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "Show.get: paste was expired, is your cronjob running?"
                 )
 
