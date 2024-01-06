@@ -307,7 +307,7 @@ class Show(Base):
                 session.delete(paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "Show.get: paste was expired, is your cronjob running?"
                 )
 
@@ -344,7 +344,7 @@ class RedirectShow(Base):
                 session.delete(paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "RedirectShow.get: paste was expired, is your cronjob running?"
                 )
 
@@ -376,7 +376,7 @@ class FileRaw(Base):
                 session.delete(file.paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "FileRaw.get: paste was expired, is your cronjob running?"
                 )
 
@@ -409,7 +409,7 @@ class FileHex(Base):
                 session.delete(file.paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "FileRaw.get: paste was expired, is your cronjob running?"
                 )
 
@@ -442,7 +442,7 @@ class PasteDownload(Base):
                 session.delete(paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "FileRaw.get: paste was expired, is your cronjob running?"
                 )
 
@@ -491,7 +491,7 @@ class FileDownload(Base):
                 session.delete(file.paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "FileDownload.get: paste was expired, is your cronjob running?"
                 )
 
@@ -537,7 +537,7 @@ class Remove(Base):
                 session.delete(paste)
                 session.commit()
 
-                log.warn(
+                log.warning(
                     "Remove.get: paste was expired, is your cronjob running?"
                 )
 
