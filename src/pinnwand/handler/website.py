@@ -236,7 +236,7 @@ class CreateAction(Base):
             if total_size > configuration.paste_size:
                 log.info("CreateAction.post: sum of files was too large")
                 raise error.ValidationError(
-                    "Sum of file sizes exceed size limit when syntax highlighting applied "
+                    "Sum of file sizes exceeds size limit when syntax highlighting applied "
                     f"({total_size//1024}kB > {configuration.paste_size//1024}kB)"
                 )
 
