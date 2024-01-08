@@ -187,7 +187,7 @@ class CreateAction(Base):
             log.info(
                 "CreateAction.post: a paste was submitted with an invalid expiry"
             )
-            raise error.ValidationError()
+            raise error.ValidationError("Invalid expiry provided")
 
         auto_scale = self.get_body_argument("long", None) is None
 
@@ -197,19 +197,23 @@ class CreateAction(Base):
 
         if not all([lexers, raws, filenames]):
             # Prevent empty argument lists from making it through
-            raise error.ValidationError()
+            raise error.ValidationError(
+                "'lexers', 'raws', and 'filenames' arguments must not be empty"
+            )
 
         if not all(raw.strip() for raw in raws):
             # Prevent empty raws from making it through
-            raise error.ValidationError()
+            raise error.ValidationError("Empty pastes are not allowed")
 
         if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
             log.info("CreateAction.post: mismatching argument lists")
-            raise error.ValidationError()
+            raise error.ValidationError(
+                "'lexers', 'raws', and 'filenames' arguments must be the same length"
+            )
 
         if any(lexer not in utility.list_languages() for lexer in lexers):
             log.info("CreateAction.post: a file had an invalid lexer")
-            raise error.ValidationError()
+            raise error.ValidationError("Invalid lexer provided")
 
         with database.session() as session, utility.SlugContext(
             auto_scale
@@ -228,9 +232,13 @@ class CreateAction(Base):
                     )
                 )
 
-            if sum(len(f.fmt) for f in paste.files) > configuration.paste_size:
+            total_size = sum(len(f.fmt) for f in paste.files)
+            if total_size > configuration.paste_size:
                 log.info("CreateAction.post: sum of files was too large")
-                raise error.ValidationError()
+                raise error.ValidationError(
+                    "Sum of file sizes exceed size limit when syntax highlighting applied "
+                    f"({total_size//1024}kB > {configuration.paste_size//1024}kB)"
+                )
 
             # For the first file we will always use the same slug as the paste,
             # since slugs are generated to be unique over both pastes and files
