@@ -1,3 +1,8 @@
+import os
+import pathlib
+import tempfile
+
+
 import pytest
 
 from pinnwand import configuration, database, utility
@@ -133,6 +138,30 @@ def test_slug_context() -> None:
                 .filter_by(slug=slug)
                 .one_or_none()
             )
+
+
+def test_loading_config_from_env():
+    env_config = """
+PINNWAND_DATABASE_URI="sqlite:///mydatabase.db"
+PINNWAND_SPAMSCORE=90
+    """
+    os.environ["PINNWAND_SPAMSCORE"] = "20"
+
+    assert configuration.database_uri == "sqlite:///:memory:"
+    assert configuration.spamscore == 50
+    assert configuration.default_selected_lexer == "text"
+    with tempfile.TemporaryDirectory() as tempdir:
+        directory = pathlib.Path(tempdir)
+        config_file = directory / ".env"
+        with config_file.open("w") as fp:
+            fp.write(env_config)
+        utility.load_config_from_environment(config_file.as_posix())
+
+    assert (configuration.database_uri == "sqlite:///mydatabase.db")
+    # Ensure that the environment values take precedence over the .env file
+    assert configuration.default_selected_lexer == "text"
+    # Ensure that options keep their defaults if not present in environment
+    assert configuration.spamscore == 20
 
 
 # TODO assert raises RuntimeError for dont_use
