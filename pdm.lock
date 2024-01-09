@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
 lock_version = "4.4.1"
-content_hash = "sha256:477d31840b6b031cf20d390567c735ef7c91f757e2d0f27820ce04adb61148b6"
+content_hash = "sha256:77067e32ef72978db03177332f443764134ccd17b56ffa663b2faf92dac5729e"
 
 [[package]]
 name = "aiohttp"
@@ -155,7 +155,7 @@ version = "23.12.0"
 requires_python = ">=3.8"
 summary = "The uncompromising code formatter."
 dependencies = [
-    "aiohttp>=3.7.4; sys_platform != \"win32\" or implementation_name != \"pypy\" and extra == \"d\"",
+    "aiohttp>=3.7.4; sys_platform != \"win32\" or implementation_name != \"pypy\"",
     "click>=8.0.0",
     "mypy-extensions>=0.4.3",
     "packaging>=22.0",
@@ -1379,6 +1379,16 @@ dependencies = [
 files = [
     {file = "pytest-playwright-0.4.3.tar.gz", hash = "sha256:699e2c47fbb1e6a57895454693eba278cf55d04d44c15017709b00e1de1d9ccd"},
     {file = "pytest_playwright-0.4.3-py3-none-any.whl", hash = "sha256:c9ff6e7ebfd967b562f5c3d67f1ae6b45a061d6ea51ad304fdd95aca9db20774"},
+]
+
+[[package]]
+name = "python-dotenv"
+version = "1.0.0"
+requires_python = ">=3.8"
+summary = "Read key-value pairs from a .env file and set them as environment variables"
+files = [
+    {file = "python-dotenv-1.0.0.tar.gz", hash = "sha256:a8df96034aae6d2d50a4ebe8216326c61c3eb64836776504fcca410e5937a3ba"},
+    {file = "python_dotenv-1.0.0-py3-none-any.whl", hash = "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"},
 ]
 
 [[package]]
