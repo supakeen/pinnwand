@@ -2,9 +2,7 @@
 a HTTP server, add and remove paste, initialize the database and reap expired
 pastes."""
 
-import ast
 import logging
-import os
 import sys
 from datetime import timedelta
 from typing import TYPE_CHECKING, Optional
@@ -49,24 +47,13 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
             for key, value in configuration_file.items():
                 setattr(configuration, key, value)
 
+    from pinnwand import database, utility
+
     # Or perhaps we have configuration in the environment, these are prefixed
     # with PINNWAND_ and all upper case, remove the prefix, convert to
     # lowercase.
-    for key, value in os.environ.items():
-        if key.startswith("PINNWAND_"):
-            key = key.removeprefix("PINNWAND_")
-            key = key.lower()
-
-            try:
-                value = ast.literal_eval(value)
-            except (ValueError, SyntaxError):
-                # When `ast.literal_eval` can't parse the value into another
-                # type we take it at string value
-                pass
-
-            setattr(configuration, key, value)
-
-    from pinnwand import database
+    # This also reads from .env files.
+    utility.load_config_from_environment()
 
     database.Base.metadata.create_all(database._engine)
 

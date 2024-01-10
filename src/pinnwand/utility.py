@@ -1,8 +1,11 @@
+import ast
 import math
+import os
 import re
 from base64 import b32encode
 from datetime import datetime
-from os import urandom
+from dotenv import load_dotenv
+
 from typing import Any, Dict, List, Optional
 
 from pygments.lexers import (
@@ -11,7 +14,7 @@ from pygments.lexers import (
     guess_lexer_for_filename,
 )
 
-from pinnwand import database, logger
+from pinnwand import configuration, database, logger
 
 log = logger.get_logger(__name__)
 
@@ -68,7 +71,7 @@ def guess_language(raw: str, filename: Optional[str] = None) -> str:
 
 
 def hash_create(length: int = 16) -> str:
-    return b32encode(urandom(length)).decode("ascii").replace("=", "")
+    return b32encode(os.urandom(length)).decode("ascii").replace("=", "")
 
 
 def slug_create(
@@ -201,3 +204,35 @@ def reap() -> None:
 async def async_reap() -> None:
     """Just the asynchronous definition of `reap`, note: not async."""
     reap()
+
+
+def load_config_from_environment(environment_file_path: Optional[str] = None):
+    """
+    Load configuration from both environment and .env files.
+
+    Args:
+        environment_file_path (Optional[str]): The path to the .env file holding the config.
+            If null, `load_dotenv` will search in increasingly higher folders for the given file
+            until if finds a .env file, if any.
+    Returns:
+        None
+    """
+    load_dotenv(environment_file_path)
+    prefix = "PINNWAND_"
+    for key, value in os.environ.items():
+        if key.startswith(prefix):
+            try:
+                key = key.removeprefix(prefix)
+            except AttributeError:
+                # str.removeprefix is only available in python 3.9+
+                key = key[len(prefix) :]
+            key = key.lower()
+
+            try:
+                value = ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                # When `ast.literal_eval` can't parse the value into another
+                # type we take it at string value
+                pass
+
+            setattr(configuration, key, value)
