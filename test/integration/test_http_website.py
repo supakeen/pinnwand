@@ -9,7 +9,7 @@ configuration.ratelimit["read"]["capacity"] = 2**64 - 1
 configuration.ratelimit["create"]["capacity"] = 2**64 - 1
 configuration.ratelimit["delete"]["capacity"] = 2**64 - 1
 
-from pinnwand import database, http
+from pinnwand import database, app
 
 
 class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
@@ -18,7 +18,7 @@ class WebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         database.Base.metadata.create_all(database._engine)
 
     def get_app(self) -> tornado.web.Application:
-        return http.make_application()
+        return app.make_application()
 
     def test_website_index(self) -> None:
         response = self.fetch(
@@ -402,7 +402,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         database.Base.metadata.create_all(database._engine)
 
     def get_app(self) -> tornado.web.Application:
-        return http.make_application()
+        return app.make_application()
 
     def test_website_index_post_no_lexer(self) -> None:
         response = self.fetch(

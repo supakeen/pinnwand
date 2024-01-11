@@ -82,7 +82,7 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 def http(port: int, debug: bool) -> None:
     """Run pinnwand's HTTP server."""
     from pinnwand import utility
-    from pinnwand.http import make_application
+    from pinnwand.app import make_application
 
     # Reap expired pastes on startup (we might've been shut down for a while)
     utility.reap()
