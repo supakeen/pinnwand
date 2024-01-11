@@ -64,7 +64,7 @@ jobs:
     - name: Install clipboard mechanism
       run: sudo apt-get install xclip
 
-    - name: Run e2e tests
+    - name: Run the e2e tests
       run: xvfb-run pytest --e2e test/e2e --html=test/e2e/report/index.html --self-contained-html
 
     - name: Publish test results
