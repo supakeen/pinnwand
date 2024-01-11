@@ -36,7 +36,7 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     screen_file = str(screenshot_dir / f"{slugify(item.nodeid)}.png")
     report = outcome.get_result()
-    extra = getattr(report, "extra", [])
+    extras = getattr(report, "extras", [])
     if report.when == "call":
         if report.failed:
             if "page" in item.funcargs:
@@ -44,8 +44,8 @@ def pytest_runtest_makereport(item, call):
                 make_screenshot(item, page)
         xfail = hasattr(report, "wasxfail")
         if (report.skipped and xfail) or (report.failed and not xfail):
-            extra.append(pytest_html.extras.png(re.sub("test\W*e2e\W*report\W*", "", screen_file)))
-        report.extra = extra
+            extras.append(pytest_html.extras.png(re.sub(r"test\W*e2e\W*report\W*", "", screen_file)))
+        report.extras = extras
 
 
 def make_screenshot(item, page):
