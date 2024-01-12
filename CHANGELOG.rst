@@ -6,7 +6,13 @@ a little more complex.
 
 v1.6.0 (unreleased)
 *******************
-* Added an initial browser test suite by nekhvoya_.
+* Added a browser test suite by nekhvoya_.
+* Minify the container images by williamjmorenor_.
+* Fix project metadata in `pyproject.toml` by NeilHanlon_.
+* A new `show` route in the v1 API to view a paste.
+* Logging has been reworked by shtlrs_.
+* Deprecated `log.warn` has been fixed by wookie184_.
+* Better user-facing errors by wookie184_.
 
 v1.5.0 (20230727)
 *****************
@@ -183,3 +189,7 @@ changelog created.
 .. _ChrisLovering: https://github.com/ChrisLovering
 .. _GHCR: https://ghcr.io/supakeen/pinnwand
 .. _nekhvoya: https://github.com/nekhvoya
+.. _williamjmorenor: https://github.com/williamjmorenor
+.. _NeilHanlon: https://github.com/NeilHanlon
+.. _shtlrs: https://github.com/shtlrs
+.. _wookie184: https://github.com/wookie184
