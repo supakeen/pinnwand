@@ -9,10 +9,10 @@ import sys
 from datetime import timedelta
 from typing import TYPE_CHECKING, Optional
 
-from pinnwand import logger
-
 import click
 import tornado.ioloop
+
+from pinnwand import logger
 
 log = logger.get_logger(__name__)
 
@@ -81,14 +81,16 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 )
 def http(port: int, debug: bool) -> None:
     """Run pinnwand's HTTP server."""
-    from pinnwand import utility
+    from pinnwand import configuration, utility
     from pinnwand.app import make_application
 
     # Reap expired pastes on startup (we might've been shut down for a while)
     utility.reap()
 
     # Schedule reaping every 1800 seconds
-    reap_task = tornado.ioloop.PeriodicCallback(utility.async_reap, 1_800_000)
+    reap_task = tornado.ioloop.PeriodicCallback(
+        utility.async_reap, configuration.reaping_periodicity
+    )
     reap_task.start()
 
     application = make_application(debug)

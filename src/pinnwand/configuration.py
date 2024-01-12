@@ -9,6 +9,7 @@ preferred_lexers = []  # type: ignore
 logo_path = None
 report_email = None
 expiries = {"1day": 86400, "1week": 604800}
+reaping_periodicity = 1_800_800
 ratelimit = {
     "read": {
         "capacity": 100,
