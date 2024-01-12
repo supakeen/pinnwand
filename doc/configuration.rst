@@ -102,6 +102,10 @@ with. Here's an example file::
   # paste is denied. Set to a 100 to disable.
   spamscore = 50
 
+  # pinnwand has a background job that deletes all expired pastes in order to not have an overloaded database.
+  # The period every which the task is executed is expressed in milliseconds
+  reaping_periodicity = 1_800_000
+
 Options
 *******
 
@@ -250,3 +254,10 @@ consist of links. If that percentage is larger than the number below the
 paste is denied. Set to a 100 to disable.
 
 Default: `50`
+
+reaping_periodicity
+=========
+pinnwand has a background job that deletes all expired pastes in order to not have an overloaded database.
+The period every which the job is executed is expressed in milliseconds
+
+Default: `1_800_000`
