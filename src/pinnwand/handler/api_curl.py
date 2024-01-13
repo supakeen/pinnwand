@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import tornado.web
 
 from pinnwand import configuration, database, defensive, logger, utility
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -47,10 +48,10 @@ class Create(tornado.web.RequestHandler):
             self.write("Invalid `expiry` supplied.\n")
             return
 
-        paste = database.Paste(
+        paste = models.Paste(
             utility.slug_create(), configuration.expiries[expiry], "curl"
         )
-        file = database.File(paste.slug, raw, lexer)
+        file = models.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
         with database.session() as session:

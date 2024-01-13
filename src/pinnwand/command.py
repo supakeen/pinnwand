@@ -13,6 +13,7 @@ import click
 import tornado.ioloop
 
 from pinnwand import logger
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -109,10 +110,10 @@ def add(lexer: str) -> None:
         log.error("add: unknown lexer")
         return
 
-    paste = database.Paste(
+    paste = models.Paste(
         utility.slug_create(), expiry=timedelta(days=1).seconds
     )
-    file = database.File(paste.slug, sys.stdin.read(), lexer=lexer)
+    file = models.File(paste.slug, sys.stdin.read(), lexer=lexer)
     paste.files.append(file)
 
     with database.session() as session:
@@ -130,8 +131,8 @@ def delete(paste: str) -> None:
 
     with database.session() as session:
         paste_object = (
-            session.query(database.Paste)
-            .filter(database.Paste.slug == paste)
+            session.query(models.Paste)
+            .filter(models.Paste.slug == paste)
             .first()
         )
 
@@ -166,7 +167,7 @@ def resyntax() -> None:
     from pinnwand import database, utility
 
     with database.session() as session:
-        files = session.query(database.File).all()
+        files = session.query(models.File).all()
 
         for file in files:
             if file.lexer == "autodetect":

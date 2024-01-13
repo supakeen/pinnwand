@@ -12,6 +12,7 @@ from pygments.lexers import (
 )
 
 from pinnwand import database, logger
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -85,8 +86,8 @@ def slug_create(
         if auto_scale:
             # We count our new paste as well
             count = (
-                session.query(database.Paste).count()
-                + session.query(database.File).count()
+                session.query(models.Paste).count()
+                + session.query(models.File).count()
                 + len(dont_use)
                 + 1
             )
@@ -111,10 +112,8 @@ def slug_create(
         # one, we also check if we've already generated this slug.
         while any(
             (
-                session.query(database.Paste)
-                .filter_by(slug=slug)
-                .one_or_none(),
-                session.query(database.File).filter_by(slug=slug).one_or_none(),
+                session.query(models.Paste).filter_by(slug=slug).one_or_none(),
+                session.query(models.File).filter_by(slug=slug).one_or_none(),
                 slug in dont_use,
             )
         ):
@@ -185,8 +184,8 @@ def reap() -> None:
 
     with database.session() as session:
         pastes = (
-            session.query(database.Paste)
-            .filter(database.Paste.exp_date < datetime.utcnow())
+            session.query(models.Paste)
+            .filter(models.Paste.exp_date < datetime.utcnow())
             .all()
         )
 
