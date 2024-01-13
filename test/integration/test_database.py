@@ -1,4 +1,4 @@
-from pinnwand.db import models
+from pinnwand.database import models
 
 
 def test_regression_issue_14() -> None:

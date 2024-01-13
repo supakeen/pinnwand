@@ -67,14 +67,14 @@ def create_paste_page(page: Page) -> CreatePastePage:
 
 @pytest.fixture(scope="session")
 def database() -> Generator[None, None, None]:
-    log.info("Setting up temp db")
+    log.info("Setting up temp database")
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
         props = load(config_path)
         props["database_uri"] = f"sqlite:///{temp.name}"
         with open(config_path, "w") as config_file:
             toml.dump(props, config_file)
     yield
-    log.info("Tearing down temp db")
+    log.info("Tearing down temp database")
     close_all_sessions()
     # Waiting for the connections to be closed
     time.sleep(1)
@@ -83,5 +83,5 @@ def database() -> Generator[None, None, None]:
 
 @pytest.fixture
 def clear_db():
-    log.info("Clearing temp db")
+    log.info("Clearing temp database")
     TestDb(load(config_path)["database_uri"]).clear_tables("paste", "file")

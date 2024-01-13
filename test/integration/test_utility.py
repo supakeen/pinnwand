@@ -1,7 +1,7 @@
 import pytest
 
-from pinnwand import configuration, database, utility
-from pinnwand.db import models
+from pinnwand import configuration, utility
+from pinnwand.database import manager, models
 
 
 def test_expiries() -> None:
@@ -122,7 +122,7 @@ def test_slug_context() -> None:
 
     # Make sure none of the generated slugs are already in the database
     # in a very slow way
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         for slug in L:
             assert (
                 not session.query(models.Paste)

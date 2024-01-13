@@ -5,8 +5,8 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, database, defensive, error, logger, utility
-from pinnwand.db import models
+from pinnwand import configuration, defensive, error, logger, utility
+from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
 
@@ -67,7 +67,7 @@ class Paste(Base):
         if not files:
             raise tornado.web.HTTPError(400, "no files provided")
 
-        with database.session() as session, utility.SlugContext(
+        with manager.DatabaseManager.get_session() as session, utility.SlugContext(
             auto_scale
         ) as slug_context:
             paste = models.Paste(
@@ -129,7 +129,7 @@ class PasteDetail(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == slug)

@@ -7,8 +7,8 @@ import tornado.escape
 import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import configuration, database, defensive, error, logger, utility
-from pinnwand.db import models
+from pinnwand import configuration, defensive, error, logger, utility
+from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
 
@@ -78,7 +78,7 @@ class Show(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == slug)
@@ -150,7 +150,7 @@ class Create(Base):
         )
         paste.files.append(models.File(paste.slug, raw, lexer, filename))
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             session.add(paste)
             session.commit()
 
@@ -179,7 +179,7 @@ class Remove(Base):
         if defensive.ratelimit(self.request, area="delete"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(
