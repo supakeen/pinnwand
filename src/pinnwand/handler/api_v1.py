@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 import tornado.web
 
 from pinnwand import configuration, database, defensive, error, logger, utility
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -69,7 +70,7 @@ class Paste(Base):
         with database.session() as session, utility.SlugContext(
             auto_scale
         ) as slug_context:
-            paste = database.Paste(
+            paste = models.Paste(
                 next(slug_context),
                 configuration.expiries[expiry],
                 "v1-api",
@@ -88,7 +89,7 @@ class Paste(Base):
 
                 try:
                     paste.files.append(
-                        database.File(
+                        models.File(
                             next(slug_context),
                             content,
                             lexer,
@@ -130,8 +131,8 @@ class PasteDetail(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == slug)
                 .first()
             )
 

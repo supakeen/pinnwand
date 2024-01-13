@@ -1,6 +1,7 @@
 import pytest
 
 from pinnwand import configuration, database, utility
+from pinnwand.db import models
 
 
 def test_expiries() -> None:
@@ -124,12 +125,12 @@ def test_slug_context() -> None:
     with database.session() as session:
         for slug in L:
             assert (
-                not session.query(database.Paste)
+                not session.query(models.Paste)
                 .filter_by(slug=slug)
                 .one_or_none()
             )
             assert (
-                not session.query(database.File)
+                not session.query(models.File)
                 .filter_by(slug=slug)
                 .one_or_none()
             )

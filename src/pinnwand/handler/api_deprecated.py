@@ -8,6 +8,7 @@ import tornado.web
 from tornado.escape import url_escape
 
 from pinnwand import configuration, database, defensive, error, logger, utility
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -79,8 +80,8 @@ class Show(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == slug)
                 .first()
             )
 
@@ -142,12 +143,12 @@ class Create(Base):
             )
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
+        paste = models.Paste(
             utility.slug_create(),
             configuration.expiries[expiry],
             "deprecated-api",
         )
-        paste.files.append(database.File(paste.slug, raw, lexer, filename))
+        paste.files.append(models.File(paste.slug, raw, lexer, filename))
 
         with database.session() as session:
             session.add(paste)
@@ -180,10 +181,9 @@ class Remove(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
+                session.query(models.Paste)
                 .filter(
-                    database.Paste.removal
-                    == self.get_body_argument("removal_id")
+                    models.Paste.removal == self.get_body_argument("removal_id")
                 )
                 .first()
             )

@@ -16,6 +16,7 @@ from pinnwand import (
     path,
     utility,
 )
+from pinnwand.db import models
 
 log = logger.get_logger(__name__)
 
@@ -141,12 +142,12 @@ class Create(Base):
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400)
 
-        paste = database.Paste(
+        paste = models.Paste(
             utility.slug_create(),
             configuration.expiries[expiry],
             "deprecated-web",
         )
-        file = database.File(paste.slug, raw, lexer)
+        file = models.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
         with database.session() as session:
@@ -218,13 +219,13 @@ class CreateAction(Base):
         with database.session() as session, utility.SlugContext(
             auto_scale
         ) as slug_context:
-            paste = database.Paste(
+            paste = models.Paste(
                 next(slug_context), configuration.expiries[expiry], "web"
             )
 
             for lexer, raw, filename in zip(lexers, raws, filenames):
                 paste.files.append(
-                    database.File(
+                    models.File(
                         next(slug_context),
                         raw,
                         lexer,
@@ -271,8 +272,8 @@ class Repaste(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == slug)
                 .first()
             )
 
@@ -303,8 +304,8 @@ class Show(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == slug)
                 .first()
             )
 
@@ -340,8 +341,8 @@ class RedirectShow(Base):
         exists."""
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == slug)
                 .first()
             )
 
@@ -372,8 +373,8 @@ class FileRaw(Base):
 
         with database.session() as session:
             file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
+                session.query(models.File)
+                .filter(models.File.slug == file_id)
                 .first()
             )
 
@@ -405,8 +406,8 @@ class FileHex(Base):
 
         with database.session() as session:
             file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
+                session.query(models.File)
+                .filter(models.File.slug == file_id)
                 .first()
             )
 
@@ -438,8 +439,8 @@ class PasteDownload(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == paste_id)
+                session.query(models.Paste)
+                .filter(models.Paste.slug == paste_id)
                 .first()
             )
 
@@ -487,8 +488,8 @@ class FileDownload(Base):
 
         with database.session() as session:
             file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
+                session.query(models.File)
+                .filter(models.File.slug == file_id)
                 .first()
             )
 
@@ -532,8 +533,8 @@ class Remove(Base):
 
         with database.session() as session:
             paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.removal == removal)
+                session.query(models.Paste)
+                .filter(models.Paste.removal == removal)
                 .first()
             )
 
