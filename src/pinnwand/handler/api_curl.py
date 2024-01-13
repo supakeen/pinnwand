@@ -2,8 +2,8 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, database, defensive, logger, utility
-from pinnwand.db import models
+from pinnwand import configuration, defensive, logger, utility
+from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
 
@@ -54,7 +54,7 @@ class Create(tornado.web.RequestHandler):
         file = models.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             session.add(paste)
             session.commit()
 

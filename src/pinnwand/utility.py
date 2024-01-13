@@ -11,8 +11,8 @@ from pygments.lexers import (
     guess_lexer_for_filename,
 )
 
-from pinnwand import database, logger
-from pinnwand.db import models
+from pinnwand import logger
+from pinnwand.database import manager, models
 
 log = logger.get_logger(__name__)
 
@@ -82,7 +82,7 @@ def slug_create(
     if dont_use is None:
         dont_use = []
 
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         if auto_scale:
             # We count our new paste as well
             count = (
@@ -182,7 +182,7 @@ def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
     database."""
 
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         pastes = (
             session.query(models.Paste)
             .filter(models.Paste.exp_date < datetime.utcnow())

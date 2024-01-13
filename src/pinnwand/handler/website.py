@@ -9,14 +9,13 @@ import tornado.web
 
 from pinnwand import (
     configuration,
-    database,
     defensive,
     error,
     logger,
     path,
     utility,
 )
-from pinnwand.db import models
+from pinnwand.database import manager, models
 
 log = logger.get_logger(__name__)
 
@@ -150,7 +149,7 @@ class Create(Base):
         file = models.File(paste.slug, raw, lexer)
         paste.files.append(file)
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             session.add(paste)
             session.commit()
 
@@ -216,7 +215,7 @@ class CreateAction(Base):
             log.info("CreateAction.post: a file had an invalid lexer")
             raise error.ValidationError("Invalid lexer provided")
 
-        with database.session() as session, utility.SlugContext(
+        with manager.DatabaseManager.get_session() as session, utility.SlugContext(
             auto_scale
         ) as slug_context:
             paste = models.Paste(
@@ -270,7 +269,7 @@ class Repaste(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == slug)
@@ -302,7 +301,7 @@ class Show(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == slug)
@@ -339,7 +338,7 @@ class RedirectShow(Base):
     async def get(self, slug: str) -> None:  # type: ignore
         """Fetch paste from database and redirect to /slug if the paste
         exists."""
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == slug)
@@ -371,7 +370,7 @@ class FileRaw(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             file = (
                 session.query(models.File)
                 .filter(models.File.slug == file_id)
@@ -404,7 +403,7 @@ class FileHex(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             file = (
                 session.query(models.File)
                 .filter(models.File.slug == file_id)
@@ -437,7 +436,7 @@ class PasteDownload(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.slug == paste_id)
@@ -486,7 +485,7 @@ class FileDownload(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             file = (
                 session.query(models.File)
                 .filter(models.File.slug == file_id)
@@ -531,7 +530,7 @@ class Remove(Base):
         if defensive.ratelimit(self.request, area="delete"):
             raise error.RatelimitError()
 
-        with database.session() as session:
+        with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
                 .filter(models.Paste.removal == removal)

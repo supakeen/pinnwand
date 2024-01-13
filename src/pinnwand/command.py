@@ -13,7 +13,7 @@ import click
 import tornado.ioloop
 
 from pinnwand import logger
-from pinnwand.db import models
+from pinnwand.database import models, manager, utils
 
 log = logger.get_logger(__name__)
 
@@ -67,9 +67,8 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 
             setattr(configuration, key, value)
 
-    from pinnwand import database
-
-    database.Base.metadata.create_all(database._engine)
+    engine = manager.DatabaseManager.get_engine()
+    utils.create_tables(engine)
 
 
 @main.command()
@@ -104,7 +103,7 @@ def http(port: int, debug: bool) -> None:
 @click.option("--lexer", default="text", help="Lexer to use.")
 def add(lexer: str) -> None:
     """Add a paste to pinnwand's database from stdin."""
-    from pinnwand import database, utility
+    from pinnwand import utility
 
     if lexer not in utility.list_languages():
         log.error("add: unknown lexer")
@@ -116,7 +115,7 @@ def add(lexer: str) -> None:
     file = models.File(paste.slug, sys.stdin.read(), lexer=lexer)
     paste.files.append(file)
 
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         session.add(paste)
         session.commit()
 
@@ -127,9 +126,8 @@ def add(lexer: str) -> None:
 @click.option("--paste", help="database.Paste identifier.", required=True)
 def delete(paste: str) -> None:
     """Delete a paste from pinnwand's database."""
-    from pinnwand import database
 
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         paste_object = (
             session.query(models.Paste)
             .filter(models.Paste.slug == paste)
@@ -164,9 +162,9 @@ def resyntax() -> None:
     import pygments.lexers
     from pygments_better_html import BetterHtmlFormatter
 
-    from pinnwand import database, utility
+    from pinnwand import utility
 
-    with database.session() as session:
+    with manager.DatabaseManager.get_session() as session:
         files = session.query(models.File).all()
 
         for file in files:
