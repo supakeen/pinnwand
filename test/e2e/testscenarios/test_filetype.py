@@ -21,7 +21,7 @@ def test_default_filetype(page: Page, create_paste_page: CreatePastePage):
 @pytest.mark.e2e
 def test_set_filetype(page: Page, create_paste_page: CreatePastePage):
     create_paste_page.paste_random_text(paste_number=0)
-    create_paste_page.set_filetype(Filetype.PYTHON.value["value"])
+    create_paste_page.set_filetype(Filetype.GO.value["value"])
     create_paste_page.click_add_another_file_button()
 
     create_paste_page.paste_random_text(paste_number=1)
@@ -32,7 +32,7 @@ def test_set_filetype(page: Page, create_paste_page: CreatePastePage):
     view_paste_page.should_be_opened()
 
     view_paste_page.should_have_paste_formatting(
-        Filetype.PYTHON.value["value"], paste_number=0
+        Filetype.GO.value["value"], paste_number=0
     )
     view_paste_page.should_have_paste_formatting(
         Filetype.JAVA.value["value"], paste_number=1
