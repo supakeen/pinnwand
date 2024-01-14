@@ -71,6 +71,7 @@ def database() -> Generator[None, None, None]:
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
         props = load(config_path)
         props["database_uri"] = f"sqlite:///{temp.name}"
+        props["expiries"] = {"1hour": 4, "1day": 4}  # It expires in 4 seconds instead of an hour
         with open(config_path, "w") as config_file:
             toml.dump(props, config_file)
     yield

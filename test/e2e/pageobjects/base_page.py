@@ -47,3 +47,6 @@ class BasePage:
             self.root,
             f"{self.page_name} had incorrect background color for theme {theme.name}",
         ).to_have_css("background-color", theme.value["background"])
+
+    def refresh(self):
+        self.page.reload()

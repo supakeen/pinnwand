@@ -485,7 +485,6 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch("/api/v1/paste")
         assert response.code == 405
 
-
     def test_api_detail_many_files(self) -> None:
         response = self.fetch(
             "/api/v1/paste",

@@ -44,7 +44,11 @@ def pytest_runtest_makereport(item, call):
                 make_screenshot(item, page)
         xfail = hasattr(report, "wasxfail")
         if (report.skipped and xfail) or (report.failed and not xfail):
-            extras.append(pytest_html.extras.png(re.sub(r"test\W*e2e\W*report\W*", "", screen_file)))
+            extras.append(
+                pytest_html.extras.png(
+                    re.sub(r"test\W*e2e\W*report\W*", "", screen_file)
+                )
+            )
         report.extras = extras
 
 
