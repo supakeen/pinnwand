@@ -5,7 +5,8 @@ from typing import Dict, Union
 import token_bucket
 from tornado.httputil import HTTPServerRequest
 
-from pinnwand import configuration, logger
+from pinnwand import logger
+from pinnwand.configuration import Configuration, ConfigurationProvider
 
 log = logger.get_logger(__name__)
 
@@ -29,6 +30,8 @@ def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
     ratelimit is hit, we should walk up the CIDRs (/64, /48, etc) as those
     ranges usually belong to the same person. If this is encountered in real
     life this function will have to be expanded."""
+
+    configuration: Configuration = ConfigurationProvider.get_config()
 
     if area not in ratelimit_area:
         ratelimit_area[area] = {}

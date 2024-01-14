@@ -7,7 +7,8 @@ import tornado.escape
 import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import configuration, defensive, error, logger, utility
+from pinnwand import defensive, error, logger, utility
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
@@ -124,6 +125,8 @@ class Create(Base):
         if defensive.ratelimit(self.request, area="create"):
             raise error.RatelimitError()
 
+        configuration: Configuration = ConfigurationProvider.get_config()
+
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
@@ -221,6 +224,8 @@ class Expiry(Base):
     async def get(self) -> None:
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
+
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         self.write(
             {

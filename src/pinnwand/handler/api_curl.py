@@ -2,7 +2,8 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, defensive, logger, utility
+from pinnwand import defensive, logger, utility
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
@@ -21,6 +22,7 @@ class Create(tornado.web.RequestHandler):
             self.write("Enhance your calm, you have exceeded the ratelimit.")
             return
 
+        configuration: Configuration = ConfigurationProvider.get_config()
         lexer = self.get_body_argument("lexer", "text")
         raw = self.get_body_argument("raw", "", strip=False)
         expiry = self.get_body_argument("expiry", "1day")

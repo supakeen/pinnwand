@@ -18,7 +18,8 @@ from sqlalchemy.orm import (
     relationship,
 )
 
-from pinnwand import configuration, defensive, error, logger, utility
+from pinnwand import defensive, error, logger, utility
+from pinnwand.configuration import Configuration, ConfigurationProvider
 
 
 log = logger.get_logger(__name__)
@@ -101,6 +102,8 @@ class File(Base):  # type: ignore
         # Start with some basic housekeeping related to size
         if not len(raw):
             raise error.ValidationError("Empty pastes are not allowed")
+
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         if len(raw) > configuration.paste_size:
             raise error.ValidationError(

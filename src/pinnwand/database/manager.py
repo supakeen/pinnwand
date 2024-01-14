@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 
-from pinnwand import configuration
+from pinnwand.configuration import Configuration, ConfigurationProvider
 
 
 class DatabaseManager:
@@ -17,7 +17,7 @@ class DatabaseManager:
     @classmethod
     def get_engine(cls):
         """Return an engine for the currently configured connection string."""
-
+        configuration: Configuration = ConfigurationProvider.get_config()
         if not cls._engine:
             cls._engine = create_engine(configuration.database_uri)
 
