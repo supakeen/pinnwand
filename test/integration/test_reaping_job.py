@@ -30,13 +30,13 @@ def temp_database_url() -> str:
 
 @patch("pinnwand.utility.reap")
 @pytest.mark.asyncio
-async def test_reaping_tasks_running_periodicity(reap_utility_mock: MagicMock, temp_database_url):
+async def test_reaping_tasks_running_periodicity(
+    reap_utility_mock: MagicMock, temp_database_url
+):
     """Test that the reaping task gets executed every period T."""
     runner = CliRunner()
 
-    runner.invoke(
-        command.main, ["--configuration-path", config_path, "http"]
-    )
+    runner.invoke(command.main, ["--configuration-path", config_path, "http"])
 
     await asyncio.sleep(5)
 
@@ -48,7 +48,9 @@ async def test_reaping_tasks_running_periodicity(reap_utility_mock: MagicMock, t
 
 @patch("pinnwand.database.manager.DatabaseManager.get_engine")
 @pytest.mark.asyncio
-async def test_pastes_reaped_on_startup(get_engine_patch: MagicMock, temp_database_url):
+async def test_pastes_reaped_on_startup(
+    get_engine_patch: MagicMock, temp_database_url
+):
     """Ensures that pastes are reaped correctly upon startup."""
 
     engine = create_engine(temp_database_url)
@@ -74,9 +76,7 @@ async def test_pastes_reaped_on_startup(get_engine_patch: MagicMock, temp_databa
     await asyncio.sleep(2)
 
     runner = CliRunner()
-    runner.invoke(
-        command.main, ["--configuration-path", config_path, "http"]
-    )
+    runner.invoke(command.main, ["--configuration-path", config_path, "http"])
 
     with manager.DatabaseManager.get_session() as session:
         for slug in slugs:

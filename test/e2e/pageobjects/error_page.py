@@ -22,4 +22,3 @@ class ErrorPage(BasePage):
 
     def should_be_opened(self):
         expect(self.page).to_have_title("error")
-
