@@ -5,8 +5,8 @@ from playwright.sync_api import Page, expect
 class ErrorPage(BasePage):
     def __init__(self, page: Page) -> None:
         super().__init__(page, page.locator("article"), "Error Page")
-        self.error_code = self.page_locator.locator("h1")
-        self.error_description = self.page_locator.locator("p")
+        self.error_code = self.page_locator.locator("#status-code")
+        self.error_description = self.page_locator.locator("#error-message")
         self.page = page
 
     # Expectations
@@ -19,3 +19,7 @@ class ErrorPage(BasePage):
             self.error_description,
             f"Error description displayed on {self.page_name} was incorrect",
         ).to_have_text(description)
+
+    def should_be_opened(self):
+        expect(self.page).to_have_title("error")
+
