@@ -3,6 +3,7 @@ import tempfile
 from click.testing import CliRunner
 
 import pinnwand.command as command
+from pinnwand.configuration import Configuration, ConfigurationProvider
 
 
 def test_main():
@@ -42,9 +43,8 @@ def test_main():
         )
         assert result.exit_code == 0
 
-        import pinnwand.configuration
-
-        assert pinnwand.configuration.foo == 1
+        configuration: Configuration = ConfigurationProvider.get_config()
+        assert configuration._foo == 1
 
 
 def test_reap():

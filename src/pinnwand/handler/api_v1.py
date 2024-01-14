@@ -5,7 +5,8 @@ from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, defensive, error, logger, utility
+from pinnwand import defensive, error, logger, utility
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import models, manager
 
 log = logger.get_logger(__name__)
@@ -30,6 +31,8 @@ class Expiry(Base):
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
+        configuration: Configuration = ConfigurationProvider.get_config()
+
         self.write(
             {
                 name: str(timedelta(seconds=delta))
@@ -48,6 +51,8 @@ class Paste(Base):
     async def post(self) -> None:
         if defensive.ratelimit(self.request, area="create"):
             raise error.RatelimitError()
+
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         try:
             data = tornado.escape.json_decode(self.request.body)

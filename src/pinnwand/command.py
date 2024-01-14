@@ -2,17 +2,16 @@
 a HTTP server, add and remove paste, initialize the database and reap expired
 pastes."""
 
-import ast
 import logging
-import os
 import sys
 from datetime import timedelta
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 import click
 import tornado.ioloop
 
 from pinnwand import logger
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import models, manager, utils
 
 log = logger.get_logger(__name__)
@@ -30,42 +29,12 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
     """Pinnwand pastebin software."""
     logging.basicConfig(level=10 + (logging.FATAL - verbose * 10))
 
-    from pinnwand import configuration
-
+    configuration: Configuration = ConfigurationProvider.get_config()
     # First check if we have a configuration path
     if configuration_path:
-        if (
-            TYPE_CHECKING
-        ):  # lie to mypy, see https://github.com/python/mypy/issues/1153
-            import tomllib as toml
-        else:
-            try:
-                import tomllib as toml
-            except ImportError:
-                import tomli as toml
+        configuration.load_config_file(configuration_path)
 
-        with open(configuration_path, "rb") as file:
-            configuration_file = toml.load(file)
-
-            for key, value in configuration_file.items():
-                setattr(configuration, key, value)
-
-    # Or perhaps we have configuration in the environment, these are prefixed
-    # with PINNWAND_ and all upper case, remove the prefix, convert to
-    # lowercase.
-    for key, value in os.environ.items():
-        if key.startswith("PINNWAND_"):
-            key = key.removeprefix("PINNWAND_")
-            key = key.lower()
-
-            try:
-                value = ast.literal_eval(value)
-            except (ValueError, SyntaxError):
-                # When `ast.literal_eval` can't parse the value into another
-                # type we take it at string value
-                pass
-
-            setattr(configuration, key, value)
+    configuration.load_environment()
 
     engine = manager.DatabaseManager.get_engine()
     utils.create_tables(engine)
@@ -81,8 +50,10 @@ def main(verbose: int, configuration_path: Optional[str]) -> None:
 )
 def http(port: int, debug: bool) -> None:
     """Run pinnwand's HTTP server."""
-    from pinnwand import configuration, utility
+    from pinnwand import utility
     from pinnwand.app import make_application
+
+    configuration: Configuration = ConfigurationProvider.get_config()
 
     # Reap expired pastes on startup (we might've been shut down for a while)
     utility.reap()

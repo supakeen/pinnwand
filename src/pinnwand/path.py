@@ -1,7 +1,9 @@
 """Shorthands for paths for templates, static assets, etc."""
 import pathlib
 
-from pinnwand import configuration
+from pinnwand.configuration import Configuration, ConfigurationProvider
+
+configuration: Configuration = ConfigurationProvider.get_config()
 
 base = pathlib.Path(__file__).parent
 

@@ -3,12 +3,17 @@ from typing import Any, List
 
 import tornado.web
 
-from pinnwand import configuration, handler, logger, path
+from pinnwand import handler, logger, path
+from pinnwand.configuration import Configuration, ConfigurationProvider
 
 log = logger.get_logger(__name__)
 
 
 def make_application(debug: bool = False) -> tornado.web.Application:
+    configuration: Configuration = ConfigurationProvider.get_config(
+        load_env=True
+    )
+
     pages: List[Any] = [
         (r"/", handler.website.Create),
         (r"/\+(.*)", handler.website.Create),

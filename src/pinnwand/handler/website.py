@@ -8,13 +8,13 @@ import docutils.core
 import tornado.web
 
 from pinnwand import (
-    configuration,
     defensive,
     error,
     logger,
     path,
     utility,
 )
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import manager, models
 
 log = logger.get_logger(__name__)
@@ -86,6 +86,8 @@ class Create(Base):
         """Render the new paste form, optionally have a lexer preselected from
         the URL."""
 
+        configuration: Configuration = ConfigurationProvider.get_config()
+
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
 
@@ -125,6 +127,7 @@ class Create(Base):
         lexer = self.get_body_argument("lexer")
         raw = self.get_body_argument("code", strip=False)
         expiry = self.get_body_argument("expiry")
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         if defensive.ratelimit(self.request, area="create"):
             raise error.RatelimitError()
@@ -181,6 +184,7 @@ class CreateAction(Base):
         if defensive.ratelimit(self.request, area="create"):
             raise error.RatelimitError()
 
+        configuration: Configuration = ConfigurationProvider.get_config()
         expiry = self.get_body_argument("expiry")
 
         if expiry not in configuration.expiries:
@@ -268,6 +272,8 @@ class Repaste(Base):
 
         if defensive.ratelimit(self.request, area="read"):
             raise error.RatelimitError()
+
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         with manager.DatabaseManager.get_session() as session:
             paste = (

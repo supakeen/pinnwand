@@ -1,10 +1,12 @@
 import pytest
 
-from pinnwand import configuration, utility
+from pinnwand import utility
+from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import manager, models
 
 
 def test_expiries() -> None:
+    configuration: Configuration = ConfigurationProvider.get_config()
     assert len(configuration.expiries) == 2
 
 

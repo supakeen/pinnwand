@@ -4,13 +4,14 @@ import urllib.parse
 import tornado.testing
 import tornado.web
 
-from pinnwand import configuration
+from pinnwand.configuration import Configuration, ConfigurationProvider
+configuration: Configuration = ConfigurationProvider.get_config()
 
-configuration.ratelimit["read"]["capacity"] = 2**64 - 1
-configuration.ratelimit["create"]["capacity"] = 2**64 - 1
-configuration.ratelimit["delete"]["capacity"] = 2**64 - 1
+configuration._ratelimit["read"]["capacity"] = 2**64 - 1
+configuration._ratelimit["create"]["capacity"] = 2**64 - 1
+configuration._ratelimit["delete"]["capacity"] = 2**64 - 1
 
-from pinnwand import configuration, app, utility
+from pinnwand import app, utility
 from pinnwand.database import manager, utils as database_utils
 
 
