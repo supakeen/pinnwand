@@ -9,7 +9,7 @@ def random_string(size=1000) -> str:
                 random.choice(string.ascii_letters + string.digits + " \n\t")
                 for i in range(size)
             ]
-        )
+        ).strip()
         + string.punctuation
     )
 

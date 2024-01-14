@@ -20,3 +20,4 @@ class Filetype(Enum):
     JAVA = {"label": "Java", "value": "java"}
     JAVASCRIPT = {"label": "JavaScript", "value": "javascript"}
     JSON = {"label": "JSON", "value": "json"}
+    GO = {"label": "Go", "value": "go"}
