@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Any
 from urllib.parse import urljoin
 
@@ -7,7 +7,7 @@ import tornado.escape
 import tornado.web
 from tornado.escape import url_escape
 
-from pinnwand import configuration, database, defensive, error, logger, utility
+from pinnwand import configuration, crud, database, defensive, error, logger, utility
 
 log = logger.get_logger(__name__)
 
@@ -78,24 +78,7 @@ class Show(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "Show.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, slug)
 
             self.write(
                 {
@@ -128,43 +111,24 @@ class Create(Base):
         expiry = self.get_body_argument("expiry")
         filename = self.get_body_argument("filename", None)
 
-        if not raw or not raw.strip():
-            log.info("APINew.post: a paste was submitted without content")
-            raise tornado.web.HTTPError(400)
-
-        if lexer not in utility.list_languages():
-            log.info("APINew.post: a paste was submitted with an invalid lexer")
-            raise tornado.web.HTTPError(400)
-
-        if expiry not in configuration.expiries:
-            log.info(
-                "APINew.post: a paste was submitted with an invalid expiry"
-            )
-            raise tornado.web.HTTPError(400)
-
-        paste = database.Paste(
-            utility.slug_create(),
-            configuration.expiries[expiry],
-            "deprecated-api",
-        )
-        paste.files.append(database.File(paste.slug, raw, lexer, filename))
+        files = [crud.PastedFile(lexer, raw, filename)]
 
         with database.session() as session:
-            session.add(paste)
-            session.commit()
+            paste = crud.create_paste(session, files, expiry, auto_scale=True, source="deprecated-api")
 
-            req_url = self.request.full_url()
-            location = paste.slug
-            if filename:
-                location += "#" + url_escape(filename)
-            self.write(
-                {
-                    "paste_id": paste.slug,
-                    "removal_id": paste.removal,
-                    "paste_url": urljoin(req_url, f"/{location}"),
-                    "raw_url": urljoin(req_url, f"/raw/{paste.files[0].slug}"),
-                }
-            )
+        req_url = self.request.full_url()
+        location = paste.paste_slug
+        if filename:
+            location += "#" + url_escape(filename)
+
+        self.write(
+            {
+                "paste_id": paste.paste_slug,
+                "removal_id": paste.removal_slug,
+                "paste_url": urljoin(req_url, f"/{location}"),
+                "raw_url": urljoin(req_url, f"/raw/{paste.paste_slug}"),
+            }
+        )
 
 
 class Remove(Base):
@@ -179,18 +143,7 @@ class Remove(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(
-                    database.Paste.removal
-                    == self.get_body_argument("removal_id")
-                )
-                .first()
-            )
-
-            if not paste:
-                self.set_status(400)
-                return
+            paste = crud.get_paste_by_removal(session, self.get_body_argument("removal_id"))
 
             session.delete(paste)
             session.commit()

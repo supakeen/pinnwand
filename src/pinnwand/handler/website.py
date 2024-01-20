@@ -9,6 +9,7 @@ import tornado.web
 
 from pinnwand import (
     configuration,
+    crud,
     database,
     defensive,
     error,
@@ -182,80 +183,34 @@ class CreateAction(Base):
             raise error.RatelimitError()
 
         expiry = self.get_body_argument("expiry")
-
-        if expiry not in configuration.expiries:
-            log.info(
-                "CreateAction.post: a paste was submitted with an invalid expiry"
-            )
-            raise error.ValidationError("Invalid expiry provided")
-
         auto_scale = self.get_body_argument("long", None) is None
 
         lexers = self.get_body_arguments("lexer")
         raws = self.get_body_arguments("raw", strip=False)
         filenames = self.get_body_arguments("filename")
 
-        if not all([lexers, raws, filenames]):
-            # Prevent empty argument lists from making it through
-            raise error.ValidationError(
-                "'lexers', 'raws', and 'filenames' arguments must not be empty"
-            )
-
-        if not all(raw.strip() for raw in raws):
-            # Prevent empty raws from making it through
-            raise error.ValidationError("Empty pastes are not allowed")
-
         if any(len(L) != len(lexers) for L in [lexers, raws, filenames]):
             log.info("CreateAction.post: mismatching argument lists")
             raise error.ValidationError(
                 "'lexers', 'raws', and 'filenames' arguments must be the same length"
             )
+        
+        files = [
+            crud.PastedFile(lexer, raw, filename)
+            for lexer, raw, filename in zip(lexers, raws, filenames)
+        ]
 
-        if any(lexer not in utility.list_languages() for lexer in lexers):
-            log.info("CreateAction.post: a file had an invalid lexer")
-            raise error.ValidationError("Invalid lexer provided")
+        with database.session() as session:
+            result = crud.create_paste(session, files, expiry, auto_scale, "web")
 
-        with database.session() as session, utility.SlugContext(
-            auto_scale
-        ) as slug_context:
-            paste = database.Paste(
-                next(slug_context), configuration.expiries[expiry], "web"
-            )
+        # The removal cookie is set for the specific path of the paste it is
+        # related to
+        self.set_cookie(
+            "removal", result.removal_slug, path=f"/{result.paste_slug}"
+        )
 
-            for lexer, raw, filename in zip(lexers, raws, filenames):
-                paste.files.append(
-                    database.File(
-                        next(slug_context),
-                        raw,
-                        lexer,
-                        filename if filename else None,
-                    )
-                )
-
-            total_size = sum(len(f.fmt) for f in paste.files)
-            if total_size > configuration.paste_size:
-                log.info("CreateAction.post: sum of files was too large")
-                raise error.ValidationError(
-                    "Sum of file sizes exceeds size limit when syntax highlighting applied "
-                    f"({total_size//1024}kB > {configuration.paste_size//1024}kB)"
-                )
-
-            # For the first file we will always use the same slug as the paste,
-            # since slugs are generated to be unique over both pastes and files
-            # this can be done safely.
-            paste.files[0].slug = paste.slug
-
-            session.add(paste)
-            session.commit()
-
-            # The removal cookie is set for the specific path of the paste it is
-            # related to
-            self.set_cookie(
-                "removal", str(paste.removal), path=f"/{paste.slug}"
-            )
-
-            # Send the client to the paste
-            self.redirect(f"/{paste.slug}")
+        # Send the client to the paste
+        self.redirect(f"/{result.paste_slug}")
 
 
 class Repaste(Base):
@@ -270,14 +225,7 @@ class Repaste(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, slug)
 
             lexers_available = utility.list_languages()
 
@@ -302,24 +250,7 @@ class Show(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "Show.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, slug)
 
             can_delete = self.get_cookie("removal") == str(paste.removal)
 
@@ -339,24 +270,7 @@ class RedirectShow(Base):
         """Fetch paste from database and redirect to /slug if the paste
         exists."""
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "RedirectShow.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, slug)
 
             self.redirect(f"/{paste.slug}")
 
@@ -371,24 +285,7 @@ class FileRaw(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
-                .first()
-            )
-
-            if not file:
-                raise tornado.web.HTTPError(404)
-
-            if file.paste.exp_date < datetime.utcnow():
-                session.delete(file.paste)
-                session.commit()
-
-                log.warning(
-                    "FileRaw.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            file = crud.get_file(session, file_id)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(file.raw)
@@ -404,24 +301,7 @@ class FileHex(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
-                .first()
-            )
-
-            if not file:
-                raise tornado.web.HTTPError(404)
-
-            if file.paste.exp_date < datetime.utcnow():
-                session.delete(file.paste)
-                session.commit()
-
-                log.warning(
-                    "FileRaw.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            file = crud.get_file(session, file_id)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             self.write(binascii.hexlify(file.raw.encode("utf8")))
@@ -437,24 +317,7 @@ class PasteDownload(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == paste_id)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "FileRaw.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, paste_id)
 
             data = io.BytesIO()
 
@@ -486,24 +349,7 @@ class FileDownload(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            file = (
-                session.query(database.File)
-                .filter(database.File.slug == file_id)
-                .first()
-            )
-
-            if not file:
-                raise tornado.web.HTTPError(404)
-
-            if file.paste.exp_date < datetime.utcnow():
-                session.delete(file.paste)
-                session.commit()
-
-                log.warning(
-                    "FileDownload.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            file = crud.get_file(session, file_id)
 
             self.set_header("Content-Type", "text/plain; charset=utf-8")
 
@@ -531,25 +377,7 @@ class Remove(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.removal == removal)
-                .first()
-            )
-
-            if not paste:
-                log.info("RemovePaste.get: someone visited with invalid id")
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "Remove.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste_by_removal(session, removal)
 
             session.delete(paste)
             session.commit()
