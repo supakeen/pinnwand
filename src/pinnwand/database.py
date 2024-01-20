@@ -78,9 +78,6 @@ class Paste(Base):  # type: ignore
         expiry: int = 604800,
         src: Optional[str] = None,
     ) -> None:
-        # Generate a paste_id and a removal_id
-        # Unless someone proves me wrong that I need to check for collisions
-        # my famous last words will be that the odds are astronomically small
         self.slug = slug
         self.removal = utility.slug_create(auto_scale=False)
 
@@ -118,7 +115,7 @@ class File(Base):  # type: ignore
         filename: Optional[str] = None,
     ) -> None:
         # Start with some basic housekeeping related to size
-        if not len(raw):
+        if not raw or not raw.strip():
             raise error.ValidationError("Empty pastes are not allowed")
 
         if len(raw) > configuration.paste_size:
@@ -142,7 +139,11 @@ class File(Base):  # type: ignore
             lexer = utility.guess_language(raw, filename)
             log.debug(f"Language guessed as {lexer}")
 
-        lexer = pygments.lexers.get_lexer_by_name(lexer)
+        try:
+            lexer = pygments.lexers.get_lexer_by_name(lexer)
+        except pygments.util.ClassNotFound:
+            raise error.ValidationError("Invalid lexer")
+
         formatter = BetterHtmlFormatter(  # pylint: disable=no-member
             linenos="table", cssclass="source"
         )
