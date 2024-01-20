@@ -101,41 +101,25 @@ def http(port: int, debug: bool) -> None:
 @click.option("--lexer", default="text", help="Lexer to use.")
 def add(lexer: str) -> None:
     """Add a paste to pinnwand's database from stdin."""
-    from pinnwand import database, utility
+    from pinnwand import database, crud
 
-    if lexer not in utility.list_languages():
-        log.error("add: unknown lexer")
-        return
-
-    paste = database.Paste(
-        utility.slug_create(), expiry=timedelta(days=1).seconds
-    )
-    file = database.File(paste.slug, sys.stdin.read(), lexer=lexer)
-    paste.files.append(file)
+    expiry = timedelta(days=1).seconds
+    files = [crud.PastedFile(lexer, sys.stdin.read(), None)]
 
     with database.session() as session:
-        session.add(paste)
-        session.commit()
+        paste = crud.create_paste(session, files, expiry, auto_scale=True, source="cli")
 
-        log.info("add: paste created: %s", paste.slug)
+    log.info("add: paste created: %s", paste.paste_slug)
 
 
 @main.command()
 @click.option("--paste", help="database.Paste identifier.", required=True)
 def delete(paste: str) -> None:
     """Delete a paste from pinnwand's database."""
-    from pinnwand import database
+    from pinnwand import database, crud
 
     with database.session() as session:
-        paste_object = (
-            session.query(database.Paste)
-            .filter(database.Paste.slug == paste)
-            .first()
-        )
-
-        if not paste_object:
-            log.error("delete: unknown paste")
-            raise SystemExit(1)
+        paste_object = crud.get_paste(session, paste)
 
         session.delete(paste_object)
         session.commit()
