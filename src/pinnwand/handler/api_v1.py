@@ -1,18 +1,24 @@
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Any
 from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import configuration, database, defensive, error, logger, utility
+from pinnwand import configuration, crud, database, defensive, error, logger, utility
 
 log = logger.get_logger(__name__)
 
 
 class Base(tornado.web.RequestHandler):
     def write_error(self, status_code: int, **kwargs: Any) -> None:
-        _, exc, _ = kwargs["exc_info"]
+        type_, exc, _ = kwargs["exc_info"]
+
+        if type_ is error.ValidationError:
+            self.set_status(400)
+            self.write({"state": "error", "code": 400, "message": str(exc)})
+        
+        super().write_error(status_code, **kwargs)
         self.write({"state": "error", "code": status_code, "message": str(exc)})
 
 
@@ -54,73 +60,28 @@ class Paste(Base):
             raise tornado.web.HTTPError(400, "could not parse json body")
 
         expiry = data.get("expiry")
-
-        if expiry not in configuration.expiries:
-            log.info("Paste.post: a paste was submitted with an invalid expiry")
-            raise tornado.web.HTTPError(400, "invalid expiry")
-
+        if expiry is None:
+            raise tornado.web.HTTPError(400, "expiry is required")
+        
         auto_scale = data.get("long", None) is None
-
-        files = data.get("files", [])
-
-        if not files:
-            raise tornado.web.HTTPError(400, "no files provided")
-
-        with database.session() as session, utility.SlugContext(
-            auto_scale
-        ) as slug_context:
-            paste = database.Paste(
-                next(slug_context),
-                configuration.expiries[expiry],
-                "v1-api",
+        files = [
+            crud.PastedFile(
+                file.get("lexer", ""),
+                file.get("content"),
+                file.get("name"),
             )
+            for file in data.get("files", [])
+        ]
 
-            for file in files:
-                lexer = file.get("lexer", "")
-                content = file.get("content")
-                filename = file.get("name")
+        with database.session() as session:
+            result = crud.create_paste(session, files, expiry, auto_scale, "v1-api")
 
-                if lexer not in utility.list_languages():
-                    raise tornado.web.HTTPError(400, "invalid lexer")
+        # Send the paste to the client
+        url_request = self.request.full_url()
+        url_paste = urljoin(url_request, f"/{result.paste_slug}")
+        url_removal = urljoin(url_request, f"/remove/{result.removal_slug}")
 
-                if not content:
-                    raise tornado.web.HTTPError(400, "invalid content (empty)")
-
-                try:
-                    paste.files.append(
-                        database.File(
-                            next(slug_context),
-                            content,
-                            lexer,
-                            filename,
-                        )
-                    )
-                except error.ValidationError:
-                    raise tornado.web.HTTPError(
-                        400, "invalid content (exceeds size limit)"
-                    )
-
-            if sum(len(f.fmt) for f in paste.files) > configuration.paste_size:
-                raise tornado.web.HTTPError(
-                    400, "invalid content (exceeds size limit)"
-                )
-
-            paste.files[0].slug = paste.slug
-
-            session.add(paste)
-
-            try:
-                session.commit()
-            except Exception:  # XXX be more precise
-                log.warning("%r", slug_context._slugs)
-                raise
-
-            # Send the client to the paste
-            url_request = self.request.full_url()
-            url_paste = urljoin(url_request, f"/{paste.slug}")
-            url_removal = urljoin(url_request, f"/remove/{paste.removal}")
-
-            self.write({"link": url_paste, "removal": url_removal})
+        self.write({"link": url_paste, "removal": url_removal})
 
 
 class PasteDetail(Base):
@@ -129,24 +90,7 @@ class PasteDetail(Base):
             raise error.RatelimitError()
 
         with database.session() as session:
-            paste = (
-                session.query(database.Paste)
-                .filter(database.Paste.slug == slug)
-                .first()
-            )
-
-            if not paste:
-                raise tornado.web.HTTPError(404)
-
-            if paste.exp_date < datetime.utcnow():
-                session.delete(paste)
-                session.commit()
-
-                log.warning(
-                    "Show.get: paste was expired, is your cronjob running?"
-                )
-
-                raise tornado.web.HTTPError(404)
+            paste = crud.get_paste(session, slug)
 
             self.write(
                 {
