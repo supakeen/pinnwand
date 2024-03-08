@@ -17,7 +17,7 @@ class ViewPastePage(BasePage):
             "link", name="download"
         )
         self.download_archive_button = self.page.locator(
-            ".paste-meta"
+            ".paste-actions"
         ).get_by_role("link", name="download")
         self.repaste_button = page.get_by_role("link", name="Repaste")
         self.remove_now_button = page.get_by_role("link", name="Remove now")
@@ -27,6 +27,7 @@ class ViewPastePage(BasePage):
             paste_number
         ).locator(".sourcetable td.code code")
         self.toggle_word_wrap_button = page.locator("#toggle-word-wrap")
+        self.new_paste_button = page.locator(".new-paste")
 
     def click_remove_now_button(self):
         log.info("Clicking Remove Now Button")
@@ -71,6 +72,10 @@ class ViewPastePage(BasePage):
     def click_toggle_word_wrap_button(self):
         log.info("Clicking Toggle Word Wrap Button")
         self.toggle_word_wrap_button.click()
+
+    def click_new_paste_button(self):
+        log.info("Clicking New Paste Button")
+        self.new_paste_button.click()
 
     def get_paste_slug(self):
         log.info("Getting slug from paste url")

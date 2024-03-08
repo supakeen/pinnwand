@@ -2,23 +2,17 @@
 
 {% block body %}
 <main class="paste-show{% if len(paste.files) > 1 %} multiple{% end %}">
-    <div class="paste-meta">
-        {% if paste.exp_date %}
-            <p>This paste expires on <span>{{ paste.exp_date }}</span>.
-        {% else %}
-            <p>This paste <span>never</span> expires.
-        {% end %}
+    <div class="paste-actions">
+        <a class="new-paste" href="/">New paste</a>
+
+        <a class="handle-paste" href="/repaste/{{ paste.slug }}">Repaste</a>
+        <a class="handle-paste" href="/download-archive/{{ paste.slug }}">Download</a>
+
+        <button class="handle-paste" class="btn-link" id="toggle-word-wrap">Toggle word wrap</button>
+
         {% if can_delete %}
-            <a href="/remove/{{ paste.removal }}">Remove now</a>.
+            <a class="handle-paste remove-now" href="/remove/{{ paste.removal }}">Remove now</a>
         {% end %}
-
-        <a href="/repaste/{{ paste.slug }}">Repaste</a>, or
-        <a href="/download-archive/{{ paste.slug }}">download</a> this paste.
-
-        <button class="btn-link" id="toggle-word-wrap">Toggle word wrap</button>.
-
-        Pasted through <em>{{ paste.src }}</em>.
-        </p>
     </div>
     <div class="file-container">
         <div class="files">
@@ -50,6 +44,16 @@
         </aside>
         {% end %}
         -->
+    </div>
+        <div class="paste-meta">
+        {% if paste.exp_date %}
+            <p>This paste expires on <span>{{ paste.exp_date }}</span>.
+        {% else %}
+            <p>This paste <span>never</span> expires.
+        {% end %}
+
+            Pasted through <em>{{ paste.src }}</em>.
+            </p>
     </div>
 </main>
 {% end %}

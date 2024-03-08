@@ -170,7 +170,7 @@ section.file-part div.file-meta {
     margin-bottom: .0625rem;
 }
 
-section.paste-submit {
+section.paste-submit, div.paste-actions {
     background-color: var(--color1);
     padding: .5rem;
     margin-bottom: .5rem;
@@ -244,6 +244,50 @@ button.cancel:hover {
     color: var(--color1);
     background: var(--color3);
     border: .0625rem solid var(--color3);
+}
+
+div.paste-actions {
+    background-color: var(--color1);
+    padding: .5rem;
+    margin-bottom: .5rem;
+
+    .handle-paste {
+        box-sizing: border-box;
+        border: .0625rem solid var(--color3);
+        padding: .4rem 1.4rem;
+        margin: 0 .2rem;
+        background: var(--color1);
+        color: var(--color3);
+        cursor: pointer;
+        font-size: 1.1rem;
+        text-align: center;
+        text-decoration: none;
+    }
+    .handle-paste:hover {
+        color: var(--color1);
+        background: var(--color3);
+        border: .0625rem solid var(--color3);
+    }
+    .handle-paste.remove-now {
+        float: right;
+    }
+    .new-paste {
+        box-sizing: border-box;
+        border: .0625rem solid var(--color3);
+        padding: .4rem 1.4rem;
+        margin: 0 .2rem;
+        background: var(--color3);
+        color: var(--color1);
+        cursor: pointer;
+        font-size: 1.1rem;
+        text-align: center;
+        text-decoration: none;
+    }
+    .new-paste:hover {
+        color: var(--color3);
+        background: var(--color1);
+        border: .0625rem solid var(--color3);
+    }
 }
 
 article, div.paste-meta {
