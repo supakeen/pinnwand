@@ -595,7 +595,10 @@ class Logo(Base):
         self.path = path
 
     async def get(self) -> None:
-        self.set_header("Content-Type", "image/png")
 
-        with open(self.path, "rb") as f:
-            self.write(f.read())
+        try:
+            with open(self.path, "rb") as f:
+                self.write(f.read())
+                self.set_header("Content-Type", "image/png")
+        except FileNotFoundError:
+            raise tornado.web.HTTPError(404)
