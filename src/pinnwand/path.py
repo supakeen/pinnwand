@@ -1,4 +1,5 @@
 """Shorthands for paths for templates, static assets, etc."""
+
 import pathlib
 
 from pinnwand.configuration import Configuration, ConfigurationProvider
