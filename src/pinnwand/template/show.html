@@ -2,7 +2,7 @@
 
 {% block body %}
 <main class="paste-show{% if len(paste.files) > 1 %} multiple{% end %}">
-    <div class="paste-actions">
+    <div class="paste-actions paste-meta">
         <a class="new-paste" href="/">New paste</a>
 
         <a class="handle-paste" href="/repaste/{{ paste.slug }}">Repaste</a>
