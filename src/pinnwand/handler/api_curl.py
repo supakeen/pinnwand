@@ -29,9 +29,8 @@ class Create(tornado.web.RequestHandler):
         else:
             super().write_error(status_code, **kwargs)
 
+    @defensive.ratelimit_endpoint(area="create")
     def post(self) -> None:
-        if defensive.ratelimit(self.request, area="create"):
-            raise error.RatelimitError
 
         configuration: Configuration = ConfigurationProvider.get_config()
         lexer = self.get_body_argument("lexer", "text")
