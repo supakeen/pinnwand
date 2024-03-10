@@ -13,6 +13,9 @@ v1.6.0 (unreleased)
 * Logging has been reworked by shtlrs_.
 * Deprecated `log.warn` has been fixed by wookie184_.
 * Better user-facing errors by wookie184_.
+* Added new buttons on the view paste page nekhvoya_.
+* Fix custom logo handlers to actually show the logo.
+* Various configuration and log reworks and refactoring by shtlrs_.
 
 v1.5.0 (20230727)
 *****************
