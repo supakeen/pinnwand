@@ -19,18 +19,16 @@ class Base(tornado.web.RequestHandler):
 
 
 class Lexer(Base):
-    async def get(self) -> None:
-        if defensive.ratelimit(self.request, area="read"):
-            raise error.RatelimitError()
 
+    @defensive.ratelimit_endpoint(area="read")
+    async def get(self) -> None:
         self.write(utility.list_languages())
 
 
 class Expiry(Base):
-    async def get(self) -> None:
-        if defensive.ratelimit(self.request, area="read"):
-            raise error.RatelimitError()
 
+    @defensive.ratelimit_endpoint(area="read")
+    async def get(self) -> None:
         configuration: Configuration = ConfigurationProvider.get_config()
 
         self.write(
@@ -48,16 +46,15 @@ class Paste(Base):
     async def get(self) -> None:
         raise tornado.web.HTTPError(405)
 
+    @defensive.ratelimit_endpoint(area="create")
     async def post(self) -> None:
-        if defensive.ratelimit(self.request, area="create"):
-            raise error.RatelimitError()
-
-        configuration: Configuration = ConfigurationProvider.get_config()
 
         try:
             data = tornado.escape.json_decode(self.request.body)
         except json.decoder.JSONDecodeError:
             raise tornado.web.HTTPError(400, "could not parse json body")
+
+        configuration: Configuration = ConfigurationProvider.get_config()
 
         expiry = data.get("expiry")
 
@@ -130,10 +127,9 @@ class Paste(Base):
 
 
 class PasteDetail(Base):
-    async def get(self, slug: str) -> None:
-        if defensive.ratelimit(self.request, area="read"):
-            raise error.RatelimitError()
 
+    @defensive.ratelimit_endpoint(area="read")
+    async def get(self, slug: str) -> None:
         with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
