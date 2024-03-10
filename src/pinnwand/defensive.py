@@ -22,7 +22,9 @@ ratelimit_area: Dict[
 ] = {}
 
 
-def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
+def should_be_ratelimited(
+    request: HTTPServerRequest, area: str = "global"
+) -> bool:
     """Test if a requesting IP is ratelimited for a certain area. Areas are
     different functionalities of the website, for example 'view' or 'input' to
     differentiate between creating new pastes (low volume) or high volume
@@ -55,13 +57,13 @@ def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
     return False
 
 
-def ratelimit_endpoint(area: str):
+def ratelimit(area: str):
     """A ratelimiting decorator for tornado's request handlers."""
 
     def wrapper(func):
         @wraps(func)
         def inner(request_handler: RequestHandler, *args, **kwargs):
-            if ratelimit(request_handler.request, area):
+            if should_be_ratelimited(request_handler.request, area):
                 raise error.RatelimitError()
             return func(request_handler, *args, **kwargs)
 

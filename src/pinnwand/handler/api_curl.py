@@ -29,7 +29,7 @@ class Create(tornado.web.RequestHandler):
         else:
             super().write_error(status_code, **kwargs)
 
-    @defensive.ratelimit_endpoint(area="create")
+    @defensive.ratelimit(area="create")
     def post(self) -> None:
 
         configuration: Configuration = ConfigurationProvider.get_config()
