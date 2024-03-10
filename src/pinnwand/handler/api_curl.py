@@ -1,10 +1,11 @@
+from typing import Any
 from urllib.parse import urljoin
 
 import tornado.web
 
-from pinnwand import defensive, logger, utility
 from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand.database import models, manager
+from pinnwand import defensive, error, logger, utility
 
 log = logger.get_logger(__name__)
 
@@ -16,11 +17,21 @@ class Create(tornado.web.RequestHandler):
     def get(self) -> None:
         raise tornado.web.HTTPError(400)
 
-    def post(self) -> None:
-        if defensive.ratelimit(self.request, area="create"):
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        type_, exc, traceback = kwargs["exc_info"]
+
+        if type_ == error.ValidationError:
+            self.set_status(400)
+            self.write(str(exc))
+        elif type_ == error.RatelimitError:
             self.set_status(429)
             self.write("Enhance your calm, you have exceeded the ratelimit.")
-            return
+        else:
+            super().write_error(status_code, **kwargs)
+
+    def post(self) -> None:
+        if defensive.ratelimit(self.request, area="create"):
+            raise error.RatelimitError
 
         configuration: Configuration = ConfigurationProvider.get_config()
         lexer = self.get_body_argument("lexer", "text")
@@ -33,22 +44,16 @@ class Create(tornado.web.RequestHandler):
             log.info(
                 "CurlCreate.post: a paste was submitted with an invalid lexer"
             )
-            self.set_status(400)
-            self.write("Invalid `lexer` supplied.\n")
-            return
+            raise error.ValidationError("Invalid `lexer` supplied.\n")
 
         # Guard against empty strings
         if not raw or not raw.strip():
             log.info("CurlCreate.post: a paste was submitted without raw")
-            self.set_status(400)
-            self.write("Invalid `raw` supplied.\n")
-            return
+            raise error.ValidationError("Invalid `raw` supplied.\n")
 
         if expiry not in configuration.expiries:
             log.info("CurlCreate.post: a paste was submitted without raw")
-            self.set_status(400)
-            self.write("Invalid `expiry` supplied.\n")
-            return
+            raise error.ValidationError("Invalid `expiry` supplied.\n")
 
         paste = models.Paste(
             utility.slug_create(), configuration.expiries[expiry], "curl"
