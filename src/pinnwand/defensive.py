@@ -1,12 +1,14 @@
 import ipaddress
 import re
 from typing import Dict, Union
+from functools import wraps
 
 import token_bucket
 from tornado.httputil import HTTPServerRequest
-
-from pinnwand import logger
+from tornado.web import RequestHandler
+from pinnwand import error, logger
 from pinnwand.configuration import Configuration, ConfigurationProvider
+
 
 log = logger.get_logger(__name__)
 
@@ -51,6 +53,21 @@ def ratelimit(request: HTTPServerRequest, area: str = "global") -> bool:
         return True
 
     return False
+
+
+def ratelimit_endpoint(area: str):
+    """A ratelimiting decorator for tornado's request handlers."""
+
+    def wrapper(func):
+        @wraps(func)
+        def inner(request_handler: RequestHandler, *args, **kwargs):
+            if ratelimit(request_handler.request, area):
+                raise error.RatelimitError()
+            return func(request_handler, *args, **kwargs)
+
+        return inner
+
+    return wrapper
 
 
 def spamscore(text: str) -> int:
