@@ -82,7 +82,7 @@ class Create(Base):
     """The index page shows the new paste page with a list of all available
     lexers from Pygments."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, lexers: str = "") -> None:
         """Render the new paste form, optionally have a lexer preselected from
         the URL."""
@@ -112,7 +112,7 @@ class Create(Base):
             paste=None,
         )
 
-    @defensive.ratelimit_endpoint(area="create")
+    @defensive.ratelimit(area="create")
     async def post(self) -> None:
         """This is a historical endpoint to create pastes, pastes are marked as
         old-web and will get a warning on top of them to remove any access to
@@ -174,7 +174,7 @@ class CreateAction(Base):
     """The create action is the 'new' way to create pastes and supports multi
     file pastes."""
 
-    @defensive.ratelimit_endpoint(area="create")
+    @defensive.ratelimit(area="create")
     def post(self) -> None:  # type: ignore
         """POST handler for the 'web' side of things."""
 
@@ -260,7 +260,7 @@ class Repaste(Base):
     """Repaste is a specific case of the paste page. It only works for pre-
     existing pastes and will prefill the textarea and lexer."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, slug: str) -> None:  # type: ignore
         """Render the new paste form, optionally have a lexer preselected from
         the URL."""
@@ -293,7 +293,7 @@ class Repaste(Base):
 class Show(Base):
     """Show a paste."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, slug: str) -> None:  # type: ignore
         """Fetch paste from database by slug and render the paste."""
 
@@ -360,7 +360,7 @@ class RedirectShow(Base):
 class FileRaw(Base):
     """Show a file as plaintext."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and show it in the plain."""
 
@@ -391,7 +391,7 @@ class FileRaw(Base):
 class FileHex(Base):
     """Show a file as hexadecimal."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and show it in hex."""
 
@@ -422,7 +422,7 @@ class FileHex(Base):
 class PasteDownload(Base):
     """Download an entire paste."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, paste_id: str) -> None:  # type: ignore
         """Get all files from the database and download them as a zipfile."""
 
@@ -469,7 +469,7 @@ class PasteDownload(Base):
 class FileDownload(Base):
     """Download a file."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, file_id: str) -> None:  # type: ignore
         """Get a file from the database and download it in the plain."""
 
@@ -511,7 +511,7 @@ class FileDownload(Base):
 class Remove(Base):
     """Remove a paste."""
 
-    @defensive.ratelimit_endpoint(area="delete")
+    @defensive.ratelimit(area="delete")
     async def get(self, removal: str) -> None:  # type: ignore
         """Look up if the user visiting this page has the removal id for a
         certain paste. If they do they're authorized to remove the paste."""
@@ -549,7 +549,7 @@ class RestructuredTextPage(Base):
     def initialize(self, file: str) -> None:
         self.file = file
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self) -> None:
         try:
             with open(path.page / self.file) as f:
@@ -573,7 +573,6 @@ class Logo(Base):
         self.path = path
 
     async def get(self) -> None:
-
         try:
             with open(self.path, "rb") as f:
                 self.write(f.read())

@@ -75,7 +75,7 @@ class Base(tornado.web.RequestHandler):
 class Show(Base):
     """Show a paste on the deprecated API."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self, slug: str) -> None:  # type: ignore
         with manager.DatabaseManager.get_session() as session:
             paste = (
@@ -119,9 +119,8 @@ class Create(Base):
     async def get(self) -> None:
         raise tornado.web.HTTPError(405)
 
-    @defensive.ratelimit_endpoint(area="create")
+    @defensive.ratelimit(area="create")
     async def post(self) -> None:
-
         configuration: Configuration = ConfigurationProvider.get_config()
 
         lexer = self.get_body_argument("lexer")
@@ -175,9 +174,8 @@ class Remove(Base):
         """No XSRF cookies on the API."""
         return
 
-    @defensive.ratelimit_endpoint(area="delete")
+    @defensive.ratelimit(area="delete")
     async def post(self) -> None:
-
         with manager.DatabaseManager.get_session() as session:
             paste = (
                 session.query(models.Paste)
@@ -207,7 +205,7 @@ class Remove(Base):
 class Lexer(Base):
     """List lexers through the deprecated API."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self) -> None:
         self.write(utility.list_languages())
 
@@ -215,7 +213,7 @@ class Lexer(Base):
 class Expiry(Base):
     """List expiries through the deprecated API."""
 
-    @defensive.ratelimit_endpoint(area="read")
+    @defensive.ratelimit(area="read")
     async def get(self) -> None:
         configuration: Configuration = ConfigurationProvider.get_config()
 
