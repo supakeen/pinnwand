@@ -114,13 +114,13 @@ class Configuration:
 
     def load_environment(self):
         """Load configuration from the environment, if any."""
+        prefix = "PINNWAND_"
         for key, value in os.environ.items():
-            if not key.startswith("PINNWAND_"):
+            if not key.startswith(prefix):
                 continue
 
-            key = key.removeprefix("PINNWAND_")
+            key = key[len(prefix) :]
             key = key.lower()
-
             try:
                 value = ast.literal_eval(value)
                 setattr(self, f"_{key}", value)

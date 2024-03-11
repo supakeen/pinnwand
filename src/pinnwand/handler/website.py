@@ -595,7 +595,6 @@ class Logo(Base):
         self.path = path
 
     async def get(self) -> None:
-
         try:
             with open(self.path, "rb") as f:
                 self.write(f.read())
