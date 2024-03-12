@@ -15,8 +15,16 @@ Here is a quick example::
 The ``http`` subcommand takes a separate argument ``--port`` to override
 the default listening port (8000).
 
-Any value in this file can be overridden by passing `PINNWAND_DATABASE_URI` in
-the environment (for example).
+Any value in this file can be overriden by setting its equivalent in the environment or in a `.env` file.
+
+To do that, all environment variables need to be in the form of `PINNWAND_{{option}}`.
+For example, if we wanted to override the `database_uri` option, we will define our value like the following::
+
+   PINNWAND_DATABASE_URI="hello"
+
+.. note::
+    * Any variable in the actual environment will take precedence over its equivalent in the `.env` file.
+    * It's best to place the `.env` at the root directory of the project, to avoid including it into VCS.
 
 File
 ****
