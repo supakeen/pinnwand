@@ -1,6 +1,7 @@
 import ast
 import os
 from typing import Optional, TYPE_CHECKING
+from dotenv import load_dotenv
 
 if TYPE_CHECKING:  # lie to mypy, see https://github.com/python/mypy/issues/1153
     import tomllib as toml
@@ -112,9 +113,11 @@ class Configuration:
             for key, value in loaded_configuration.items():
                 setattr(self, f"_{key}", value)
 
-    def load_environment(self):
+    def load_environment(self, dotenv_file_path: Optional[str] = None):
         """Load configuration from the environment, if any."""
         prefix = "PINNWAND_"
+        load_dotenv(dotenv_path=dotenv_file_path, override=False)
+
         for key, value in os.environ.items():
             if not key.startswith(prefix):
                 continue
