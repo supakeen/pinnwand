@@ -31,7 +31,6 @@ class Create(tornado.web.RequestHandler):
 
     @defensive.ratelimit(area="create")
     def post(self) -> None:
-
         configuration: Configuration = ConfigurationProvider.get_config()
         lexer = self.get_body_argument("lexer", "text")
         raw = self.get_body_argument("raw", "", strip=False)

@@ -1,6 +1,5 @@
-import ipaddress
 import re
-from typing import Dict, Union
+from typing import Dict
 from functools import wraps
 
 import token_bucket
@@ -13,13 +12,7 @@ from pinnwand.configuration import Configuration, ConfigurationProvider
 log = logger.get_logger(__name__)
 
 
-ratelimit_area: Dict[
-    str,
-    Dict[
-        Union[ipaddress.IPv4Address, ipaddress.IPv6Address],
-        token_bucket.Limiter,
-    ],
-] = {}
+ratelimit_area: Dict[str, token_bucket.Limiter] = {}
 
 
 def should_be_ratelimited(
@@ -38,20 +31,17 @@ def should_be_ratelimited(
     configuration: Configuration = ConfigurationProvider.get_config()
 
     if area not in ratelimit_area:
-        ratelimit_area[area] = {}
-
-    # TODO handle valueerror as validationerror?
-    address = ipaddress.ip_address(str(request.remote_ip))
-
-    if address not in ratelimit_area[area]:
-        ratelimit_area[area][address] = token_bucket.Limiter(
+        ratelimit_area[area] = token_bucket.Limiter(
             configuration.ratelimit[area]["refill"],
             configuration.ratelimit[area]["capacity"],
             token_bucket.MemoryStorage(),
         )
 
-    if not ratelimit_area[area][address].consume(1):
-        log.warning("%s hit rate limit for %r", address, area)
+    if not ratelimit_area[area].consume(
+        request.remote_ip.encode("utf-8"),
+        configuration.ratelimit[area]["consume"],
+    ):
+        log.warning("%s hit rate limit for %r", request.remote_ip, area)
         return True
 
     return False
