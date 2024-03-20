@@ -1,20 +1,23 @@
 import json
+import copy
 import urllib.parse
-
+import unittest.mock
 import tornado.testing
 import tornado.web
 
 from pinnwand.configuration import Configuration, ConfigurationProvider
-configuration: Configuration = ConfigurationProvider.get_config()
-
-configuration._ratelimit["read"]["capacity"] = 2**64 - 1
-configuration._ratelimit["create"]["capacity"] = 2**64 - 1
-configuration._ratelimit["delete"]["capacity"] = 2**64 - 1
-
 from pinnwand import app, utility
 from pinnwand.database import manager, utils as database_utils
 
+configuration: Configuration = ConfigurationProvider.get_config()
 
+
+ratelimit_copy = copy.deepcopy(configuration._ratelimit)
+for area in ("read", "create", "delete"):
+    ratelimit_copy[area]["capacity"] = 2**64 - 1
+
+
+@unittest.mock.patch.dict(configuration._ratelimit, ratelimit_copy)
 class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self) -> None:
         super().setUp()
@@ -117,7 +120,6 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
             ),
         )
 
-        print(response.body)
         assert response.code == 200
 
     def test_api_new_large_file(self) -> None:
