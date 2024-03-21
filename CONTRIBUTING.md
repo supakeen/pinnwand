@@ -69,13 +69,14 @@ pre-commit install
 ## Working on features/bug fixes
 
 Once everything is set up, you can start developing a feature/fixing a bug locally.
-Changes are merged thanks to `Pull Request`s.
+Changes are merged thanks to `Pull Requests`.
 
-If you don't know what `Pull Requests` are, you can read about [what they are](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) here, and about 
-[creating them](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) here.
+If `Pull Requests` are an unfamiliar concept, you can read more about [what they are](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests), and about 
+[creating them](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request).
 
 All `Pull Request`s will need to be reviewed and approved before they can merged into the master branch.
 
+> Note: All new features should be accompanied with a test that covers them.
 
 ## Adding new dependencies
 
