@@ -77,4 +77,14 @@ If you don't know what `Pull Request`s are, you can read about [what they are](h
 All `Pull Request`s will need to be reviewed and approved before they can merged into the master branch.
 
 
+## Adding new dependencies
 
+> Note : For all dependencies (both installation and development):
+> * **Do not add** a new dependency if the desired behavior/functionality can be easily implemented
+> * If adding a dependency is unavoidable, it should be well maintained and trust worthy.
+
+To add a dependency, the following commands should be ran
+```bash
+pdm add {{dependency}}
+pdm export -o requirements.txt -f requirements
+```
