@@ -71,7 +71,7 @@ pre-commit install
 Once everything is set up, you can start developing a feature/fixing a bug locally.
 Changes are merged thanks to `Pull Request`s.
 
-If you don't know what `Pull Request`s are, you can read about [what they are](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) here, and about 
+If you don't know what `Pull Requests` are, you can read about [what they are](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) here, and about 
 [creating them](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) here.
 
 All `Pull Request`s will need to be reviewed and approved before they can merged into the master branch.
@@ -80,7 +80,7 @@ All `Pull Request`s will need to be reviewed and approved before they can merged
 ## Adding new dependencies
 
 > Note : For all dependencies (both installation and development):
-> * **Do not add** a new dependency if the desired behavior/functionality can be easily implemented
+> * **Do not add** a new dependency if the desired behavior/functionality can be easily implemented.
 > * If adding a dependency is unavoidable, it should be well maintained and trust worthy.
 
 To add a dependency, the following commands should be ran
