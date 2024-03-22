@@ -66,17 +66,16 @@ pre-commit install
 
 > Note: Make sure you have the optional dev dependencies installed in order to be able to use pre-commit.
 
-## Working on features/bug fixes
+## Submitting Your Contributions
 
-Once everything is set up, you can start developing a feature/fixing a bug locally.
-Changes are merged thanks to `Pull Requests`.
+After the project is set up and you have an issue assigned to you, you can start working on it.
 
-If `Pull Requests` are an unfamiliar concept, you can read more about [what they are](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests), and about 
-[creating them](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request).
+Once you are happy with your changes:
+1. **Push** your changes to your fork.
+2. **[Create a Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)** against the main Pinnwand repository. Provide a clear description of the changes and any related issue numbers.
+3. **Participate in the Code Review** process. Be open to feedback and ready to make further tweaks if necessary.
 
-All `Pull Request`s will need to be reviewed and approved before they can merged into the master branch.
-
-> Note: All new features should be accompanied with a test that covers them.
+> Note: All new features/changes should be accompanied with a test that covers them.
 
 ### Adding New Dependencies
 
