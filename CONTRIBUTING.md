@@ -78,14 +78,14 @@ All `Pull Request`s will need to be reviewed and approved before they can merged
 
 > Note: All new features should be accompanied with a test that covers them.
 
-## Adding new dependencies
+### Adding New Dependencies
 
-> Note : For all dependencies (both installation and development):
-> * **Do not add** a new dependency if the desired behavior/functionality can be easily implemented.
-> * If adding a dependency is unavoidable, it should be well maintained and trust worthy.
+We strive to keep Pinnwand lightweight and simple, therefore, before adding a new dependency, please consider the following:
+- Can the functionality be achieved without an additional dependency?
+- Is the dependency actively maintained and well-regarded in the community?
 
-To add a dependency, the following commands should be ran
+If a new dependency is justified, discuss it in your pull request or open an issue for discussion. To add it:
 ```bash
-pdm add {{dependency}}
+pdm add your-dependency
 pdm export -o requirements.txt -f requirements
 ```
