@@ -1,13 +1,13 @@
-# Contributing
+# Contributing to Pinnwand
+Welcome to the Pinnwand contributing guide! Your interest in improving Pinnwand is greatly appreciated. In this document, you'll find the steps and guidelines that will help you contribute effectively to the project. We aim to maintain a welcoming and collaborative environment, and every contribution counts, no matter how big or small.
 
-This document lists the different steps required in order to contribute to pinnwand.
 
 ## Getting the code
 In order to be able to contribute, you'll need to have the repository cloned on your local machine.
 
 To do that, you'll need to:
-* [Make a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) of pinnwand.
-  * This will have a copy of `pinnwand` as your remote repository on `Github
+* [Make a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) of the [pinnwand repo](https://github.com/supakeen/pinnwand).
+  * This will have a copy of `pinnwand` as your remote repository on `Github`
 
 * [Clone your forked repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
   * This will allow you to pull/push changes to your remote `pinnwand` fork.
