@@ -37,7 +37,7 @@ python -m black src/pinnwand
 ```
 
 ## Running tests
-The project has 2 main test suites, [e2e](test/e2e) and [integration](test/integration).
+To ensure that contributions do not alter expected behavior or break things, the project has 2 main test suites, [e2e](test/e2e) and [integration](test/integration).
 
 The [e2e](test/e2e) runs tests on a browser, to ensure that the user interface displays correct content and behaves correctly from a GUI perspective.
 The [integration](test/integration) runs various integration/unit tests to make sure that different parts of the app behave correctly both independently and with others
