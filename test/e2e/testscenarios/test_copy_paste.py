@@ -1,17 +1,16 @@
 import pytest
-from playwright.sync_api import Playwright
+from playwright.sync_api import Page
 
 from test.conftest import make_screenshot
 from test.e2e.pageobjects.create_paste_page import CreatePastePage
 from test.e2e.pageobjects.view_paste_page import ViewPastePage
 from test.e2e.utils.clipboard_utils import verify_clipboard_contents
-from test.e2e.playwright.browser_manager import BrowserManager
 
 
 @pytest.mark.e2e
-def test_copy_paste(playwright: Playwright, request):
+@pytest.mark.browser_type_launch_args(headless=False)
+def test_copy_paste(page: Page, request):
     # This test needs to be run in a headed mode for the clipboard to work correctly
-    page = BrowserManager(playwright).create_new_context(headless=False)
     try:
         create_paste_page = CreatePastePage(page)
         create_paste_page.open()
