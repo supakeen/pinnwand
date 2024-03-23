@@ -1,17 +1,38 @@
+import contextlib
 import logging
 from test.e2e.env_config import is_headless
-
-from playwright.sync_api import Page, Playwright
+from typing import Optional
+from playwright.sync_api import BrowserContext, Page, Playwright
 
 log = logging.getLogger(__name__)
 
 
 class BrowserManager:
-    def __init__(self, playwright: Playwright) -> None:
-        self.playwright = playwright
 
-    def create_new_context(self, headless=is_headless()) -> Page:
+    @classmethod
+    @contextlib.contextmanager
+    def new_context(cls, playwright: Playwright, headless: Optional[bool] = None) -> BrowserContext:
         log.info("creating new browser context")
-        browser = self.playwright.chromium.launch(headless=headless)
+        headless = headless if headless is not None else is_headless()
+        browser = playwright.chromium.launch(headless=headless)
         context = browser.new_context()
-        return context.new_page()
+        try:
+            yield context
+        except Exception as e:
+            log.exception(e)
+        finally:
+            context.close()
+
+    @classmethod
+    @contextlib.contextmanager
+    def new_page(cls, playwright: Playwright, headless: Optional[bool] = None) -> Page:
+        headless = headless if headless is not None else is_headless()
+        with cls.new_context(playwright=playwright, headless=headless) as context:
+            page = context.new_page()
+            try:
+                yield page
+            except Exception as e:
+                log.exception(e)
+            finally:
+                page.close()
+
