@@ -10,6 +10,7 @@ from pygments.lexers import (
     guess_lexer,
     guess_lexer_for_filename,
 )
+from sqlalchemy import delete
 
 from pinnwand import logger
 from pinnwand.database import manager, models
@@ -181,20 +182,14 @@ def filename_clean(filename: str) -> str:
 def reap() -> None:
     """Delete all pastes that are past their expiry date in pinnwand's
     database."""
+    statement = delete(models.Paste).where(
+        models.Paste.exp_date < datetime.utcnow()
+    )
 
     with manager.DatabaseManager.get_session() as session:
-        pastes = (
-            session.query(models.Paste)
-            .filter(models.Paste.exp_date < datetime.utcnow())
-            .all()
-        )
-
-        for paste in pastes:
-            session.delete(paste)
-
+        result = session.execute(statement)
         session.commit()
-
-        log.info("reap: removed %d pastes", len(pastes))
+        log.info("reap: removed %d pastes", result.context.rowcount)
 
 
 async def async_reap() -> None:
