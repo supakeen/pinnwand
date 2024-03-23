@@ -140,6 +140,9 @@ section.file-part div.file-meta {
   padding: .5rem;
   margin-bottom: .0625rem; }
 
+section.paste-submit {
+  align-items: center; }
+
 section.paste-submit, div.paste-actions {
   background-color: var(--color1);
   padding: .5rem;
