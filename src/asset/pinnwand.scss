@@ -41,6 +41,10 @@ body {
     min-width: 500px;
 }
 
+.page-create {
+    display: grid;
+}
+
 @media only screen and (min-width: 1280px) {
     body {
         margin: 2rem 8rem;
@@ -176,11 +180,11 @@ section.paste-submit, div.paste-actions {
     margin-bottom: .5rem;
 }
 
+
 div.file-meta button.remove,
 section.paste-submit button.add {
     margin: 0 .5rem 0 0;
     padding: .4rem 1.4rem;
-    float: right;
     background: var(--color1);
     color: var(--color3);
     border: .0625rem solid var(--color3);
@@ -195,6 +199,12 @@ section.paste-submit button.add:hover {
     background: var(--color3);
     border: .0625rem solid var(--color1);
 }
+
+// push the button to right within the flex container
+div.file-meta button.remove, section.paste-submit button.add {
+    margin-left: auto;
+}
+
 
 section.paste-submit button[type=submit],
 button.confirm {
@@ -250,6 +260,7 @@ div.paste-actions {
     background-color: var(--color1);
     padding: .5rem;
     margin-bottom: .5rem;
+    display: flex;
 
     .handle-paste {
         box-sizing: border-box;
@@ -269,7 +280,7 @@ div.paste-actions {
         border: .0625rem solid var(--color3);
     }
     .handle-paste.remove-now {
-        float: right;
+        margin-left: auto;
     }
     .new-paste {
         box-sizing: border-box;
@@ -288,6 +299,12 @@ div.paste-actions {
         background: var(--color1);
         border: .0625rem solid var(--color3);
     }
+}
+
+// align the text at center when squished
+div.paste-actions > * {
+    display: flex;
+    align-items: center;
 }
 
 article, div.paste-meta {
@@ -505,6 +522,11 @@ textarea.copy-area {
     height: fit-content;
     margin: auto;
     inset: 0;
+}
+
+// utility classes
+.flex {
+    display: flex;
 }
 
 .hll { background-color: #ffffcc }
