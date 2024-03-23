@@ -3,7 +3,7 @@ import os
 import tempfile
 import toml
 from unittest.mock import patch, MagicMock
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, insert
 
 
 import pytest
@@ -59,16 +59,24 @@ async def test_pastes_reaped_on_startup(
     engine = manager.DatabaseManager.get_engine()
     utils.create_tables(engine)
 
-    slugs = [utility.slug_create() for _ in range(2)]
-
+    slugs = [utility.slug_create() for _ in range(8)]
+    persistent_paste_slug = utility.slug_create()
+    pastes = []
     for text in slugs:
         paste = models.Paste(text, expiry=1)
         file = models.File(paste.slug, text, lexer="text")
         paste.files.append(file)
+        pastes.append(paste)
 
-        with manager.DatabaseManager.get_session() as session:
-            session.add(paste)
-            session.commit()
+    persistent_paste_text = "I will survive!"
+    persistent_paste = models.Paste(persistent_paste_slug, expiry=30)
+    file = models.File(persistent_paste.slug, persistent_paste_text, lexer="text")
+    persistent_paste.files.append(file)
+    pastes.append(persistent_paste)
+
+    with manager.DatabaseManager.get_session() as session:
+        session.add_all(pastes)
+        session.commit()
 
     # This does two things.
     # 1. Most importantly, yields control back to this control from tornado's started loop in the http command.
@@ -79,6 +87,14 @@ async def test_pastes_reaped_on_startup(
     runner.invoke(command.main, ["--configuration-path", config_path, "http"])
 
     with manager.DatabaseManager.get_session() as session:
+        paste = (
+            session.query(models.Paste)
+            .filter(models.Paste.slug == persistent_paste_slug)
+            .first()
+        )
+        assert paste is not None
+        assert persistent_paste_text == paste.files[0].raw
+
         for slug in slugs:
             paste = (
                 session.query(models.Paste)
