@@ -16,7 +16,7 @@
         {% if paste %}
             {% for index, file in enumerate(paste.files) %}
             <section class="file-part">
-                <div class="file-meta">
+                <div class="file-meta flex">
                     {% module Template("part/lexer-select.html", selected=file.lexer, lexers=lexers_available) %}
                     <input name="filename" placeholder="Filename (optional)" {% if file.filename %}value="{{ file.filename }}"{% end %}>
                 </div>
@@ -26,7 +26,7 @@
         {% else %}
         {% for index, lexer in enumerate(lexers) %}
         <section class="file-part">
-            <div class="file-meta">
+            <div class="file-meta flex">
                 {% module Template("part/lexer-select.html", selected=lexer, lexers=lexers_available) %}
                 <input name="filename" placeholder="Filename (optional)">
             </div>
@@ -34,7 +34,7 @@
         </section>
         {% end %}
         {% end %}
-        <section class="paste-submit">
+        <section class="paste-submit flex">
             <button type="submit">Paste!</button>
             <select name="expiry">
                 {% for expiry in expiries %}
@@ -50,7 +50,7 @@
     </main>
 </form>
 <section class="file-template">
-    <div class="file-meta">
+    <div class="file-meta flex">
         {% module Template("part/lexer-select.html", selected=lexers[0], lexers=lexers_available) %}
         <input name="filename" placeholder="Filename (optional)">
     </div>
