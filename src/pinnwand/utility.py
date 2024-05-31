@@ -69,6 +69,10 @@ def guess_language(raw: str, filename: Optional[str] = None) -> str:
 
 
 def hash_create(length: int = 16) -> str:
+    """Create a random string by taking `length` random bytes and encoding them
+    as base32. This makes them URL-safe and uses discernable characters to
+    reduce typos."""
+
     return b32encode(urandom(length)).decode("ascii").replace("=", "")
 
 
