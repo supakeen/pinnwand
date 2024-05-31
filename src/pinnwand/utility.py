@@ -77,7 +77,10 @@ def slug_create(
 ) -> str:
     """Creates a new slug, a slug has to be unique within both the Paste and
     File namespace. These slugs auto-lengthen unless they are specified not
-    to."""
+    to.
+
+    Slugs are unique identifiers that are used the URLs that pinnwand serves
+    pastes and files on."""
 
     if dont_use is None:
         dont_use = []
