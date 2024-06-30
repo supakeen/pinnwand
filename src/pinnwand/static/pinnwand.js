@@ -1,6 +1,10 @@
 let indents = {
+    "default": " ".repeat(4),
     "python": " ".repeat(4),
     "python2": " ".repeat(4),
+    "html": " ".repeat(2),
+    "css": " ".repeat(2),
+    "javascript": " ".repeat(2),
 };
 
 document.addEventListener('keydown', e => {
@@ -120,13 +124,9 @@ function indent_textarea(event) {
 	let selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']"),
 	    lexer = selector.options[selector.selectedIndex].text
 
-	if(!(lexer && lexer.toLowerCase().indexOf("python") == 0)) {
-		return
-	}
-
-    let indent = " ".repeat(4);
-	let keyCode = event.keyCode || event.which;
-
+    let indent = indents[lexer.toLowerCase()] || indents["default"];
+    let keyCode = event.keyCode || event.which;
+    
 	if (keyCode == 9) {
 		event.preventDefault();
 		var start = this.selectionStart;
