@@ -36,6 +36,7 @@ jobs:
           context: .
           file: ./Containerfile
           target: base
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') }}
           cache-from: type=registry,ref=ghcr.io/supakeen/pinnwand:latest
           cache-to: type=inline
@@ -77,6 +78,7 @@ jobs:
           context: .
           file: ./Containerfile
           target: ${{ matrix.container-stage }}
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') }}
           cache-from: type=registry,ref=ghcr.io/supakeen/pinnwand:latest-${{ matrix.container-stage }}
           cache-to: type=inline
