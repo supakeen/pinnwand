@@ -107,7 +107,6 @@ section.file-part {
     color: var(--color2);
     border: none;
     box-sizing: border-box;
-    height: 100%;
     min-height: 25rem;
     font-size: 1.25rem;
     font-family: monospace;
