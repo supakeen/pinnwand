@@ -8,6 +8,8 @@ v1.6.1 (unreleased)
 *******************
 * Removed the default indentation from pastes. It now only applies to configured 
   languages again. Opened a public discussion about this behavior.
+* Conditionally discover e2e testcases only when playwright is available in
+  the environment. Closes #284.
 
 v1.6.0 (20241101)
 *******************
