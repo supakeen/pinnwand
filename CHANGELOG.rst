@@ -4,6 +4,11 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.6.1 (unreleased)
+*******************
+* Removed the default indentation from pastes. It now only applies to configured 
+  languages again. Opened a public discussion about this behavior.
+
 v1.6.0 (20241101)
 *******************
 * Added a browser test suite by nekhvoya_.

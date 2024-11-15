@@ -1,5 +1,4 @@
 let indents = {
-    "default": " ".repeat(4),
     "python": " ".repeat(4),
     "python2": " ".repeat(4),
     "html": " ".repeat(2),
@@ -124,7 +123,12 @@ function indent_textarea(event) {
 	let selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']"),
 	    lexer = selector.options[selector.selectedIndex].text
 
-    let indent = indents[lexer.toLowerCase()] || indents["default"];
+    let indent = indents[lexer.toLowerCase()];
+
+    if(!indent) {
+        return;
+    }
+
     let keyCode = event.keyCode || event.which;
     
 	if (keyCode == 9) {
