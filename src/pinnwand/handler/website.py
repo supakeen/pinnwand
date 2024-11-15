@@ -1,7 +1,7 @@
 import binascii
 import io
 import zipfile
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 import docutils.core
@@ -307,7 +307,7 @@ class Show(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.utcnow():
+            if paste.exp_date < datetime.now(timezone.utc):
                 session.delete(paste)
                 session.commit()
 
@@ -344,7 +344,7 @@ class RedirectShow(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.utcnow():
+            if paste.exp_date < datetime.now(timezone.utc):
                 session.delete(paste)
                 session.commit()
 
@@ -374,7 +374,7 @@ class FileRaw(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.utcnow():
+            if file.paste.exp_date < datetime.now(timezone.utc):
                 session.delete(file.paste)
                 session.commit()
 
@@ -405,7 +405,7 @@ class FileHex(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.utcnow():
+            if file.paste.exp_date < datetime.now(timezone.utc):
                 session.delete(file.paste)
                 session.commit()
 
@@ -436,7 +436,7 @@ class PasteDownload(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.utcnow():
+            if paste.exp_date < datetime.now(timezone.utc):
                 session.delete(paste)
                 session.commit()
 
@@ -483,7 +483,7 @@ class FileDownload(Base):
             if not file:
                 raise tornado.web.HTTPError(404)
 
-            if file.paste.exp_date < datetime.utcnow():
+            if file.paste.exp_date < datetime.now(timezone.utc):
                 session.delete(file.paste)
                 session.commit()
 
@@ -527,7 +527,7 @@ class Remove(Base):
                 log.info("RemovePaste.get: someone visited with invalid id")
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.utcnow():
+            if paste.exp_date < datetime.now(timezone.utc):
                 session.delete(paste)
                 session.commit()
 

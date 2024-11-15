@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urljoin
 
@@ -87,7 +87,7 @@ class Show(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
-            if paste.exp_date < datetime.utcnow():
+            if paste.exp_date < datetime.now(timezone.utc):
                 session.delete(paste)
                 session.commit()
 

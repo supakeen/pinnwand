@@ -1,5 +1,5 @@
-database_uri = "sqlite:///C:\\Users\\shtlrs\\AppData\\Local\\Temp\\tmpvb8tgs72"
-reaping_periodicity = 2000 # in milliseconds
+database_uri = "sqlite:////tmp/tmp5r3kq5tn"
+reaping_periodicity = 2000
 
 [ratelimit.read]
 capacity = 200
