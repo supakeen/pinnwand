@@ -121,3 +121,4 @@ dmypy.json
 
 
 test/e2e/report/
+test/e2e/pinnwand.toml
