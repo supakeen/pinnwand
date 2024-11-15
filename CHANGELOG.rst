@@ -10,6 +10,8 @@ v1.6.1 (unreleased)
   languages again. Opened a public discussion about this behavior.
 * Conditionally discover e2e testcases only when playwright is available in
   the environment. Closes #284.
+* Switched to timezone-aware objects in the databse to squash deprecation
+  warnings.
 
 v1.6.0 (20241101)
 *******************

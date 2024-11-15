@@ -1,12 +1,11 @@
 import datetime
-from datetime import timedelta
+from datetime import timedelta, timezone
 from typing import Optional
 
 import pygments.lexers
 from pygments_better_html import BetterHtmlFormatter
 from sqlalchemy import (
     Column,
-    DateTime,
     ForeignKey,
     Integer,
     String,
@@ -17,6 +16,8 @@ from sqlalchemy.orm import (
     declarative_base,
     relationship,
 )
+
+from sqlalchemy_utc import UtcDateTime
 
 from pinnwand import defensive, error, logger, utility
 from pinnwand.configuration import Configuration, ConfigurationProvider
@@ -42,15 +43,15 @@ Base = declarative_base(cls=_Base)
 class Paste(Base):  # type: ignore
     """The Paste model represents a single Paste."""
 
-    pub_date = Column(DateTime)
-    chg_date = Column(DateTime)
+    pub_date = Column(UtcDateTime)
+    chg_date = Column(UtcDateTime)
 
     slug = Column(String(250), unique=True)
     removal = Column(String(250), unique=True)
 
     src = Column(String(250))
 
-    exp_date = Column(DateTime)
+    exp_date = Column(UtcDateTime)
 
     files = relationship("File", cascade="all,delete", backref="paste")
 
@@ -66,8 +67,8 @@ class Paste(Base):  # type: ignore
         self.slug = slug
         self.removal = utility.slug_create(auto_scale=False)
 
-        self.pub_date = datetime.datetime.utcnow()
-        self.chg_date = datetime.datetime.utcnow()
+        self.pub_date = datetime.datetime.now(timezone.utc)
+        self.chg_date = datetime.datetime.now(timezone.utc)
 
         self.src = src
 
@@ -82,8 +83,8 @@ class File(Base):  # type: ignore
     paste_id = Column(ForeignKey("paste.id"))
     slug = Column(String(255), unique=True)
 
-    pub_date = Column(DateTime)
-    chg_date = Column(DateTime)
+    pub_date = Column(UtcDateTime)
+    chg_date = Column(UtcDateTime)
 
     lexer = Column(String(250))
 
@@ -110,8 +111,8 @@ class File(Base):  # type: ignore
                 f"Text exceeds size limit {configuration.paste_size//1024} (kB)"
             )
 
-        self.pub_date = datetime.datetime.utcnow()
-        self.chg_date = datetime.datetime.utcnow()
+        self.pub_date = datetime.datetime.now(timezone.utc)
+        self.chg_date = datetime.datetime.now(timezone.utc)
 
         self.raw = raw
 

@@ -15,6 +15,7 @@ dependencies = [
     "token-bucket>=0.3.0",
     "tomli>=2.0.1",
     "python-dotenv>=1.0.1",
+    "sqlalchemy-utc>=0.14.0",
 ]
 requires-python = ">=3.8"
 readme = "README.md"

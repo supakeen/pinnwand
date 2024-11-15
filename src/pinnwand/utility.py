@@ -1,7 +1,7 @@
 import math
 import re
 from base64 import b32encode
-from datetime import datetime
+from datetime import datetime, timezone
 from os import urandom
 from typing import Any, Dict, List, Optional
 
@@ -192,7 +192,7 @@ def reap() -> None:
     with manager.DatabaseManager.get_session() as session:
         pastes = (
             session.query(models.Paste)
-            .filter(models.Paste.exp_date < datetime.utcnow())
+            .filter(models.Paste.exp_date < datetime.now(timezone.utc))
             .all()
         )
 
