@@ -5,6 +5,12 @@ import pytest
 from slugify import slugify
 
 
+try:
+    import playwright
+except ImportError:
+    collect_ignore = ["e2e/"]
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--e2e",
