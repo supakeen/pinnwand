@@ -1,0 +1,32 @@
+###
+# pinnwand init.d configuration
+###
+
+# Path to the Pinnwand configuration file.
+config_file="/home/pinnwand/pinnwand_config.toml"
+
+# User and group under which the Pinnwand service will run.
+pinnwand_user="pinnwand:pinnwand"
+
+# Port on which the Pinnwand service will listen for HTTP requests..
+port=9000
+
+# Path to the Pinnwand executable.
+command="/home/pinnwand/venv/bin/pinnwand"
+
+# Directory where logs will be stored.
+#log_dir="/var/log"
+
+# Path to the standard output log file for the Pinnwand service..
+#output_log="${log_dir}/pinnwand.log"
+
+# Path to the error log file for the Pinnwand service.
+#error_log="${log_dir}/pinnwand.err"
+
+# Override arguments passed to the Pinnwand command at startup.
+# -v: Enable verbose logging.
+# --configuration-path: Specify the path to the configuration file.
+# http: Start the HTTP server.
+# --port: Specify the port on which the service will listen.
+
+#command_args="-v --configuration-path \"${config_file}\" http --port ${port}"

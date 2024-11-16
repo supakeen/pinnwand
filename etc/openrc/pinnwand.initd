@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+
+description="Pinnwand pastebin service"
+
+config_file="${config_file:-/home/pinnwand/pinnwand_config.toml}"
+port="${port:-9000}"
+log_dir="${log_dir:-/var/log}"
+output_log="${output_log:-$log_dir/$RC_SVCNAME.log}"
+error_log="${error_log:-$log_dir/$RC_SVCNAME.err}"
+pidfile="${pidfile:-/run/$RC_SVCNAME.pid}"
+command="${command:-/home/pinnwand/venv/bin/pinnwand}"
+command_user="${pinnwand_user:-pinnwand:pinnwand}"
+command_args="${command_args:- --configuration-path \"$config_file\" http --port $port}"
+command_background=true
+
+start_pre() {
+	if [ ! -f "$config_file" ]; then
+		eerror "Configuration file not found: $config_file"
+		return 1
+	fi
+
+	checkpath --file --owner "$command_user" --mode 0664 "$output_log"
+	checkpath --file --owner "$command_user" --mode 0664 "$error_log"
+}
