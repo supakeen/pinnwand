@@ -315,9 +315,9 @@ iniconfig==2.0.0 \
 isort==5.13.2 \
     --hash=sha256:48fdfcb9face5d58a4f6dde2e72a1fb8dcaf8ab26f95ab49fab84c2ddefb0109 \
     --hash=sha256:8ca5e72a8d85860d5a3fa69b8745237f2939afe12dbf656afbcb47fe72d947a6
-jinja2==3.1.4 \
-    --hash=sha256:4a3aee7acbbe7303aede8e9648d13b8bf88a429282aa6122a993f0ac800cb369 \
-    --hash=sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d
+jinja2==3.1.5 \
+    --hash=sha256:8fefff8dc3034e27bb80d67c671eb8a9bc424c0ef4c0826edbff304cceff43bb \
+    --hash=sha256:aba0f4dc9ed8013c424088f68a5c226f7d6097ed89b246d7749c2ec4175c6adb
 license-expression==30.3.1 \
     --hash=sha256:60d5bec1f3364c256a92b9a08583d7ea933c7aa272c8d36d04144a89a3858c01 \
     --hash=sha256:97904b9185c7bbb1e98799606fa7424191c375e70ba63a524b6f7100e42ddc46
