@@ -1,9 +1,9 @@
-FROM registry.fedoraproject.org/fedora-minimal:38 AS base
+FROM registry.fedoraproject.org/fedora-minimal:41 AS base
 
 RUN \
-    microdnf install -y \
+    dnf install -y \
         python3-pip && \
-        microdnf clean all
+        dnf clean all
 
 WORKDIR /usr/app
 
@@ -34,9 +34,9 @@ CMD ["venv/bin/python3", "-m", "pinnwand", "http"]
 FROM base AS mysql
 WORKDIR /usr/app
 RUN \
-    microdnf install -y \
+    dnf install -y \
         community-mysql-devel python3-devel gcc && \
-    microdnf clean all
+    dnf clean all
 
 COPY --from=base /usr/app ./
 RUN venv/bin/pip install mysqlclient
