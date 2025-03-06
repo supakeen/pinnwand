@@ -125,12 +125,12 @@ class Configuration:
             key = key[len(prefix) :]
             key = key.lower()
             try:
-                value = ast.literal_eval(value)
-                setattr(self, f"_{key}", value)
+                parsed_value = ast.literal_eval(value)
+                setattr(self, f"_{key}", parsed_value)
             except (ValueError, SyntaxError):
                 # When `ast.literal_eval` can't parse the value into another
                 # type we take it at string value
-                pass
+                setattr(self, f"_{key}", value)
 
 
 class ConfigurationProvider:
