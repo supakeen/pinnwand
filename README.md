@@ -101,7 +101,7 @@ Reporting bugs
 ==============
 Bugs are reported best at `pinnwand`'s [project page](https://github.com/supakeen/pinnwand) on github. If you just
 want to hang out and chat about `pinnwand` then I'm available in the
-`#pinnwand` channel on Freenode IRC.
+`#pinnwand` channel on OFTC IRC.
 
 License
 =======
