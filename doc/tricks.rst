@@ -5,6 +5,13 @@ Tricks
 
 Some tricks to make talking to ``pinnwand`` easier.
 
+Web
+***
+
+You can pre-select the type of syntax highlighting ("lexer") by adding ``+language`` to the URL::
+
+  https://bpa.st/+python
+
 steck
 *****
 
