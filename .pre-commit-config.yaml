@@ -30,3 +30,8 @@ repos:
       entry: python -m bandit
       types: [python]
       exclude: ^doc/conf.py|^test
+    - id: pdm-export
+      name: pdm-export
+      language: system
+      pass_filenames: false
+      entry: pdm export -f requirements -o requirements.txt
