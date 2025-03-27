@@ -1,13 +1,15 @@
 import logging
 import os
+from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import time
 import pytest
-import toml
+import tomli
 from threading import Thread
-from toml import load
+
+import tomli_w
 from test.e2e.utils.database_utils import TestDb
 from test.e2e.env_config import PORT
 from test.e2e.pageobjects.create_paste_page import CreatePastePage
@@ -69,11 +71,14 @@ def create_paste_page(page: Page) -> CreatePastePage:
 def database() -> Generator[None, None, None]:
     log.info("Setting up temp database")
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
-        props = load(config_path)
+        props = tomli.loads(Path(config_path).read_text())
         props["database_uri"] = f"sqlite:///{temp.name}"
-        props["expiries"] = {"1hour": 4, "1day": 4}  # It expires in 4 seconds instead of an hour
-        with open(config_path, "w") as config_file:
-            toml.dump(props, config_file)
+        props["expiries"] = {
+            "1hour": 4,
+            "1day": 4,
+        }  # It expires in 4 seconds instead of an hour
+        with open(config_path, "wb") as config_file:
+            tomli_w.dump(props, config_file)
     yield
     log.info("Tearing down temp database")
     close_all_sessions()
@@ -85,4 +90,6 @@ def database() -> Generator[None, None, None]:
 @pytest.fixture
 def clear_db():
     log.info("Clearing temp database")
-    TestDb(load(config_path)["database_uri"]).clear_tables("paste", "file")
+    TestDb(
+        tomli.loads(Path(config_path).read_text())["database_uri"]
+    ).clear_tables("paste", "file")
