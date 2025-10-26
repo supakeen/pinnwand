@@ -9,7 +9,7 @@ dependencies = [
     "tornado>=6.3.2",
     "pygments>=2.15.1",
     "sqlalchemy>=2.0.15",
-    "click>=8.1.3",
+    "click>=8.2.0",
     "docutils>=0.20.1",
     "pygments-better-html>=0.1.4",
     "token-bucket>=0.3.0",
@@ -17,7 +17,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "sqlalchemy-utc>=0.14.0",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
