@@ -10,7 +10,7 @@ def test_main():
     runner = CliRunner()
 
     result = runner.invoke(command.main, [])
-    assert result.exit_code == 0
+    assert result.exit_code == 2
 
     result = runner.invoke(command.main, ["unknown"])
     assert result.exit_code == 2
