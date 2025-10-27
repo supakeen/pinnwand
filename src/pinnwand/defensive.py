@@ -70,7 +70,7 @@ def spamscore(text: str) -> int:
 
     # TODO Is this a good URL regex?
     match = re.compile(
-        r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+        r"((http|ws|grpc|ftp)s?.//[a-z-]+\.[a-z]+/?[^\"\'\ \n\r\t\v]+)"
     )
 
     text_size = len(text)
