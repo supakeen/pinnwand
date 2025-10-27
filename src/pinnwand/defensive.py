@@ -68,9 +68,8 @@ def spamscore(text: str) -> int:
     This will then give a value 0-100, which can be used with a configuration
     option to deny pastes over a certain percentage."""
 
-    # TODO Is this a good URL regex?
     match = re.compile(
-        r"((http|ws|grpc|ftp)s?.//[a-z-]+\.[a-z]+/?[^\"\'\ \n\r\t\v]+)"
+        r"(?:http|ws|grpc|ftp)(?:s?.//[a-z-]+\.[a-z]+/?[^\"\'\ \n\r\t\v]+)"
     )
 
     text_size = len(text)
