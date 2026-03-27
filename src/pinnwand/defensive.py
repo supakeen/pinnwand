@@ -8,7 +8,6 @@ from tornado.web import RequestHandler
 from pinnwand import error, logger
 from pinnwand.configuration import Configuration, ConfigurationProvider
 
-
 log = logger.get_logger(__name__)
 
 

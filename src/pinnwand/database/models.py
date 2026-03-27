@@ -22,7 +22,6 @@ from sqlalchemy_utc import UtcDateTime
 from pinnwand import defensive, error, logger, utility
 from pinnwand.configuration import Configuration, ConfigurationProvider
 
-
 log = logger.get_logger(__name__)
 
 
