@@ -4,7 +4,7 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
-v1.6.1 (unreleased)
+v1.6.1 (20260327)
 *******************
 * Removed the default indentation from pastes. It now only applies to configured 
   languages again. Opened a public discussion about this behavior.
@@ -12,6 +12,10 @@ v1.6.1 (unreleased)
   the environment. Closes #284.
 * Switched to timezone-aware objects in the databse to squash deprecation
   warnings.
+* Add OpenRC example init scripts by Forza-tng_
+* Document trick to pre-select lexer via web URL by kjetilho_
+* Fix spam score regex by pl7ofit_
+* Replace toml usage with tomli and tomli-w by dogukancagatay_
 
 v1.6.0 (20241101)
 *******************
@@ -205,3 +209,8 @@ changelog created.
 .. _NeilHanlon: https://github.com/NeilHanlon
 .. _shtlrs: https://github.com/shtlrs
 .. _wookie184: https://github.com/wookie184
+.. _Forza-tng: https://github.com/Forza-tng
+.. _kjetilho: https://github.com/kjetilho
+.. _pl7ofit: https://github.com/pl7ofit
+.. _dogukancagatay: https://github.com/dogukancagatay
+
