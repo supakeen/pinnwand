@@ -68,7 +68,7 @@ def spamscore(text: str) -> int:
     option to deny pastes over a certain percentage."""
 
     match = re.compile(
-        r"(?:http|ws|grpc|ftp)(?:s?.//[a-z-]+\.[a-z]+/?[^\"\'\ \n\r\t\v]+)"
+        r"(?:http|ws|grpc|ftp)(?:s?.//[a-z0-9-]+\.[a-z]+/?[^\"\'\ \n\r\t\v]+)"
     )
 
     text_size = len(text)
