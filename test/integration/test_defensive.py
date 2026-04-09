@@ -119,6 +119,26 @@ def test_spamscore_multiple_domains_with_numbers() -> None:
     assert score > 50
 
 
+def test_spamscore_uppercase_domain() -> None:
+    text = "Visit https://EXAMPLE.COM for more info."
+    score = defensive.spamscore(text)
+    assert score > 0
+    assert score > 40
+
+
+def test_spamscore_mixed_case_domain() -> None:
+    text = "Visit https://Example.Com for more info."
+    score = defensive.spamscore(text)
+    assert score > 0
+    assert score > 40
+
+
+def test_spamscore_uppercase_spam() -> None:
+    text = "https://SPAM.COM https://FAKE.ORG https://BAD.NET buy now!"
+    score = defensive.spamscore(text)
+    assert score > 70
+
+
 @pytest.mark.parametrize(
     "text,expected_range",
     [
