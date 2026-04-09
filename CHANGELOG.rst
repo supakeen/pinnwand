@@ -8,6 +8,7 @@ v1.7.0 (unreleased)
 *******************
 * Added test cases for `defensive`.
 * Also catch numbers-in-domains.
+* Also catch uppercase-in-domains.
 
 v1.6.1 (20260327)
 *******************
