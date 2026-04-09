@@ -106,6 +106,19 @@ def test_spamscore_typical_code() -> None:
     assert score < 30
 
 
+def test_spamscore_domain_with_numbers() -> None:
+    text = "Visit https://example123.com for more info."
+    score = defensive.spamscore(text)
+    assert score > 0
+    assert score > 40
+
+
+def test_spamscore_multiple_domains_with_numbers() -> None:
+    text = "Check https://site1.com and https://page2.org and https://app3.net for details."
+    score = defensive.spamscore(text)
+    assert score > 50
+
+
 @pytest.mark.parametrize(
     "text,expected_range",
     [
