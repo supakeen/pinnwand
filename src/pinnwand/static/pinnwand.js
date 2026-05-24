@@ -1,10 +1,86 @@
-let indents = {
-    "python": " ".repeat(4),
-    "python2": " ".repeat(4),
-    "html": " ".repeat(2),
-    "css": " ".repeat(2),
-    "javascript": " ".repeat(2),
-};
+const INDENT_STORAGE_KEY = "pinnwand-indent";
+
+function getIndentString() {
+    let raw = localStorage.getItem(INDENT_STORAGE_KEY);
+    let cfg;
+    try { cfg = JSON.parse(raw); } catch(e) { cfg = null; }
+    let useTabs = cfg?.useTabs ?? false;
+    let size = cfg?.size ?? 4;
+    return useTabs ? "\t" : " ".repeat(size);
+}
+
+function saveIndentPreference(useTabs, size) {
+    localStorage.setItem(INDENT_STORAGE_KEY, JSON.stringify({ useTabs, size }));
+}
+
+function addIndentToolbar(fileMeta) {
+    if (fileMeta.querySelector(".indent-toolbar")) return;
+
+    let raw = localStorage.getItem(INDENT_STORAGE_KEY);
+    let cfg;
+    try { cfg = JSON.parse(raw); } catch(e) { cfg = null; }
+    let useTabs = cfg?.useTabs ?? false;
+    let size = cfg?.size ?? 4;
+
+    const toolbar = document.createElement("div");
+    toolbar.className = "indent-toolbar";
+
+    // Mode select: Spaces / Tabs
+    const modeSelect = document.createElement("select");
+    modeSelect.className = "indent-mode-select";
+    [["spaces", "Spaces"], ["tabs", "Tabs"]].forEach(([val, label]) => {
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = label;
+        if ((val === "tabs") === useTabs) opt.selected = true;
+        modeSelect.appendChild(opt);
+    });
+    toolbar.appendChild(modeSelect);
+
+    // Size select: 2 / 4 / 8
+    const sizeSelect = document.createElement("select");
+    sizeSelect.className = "indent-size-select";
+    [2, 4, 8].forEach(n => {
+        const opt = document.createElement("option");
+        opt.value = n;
+        opt.textContent = n;
+        if (n === size) opt.selected = true;
+        sizeSelect.appendChild(opt);
+    });
+    sizeSelect.style.display = useTabs ? "none" : "";
+    toolbar.appendChild(sizeSelect);
+
+    modeSelect.addEventListener("change", () => {
+        const nowTabs = modeSelect.value === "tabs";
+        const nowSize = parseInt(sizeSelect.value);
+        saveIndentPreference(nowTabs, nowSize);
+        updateAllToolbars();
+    });
+
+    sizeSelect.addEventListener("change", () => {
+        const nowTabs = modeSelect.value === "tabs";
+        const nowSize = parseInt(sizeSelect.value);
+        saveIndentPreference(nowTabs, nowSize);
+    });
+
+    fileMeta.appendChild(toolbar);
+}
+
+function updateAllToolbars() {
+    let raw = localStorage.getItem(INDENT_STORAGE_KEY);
+    let cfg;
+    try { cfg = JSON.parse(raw); } catch(e) { cfg = null; }
+    let useTabs = cfg?.useTabs ?? false;
+    let size = cfg?.size ?? 4;
+
+    document.querySelectorAll(".indent-toolbar").forEach(toolbar => {
+        const modeSelect = toolbar.querySelector(".indent-mode-select");
+        const sizeSelect = toolbar.querySelector(".indent-size-select");
+        modeSelect.value = useTabs ? "tabs" : "spaces";
+        sizeSelect.value = size;
+        sizeSelect.style.display = useTabs ? "none" : "";
+    });
+}
 
 document.addEventListener('keydown', e => {
     if ((e.ctrlKey && !e.altKey) && e.key === 's') {
@@ -101,6 +177,8 @@ function addNewFile() {
         template,
         document.querySelector("section.paste-submit")
     );
+
+    addIndentToolbar(template.querySelector("div.file-meta"));
     addRemoveButtons();
     return template;
 }
@@ -120,17 +198,9 @@ function upload_file(file) {
 
 
 function indent_textarea(event) {
-	let selector = event.target.parentNode.parentNode.querySelector("select[name='lexer']"),
-	    lexer = selector.options[selector.selectedIndex].text
-
-    let indent = indents[lexer.toLowerCase()];
-
-    if(!indent) {
-        return;
-    }
-
     let keyCode = event.keyCode || event.which;
-    
+    let indent = getIndentString();
+
 	if (keyCode == 9) {
 		event.preventDefault();
 		var start = this.selectionStart;
@@ -161,32 +231,43 @@ function indent_textarea(event) {
 		    }
 		}
 		var lines = v.split("\n");
+		var addedChars = 0;
 		for (var i = 0; i < selectedLines.length; i++)
 		{
 		    lines[selectedLines[i]] = indent + lines[selectedLines[i]];
+		    addedChars += indent.length;
 		}
 
 		this.value = lines.join("\n");
+		this.selectionStart = start + indent.length;
+		this.selectionEnd = end + addedChars;
     } else if (keyCode == 13) {
 		event.preventDefault();
 
 		var start = this.selectionStart;
 		var end = this.selectionEnd;
         var v = this.value;
-        var thisLine = "";
-        var indentation = 1;
 
-        for (var i = start-1; i >= 0 && v[i] != "\n"; i--) {
-            thisLine = v[i] + thisLine;
+        // Find the current line's content (backwards from cursor)
+        var lineStart = start - 1;
+        while (lineStart >= 0 && v[lineStart] !== "\n") lineStart--;
+        lineStart++;
+        var currentLine = v.slice(lineStart, start);
+
+        // Count leading whitespace characters (spaces or tabs)
+        var leadingWhitespace = "";
+        for (var i = 0; i < currentLine.length; i++) {
+            if (currentLine[i] === " " || currentLine[i] === "\t") {
+                leadingWhitespace += currentLine[i];
+            } else {
+                break;
+            }
         }
 
-        for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
-            indentation++;
-        }
-
-        this.value = v.slice(0, start) + "\n" + " ".repeat(indentation-1) + v.slice(start);
-        this.selectionStart = start + indentation;
-        this.selectionEnd = end + indentation;
+        var insertion = "\n" + leadingWhitespace;
+        this.value = v.slice(0, start) + insertion + v.slice(end);
+        this.selectionStart = start + insertion.length;
+        this.selectionEnd = start + insertion.length;
 	}
 }
 
@@ -260,6 +341,12 @@ function setupCreatePage() {
     })
 
     document.querySelector("section.paste-submit").appendChild(but);
+
+    let fileMetas = document.querySelectorAll('section.file-part div.file-meta');
+    for (let i = 0; i < fileMetas.length; i++) {
+        addIndentToolbar(fileMetas[i]);
+    }
+    updateAllToolbars();
 
     let textareas = document.querySelectorAll('section.file-part textarea');
     for(let i = 0; i < textareas.length; i++) {
