@@ -28,10 +28,9 @@ def extract_file_name(file_path):
 
 def verify_downloaded_file_name(download, name_regex):
     def assert_file_name(file):
-        assert (
-            re.compile(name_regex).match(extract_filename(file.name)),
-            f"Name of file {file.name} was not {name_regex}",
-        )
+        assert re.compile(name_regex).match(
+            extract_filename(file.name)
+        ), f"Name of file {file.name} was not {name_regex}"
 
     verify_downloaded_file(download, assert_file_name)
 
@@ -39,10 +38,7 @@ def verify_downloaded_file_name(download, name_regex):
 def verify_downloaded_file_contents(download, text):
     def assert_file_contents(file):
         file_content = file.read()
-        assert (
-            file_content == text,
-            f"Contents of file was not equal to {text}",
-        )
+        assert file_content == text, f"Contents of file was not equal to {text}"
 
     verify_downloaded_file(download, assert_file_contents)
 
