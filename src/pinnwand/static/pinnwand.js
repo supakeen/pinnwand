@@ -43,6 +43,7 @@ function getFirstEmptyFilePartSection() {
 
 function addRemoveButtons() {
     const tag = "button";
+    const buttonType = "button";
     const className = "remove";
     const label = "Remove this file";
     const selector = `${tag}.${className}`;
@@ -59,6 +60,7 @@ function addRemoveButtons() {
             return;
         }
         const removeButton = document.createElement(tag);
+        removeButton.type = buttonType;
         removeButton.innerText = label;
         removeButton.className = className;
         el.appendChild(removeButton);
