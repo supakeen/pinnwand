@@ -115,6 +115,10 @@ class CreatePastePage(BasePage):
         log.info(f"Typing file name {name}")
         self.filename_input.nth(paste_number).type(name)
 
+    def hit_enter_from_filename(self, paste_number=0):
+        log.info(f"Hitting enter from file name field on paste {paste_number}")
+        self.filename_input.nth(paste_number).press("Enter")
+
     def set_filetype(self, value, paste_number=0):
         log.info(f"Typing file type {value}")
         self.filetype_select.nth(paste_number).select_option(value)
