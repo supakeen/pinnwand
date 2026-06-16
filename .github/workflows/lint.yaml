@@ -19,7 +19,7 @@ jobs:
         pip install black codespell types-docutils mypy
 
     - name: Check with black
-      run: black --check src/pinnwand
+      run: black --check src/pinnwand test
 
     # - name: Check with mypy
     #   run: mypy src/pinnwand
