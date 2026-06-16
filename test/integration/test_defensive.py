@@ -14,7 +14,9 @@ def test_spamscore_only_links() -> None:
 
 
 def test_spamscore_mixed_content() -> None:
-    text = "Check out https://example.com for more information about our product."
+    text = (
+        "Check out https://example.com for more information about our product."
+    )
     score = defensive.spamscore(text)
     assert 0 < score < 100
     # ~23 chars out of ~70 total: ~32%

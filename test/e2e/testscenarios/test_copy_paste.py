@@ -15,9 +15,13 @@ def test_copy_paste(playwright: Playwright, request):
         try:
             create_paste_page = CreatePastePage(page)
             create_paste_page.open()
-            first_pasted_text = create_paste_page.paste_random_text(paste_number=0)
+            first_pasted_text = create_paste_page.paste_random_text(
+                paste_number=0
+            )
             create_paste_page.click_add_another_file_button()
-            second_pasted_text = create_paste_page.paste_random_text(paste_number=1)
+            second_pasted_text = create_paste_page.paste_random_text(
+                paste_number=1
+            )
             create_paste_page.click_submit()
 
             view_paste_page = ViewPastePage(page)

@@ -7,9 +7,7 @@ from playwright.sync_api import Page
 
 
 @pytest.mark.e2e
-def test_create_single_paste(
-    page: Page, create_paste_page: CreatePastePage
-):
+def test_create_single_paste(page: Page, create_paste_page: CreatePastePage):
     create_paste_page.should_have_title("Create new paste")
 
     pasted_text = create_paste_page.paste_random_text()
@@ -24,9 +22,7 @@ def test_create_single_paste(
 
 
 @pytest.mark.e2e
-def test_create_multi_paste(
-    page: Page, create_paste_page: CreatePastePage
-):
+def test_create_multi_paste(page: Page, create_paste_page: CreatePastePage):
     first_pasted_text = create_paste_page.paste_random_text(paste_number=0)
     create_paste_page.click_add_another_file_button()
 

@@ -11,7 +11,9 @@ class BrowserManager:
 
     @classmethod
     @contextlib.contextmanager
-    def new_context(cls, playwright: Playwright, headless: Optional[bool] = None) -> BrowserContext:
+    def new_context(
+        cls, playwright: Playwright, headless: Optional[bool] = None
+    ) -> BrowserContext:
         log.info("creating new browser context")
         headless = headless if headless is not None else is_headless()
         browser = playwright.chromium.launch(headless=headless)
@@ -25,9 +27,13 @@ class BrowserManager:
 
     @classmethod
     @contextlib.contextmanager
-    def new_page(cls, playwright: Playwright, headless: Optional[bool] = None) -> Page:
+    def new_page(
+        cls, playwright: Playwright, headless: Optional[bool] = None
+    ) -> Page:
         headless = headless if headless is not None else is_headless()
-        with cls.new_context(playwright=playwright, headless=headless) as context:
+        with cls.new_context(
+            playwright=playwright, headless=headless
+        ) as context:
             page = context.new_page()
             try:
                 yield page
@@ -35,4 +41,3 @@ class BrowserManager:
                 log.exception(e)
             finally:
                 page.close()
-
