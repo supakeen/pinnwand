@@ -10,18 +10,16 @@ def test_expiries() -> None:
     assert len(configuration.expiries) == 2
 
 
-@pytest.mark.xfail(reason="Pygments incorrectly detects this as `mojo`. Upstream bug to be made.")
+@pytest.mark.xfail(
+    reason="Pygments incorrectly detects this as `mojo`. Upstream bug to be made."
+)
 def test_guess_language_broken() -> None:
     # python
-    assert (
-        utility.guess_language(
-            """
+    assert utility.guess_language("""
       import math
       math.ceil(0.5)
-    """
-        )
-        == "python"
-    )
+    """) == "python"
+
 
 def test_guess_language() -> None:
     assert (
@@ -47,15 +45,11 @@ def test_guess_language() -> None:
     )
 
     # php
-    assert utility.guess_language(
-        """
+    assert utility.guess_language("""
       <?php
       $var = 0.5;
       abs($var);
-    """
-    ).endswith(
-        "php"
-    )  # for some reason this is guessed as js+php
+    """).endswith("php")  # for some reason this is guessed as js+php
 
     # yaml
     assert (
