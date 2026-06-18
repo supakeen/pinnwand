@@ -1,0 +1,13 @@
+[Unit]
+Description=Clear expired pastes regularly
+
+[Timer]
+AccuracySec=43200s
+FixedRandomDelay=true
+OnCalendar=daily
+Persistent=yes
+RandomizedDelaySec=24h
+Unit=pinnwand-reaper.service
+
+[Install]
+WantedBy=timers.target
