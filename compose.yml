@@ -1,9 +1,13 @@
-version: '3.3'
-
 services:
   pinnwand:
     image: pinnwand:latest
     container_name: pinnwand
-    restart: always
+    restart: unless-stopped
     ports:
-      - 1377:8000
+      - 127.0.0.1:1377:8000
+    volumes:
+      - ./pinnwand.toml:/etc/pinnwand.toml:ro
+      # If you want to use SQLite so your pastes aren't lost on restart,
+      # uncomment the line below, run `touch pinnwand.db`, and set
+      # `database_uri = "sqlite:////data/pinnwand.db"` in pinnwand.toml
+      # - ./pinnwand.db:/data/pinnwand.db
