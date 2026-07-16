@@ -4,7 +4,7 @@ repos:
     - id: black
       name: black
       language: system
-      entry: python -m black
+      entry: python -m black --check src/pinnwand test
       types: [python]
     - id: pytest
       name: pytest

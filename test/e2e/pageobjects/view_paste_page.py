@@ -112,8 +112,8 @@ class ViewPastePage(BasePage):
         ), f"Length of paste slug was incorrect on {self.page_name}:\nActual: {actual_length}\nExpected: {length}"
 
     def should_have_paste_formatting(self, value, paste_number=0):
-        assert (
-            f"lang-{value}"
-            in self.pasted_file.nth(paste_number).get_attribute("class"),
-            f"Formatting of pasted file was incorrect on {self.page_name}",
-        )
+        assert f"lang-{value}" in self.pasted_file.nth(
+            paste_number
+        ).get_attribute(
+            "class"
+        ), f"Formatting of pasted file was incorrect on {self.page_name}"

@@ -14,7 +14,9 @@ class RateLimitTestCase(tornado.testing.AsyncHTTPTestCase):
         return app.make_application()
 
     def test_ratelimit_verification_on_endpoints(self):
-        with unittest.mock.patch("pinnwand.defensive.should_be_ratelimited") as patch:
+        with unittest.mock.patch(
+            "pinnwand.defensive.should_be_ratelimited"
+        ) as patch:
             patch.return_value = False
 
             self.fetch(
@@ -32,8 +34,13 @@ class RateLimitTestCase(tornado.testing.AsyncHTTPTestCase):
         ratelimlit_copy["read"]["consume"] = 2
         ratelimlit_copy["read"]["refill"] = 1
 
-        with unittest.mock.patch.dict("pinnwand.defensive.ConfigurationProvider._config._ratelimit", ratelimlit_copy):
-            with unittest.mock.patch.dict("pinnwand.defensive.ratelimit_area", clear=True):
+        with unittest.mock.patch.dict(
+            "pinnwand.defensive.ConfigurationProvider._config._ratelimit",
+            ratelimlit_copy,
+        ):
+            with unittest.mock.patch.dict(
+                "pinnwand.defensive.ratelimit_area", clear=True
+            ):
                 response = self.fetch(
                     "/",
                     method="GET",
@@ -59,8 +66,13 @@ class RateLimitTestCase(tornado.testing.AsyncHTTPTestCase):
         ip1 = "192.168.15.32"
         ip2 = "10.45.134.23"
 
-        with unittest.mock.patch.dict("pinnwand.defensive.ConfigurationProvider._config._ratelimit", ratelimlit_copy):
-            with unittest.mock.patch.dict("pinnwand.defensive.ratelimit_area", clear=True):
+        with unittest.mock.patch.dict(
+            "pinnwand.defensive.ConfigurationProvider._config._ratelimit",
+            ratelimlit_copy,
+        ):
+            with unittest.mock.patch.dict(
+                "pinnwand.defensive.ratelimit_area", clear=True
+            ):
                 assert defensive.should_be_ratelimited(ip1, area) is False
                 assert defensive.should_be_ratelimited(ip1, area) is True
                 assert defensive.should_be_ratelimited(ip2, area) is False
@@ -81,10 +93,16 @@ class RateLimitTestCase(tornado.testing.AsyncHTTPTestCase):
         ratelimlit_copy[area]["refill"] = 1
 
         ip = "192.168.15.32"
-        with unittest.mock.patch.dict("pinnwand.defensive.ConfigurationProvider._config._ratelimit", ratelimlit_copy):
-            with unittest.mock.patch.dict("pinnwand.defensive.ratelimit_area", clear=True):
+        with unittest.mock.patch.dict(
+            "pinnwand.defensive.ConfigurationProvider._config._ratelimit",
+            ratelimlit_copy,
+        ):
+            with unittest.mock.patch.dict(
+                "pinnwand.defensive.ratelimit_area", clear=True
+            ):
                 defensive.should_be_ratelimited(ip, area)
                 limiter = defensive.ratelimit_area[area]
-                tokens_remaining = limiter._storage.get_token_count(ip.encode("utf-8"))
+                tokens_remaining = limiter._storage.get_token_count(
+                    ip.encode("utf-8")
+                )
                 assert tokens_remaining == capacity - consumption
-

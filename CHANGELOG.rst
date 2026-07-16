@@ -4,6 +4,12 @@ Changelog
 ``pinnwand`` is Python pastebin software that tried to keep it simple but got
 a little more complex.
 
+v1.7.0 (unreleased)
+*******************
+* Added test cases for `defensive`.
+* Also catch numbers-in-domains.
+* Also catch uppercase-in-domains.
+
 v1.6.1 (20260327)
 *******************
 * Removed the default indentation from pastes. It now only applies to configured 

@@ -21,11 +21,11 @@ def test_default_filetype(page: Page, create_paste_page: CreatePastePage):
 @pytest.mark.e2e
 def test_set_filetype(page: Page, create_paste_page: CreatePastePage):
     create_paste_page.paste_random_text(paste_number=0)
-    create_paste_page.set_filetype(Filetype.GO.value["value"])
+    create_paste_page.set_filetype(Filetype.GO.value["value"], paste_number=0)
     create_paste_page.click_add_another_file_button()
 
     create_paste_page.paste_random_text(paste_number=1)
-    create_paste_page.set_filetype(Filetype.JAVA.value["value"])
+    create_paste_page.set_filetype(Filetype.JAVA.value["value"], paste_number=1)
     create_paste_page.click_submit()
 
     view_paste_page = ViewPastePage(page)
@@ -51,7 +51,7 @@ def test_reset_filetype(page: Page, create_paste_page: CreatePastePage):
     view_paste_page.click_repaste_button()
     create_paste_page.should_be_opened()
     create_paste_page.should_have_selected_filetype(
-        Filetype.JAVASCRIPT.value["value"]
+        Filetype.JAVASCRIPT.value["label"]
     )
     create_paste_page.set_filetype(Filetype.JSON.value["value"])
     create_paste_page.click_submit()

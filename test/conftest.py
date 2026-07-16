@@ -4,7 +4,6 @@ from pathlib import Path
 import pytest
 from slugify import slugify
 
-
 try:
     import playwright
 except ImportError:

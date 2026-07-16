@@ -115,6 +115,10 @@ class CreatePastePage(BasePage):
         log.info(f"Typing file name {name}")
         self.filename_input.nth(paste_number).type(name)
 
+    def hit_enter_from_filename(self, paste_number=0):
+        log.info(f"Hitting enter from file name field on paste {paste_number}")
+        self.filename_input.nth(paste_number).press("Enter")
+
     def set_filetype(self, value, paste_number=0):
         log.info(f"Typing file type {value}")
         self.filetype_select.nth(paste_number).select_option(value)
@@ -152,15 +156,13 @@ class CreatePastePage(BasePage):
 
     def should_have_selected_filetype(self, filetype, paste_number=0):
         assert (
-            self.selected_option.nth(paste_number).text_content() == filetype,
-            f"Incorrect option was selected in Filetype Select on {self.page_name}",
-        )
+            self.selected_option.nth(paste_number).text_content() == filetype
+        ), f"Incorrect option was selected in Filetype Select on {self.page_name}"
 
     def should_have_paste_inputs(self, number_of_paste_inputs):
         assert (
-            len(self.paste_input.all()) == number_of_paste_inputs,
-            f"{self.page_name} had incorrect number of Paste Inputs",
-        )
+            len(self.paste_input.all()) == number_of_paste_inputs
+        ), f"{self.page_name} had incorrect number of Paste Inputs"
 
 
 class RemovalConfirmationModal:
