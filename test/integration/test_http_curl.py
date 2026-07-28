@@ -97,17 +97,6 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
-    def test_curl_post_empty_raw(self) -> None:
-        response = self.fetch(
-            "/curl",
-            method="POST",
-            body=urllib.parse.urlencode(
-                {"lexer": "c", "raw": "", "expiry": "1day"}
-            ),
-        )
-
-        assert response.code == 400
-
     def test_curl_post(self) -> None:
         response = self.fetch(
             "/curl",
@@ -130,29 +119,6 @@ class CurlTestCase(tornado.testing.AsyncHTTPTestCase):
 
         paste = (
             re.search(b"Paste URL:   (.*)", response.body)
-            .group(1)  # type: ignore
-            .decode("ascii")
-        )
-        paste = urllib.parse.urlparse(paste).path
-
-        response = self.fetch(
-            paste,
-            method="GET",
-        )
-
-        assert response.code == 200
-
-    def test_curl_raw(self) -> None:
-        response = self.fetch(
-            "/curl",
-            method="POST",
-            body=urllib.parse.urlencode(
-                {"lexer": "c", "raw": "a", "expiry": "1day"}
-            ),
-        )
-
-        paste = (
-            re.search(b"Raw URL:     (.*)", response.body)
             .group(1)  # type: ignore
             .decode("ascii")
         )

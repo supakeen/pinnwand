@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-import pinnwand
+import pinnwand  # noqa
 
 
 # -- Project information -----------------------------------------------------
