@@ -3,7 +3,6 @@ from typing import Dict
 from functools import wraps
 
 import token_bucket
-from tornado.httputil import HTTPServerRequest
 from tornado.web import RequestHandler
 from pinnwand import error, logger
 from pinnwand.configuration import Configuration, ConfigurationProvider

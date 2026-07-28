@@ -523,29 +523,6 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
         )
         assert response.code == 200
 
-    def test_website_hex(self) -> None:
-        response = self.fetch(
-            "/",
-            method="POST",
-            body=urllib.parse.urlencode(
-                {"lexer": "c", "code": "a", "expiry": "1day"}
-            ),
-        )
-
-        paste = response.effective_url.split("/")[-1]
-
-        response = self.fetch(
-            f"/hex/{paste}",
-            method="GET",
-        )
-        assert response.code == 200
-
-        response = self.fetch(
-            f"/{paste}/hex",
-            method="GET",
-        )
-        assert response.code == 200
-
     def test_website_remove(self) -> None:
         response = self.fetch(
             "/",
@@ -603,7 +580,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
     def test_website_remove_nonexistent_paste(self) -> None:
         # Can we visit the removal?
         response = self.fetch(
-            f"/remove/ABCD",
+            "/remove/ABCD",
             method="GET",
         )
         assert response.code == 404
@@ -611,7 +588,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
     def test_website_repaste_nonexistent_paste(self) -> None:
         # Can we visit the repaste?
         response = self.fetch(
-            f"/repaste/ABCD",
+            "/repaste/ABCD",
             method="GET",
         )
         assert response.code == 404
@@ -645,7 +622,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
     def test_website_hex_nonexistent_paste(self) -> None:
         response = self.fetch(
-            f"/hex/ABCD",
+            "/hex/ABCD",
             method="GET",
         )
         assert response.code == 404
@@ -678,7 +655,7 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
 
     def test_website_download_nonexistent_paste(self) -> None:
         response = self.fetch(
-            f"/download/ABCD",
+            "/download/ABCD",
             method="GET",
         )
         assert response.code == 404

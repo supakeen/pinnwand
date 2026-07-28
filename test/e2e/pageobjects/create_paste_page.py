@@ -108,7 +108,7 @@ class CreatePastePage(BasePage):
         return name
 
     def clear_filename(self, paste_number=0):
-        log.info(f"Clearing file name input")
+        log.info("Clearing file name input")
         self.filename_input.nth(paste_number).clear()
 
     def set_filename(self, name, paste_number=0):
@@ -182,10 +182,10 @@ class RemovalConfirmationModal:
 
     def should_be_displayed(self):
         expect(
-            self.modal_locator, f"Removal Confirmation modal was not displayed"
+            self.modal_locator, "Removal Confirmation modal was not displayed"
         ).to_be_visible()
 
     def should_not_be_displayed(self):
         expect(
-            self.modal_locator, f"Removal Confirmation modal was displayed"
+            self.modal_locator, "Removal Confirmation modal was displayed"
         ).not_to_be_visible()

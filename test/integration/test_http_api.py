@@ -266,7 +266,7 @@ class DeprecatedAPITestCase(tornado.testing.AsyncHTTPTestCase):
         assert data["raw"] == "foo"
 
         response = self.fetch(
-            f"/json/remove",
+            "/json/remove",
             method="POST",
             body=urllib.parse.urlencode({"removal_id": removal_id}),
         )

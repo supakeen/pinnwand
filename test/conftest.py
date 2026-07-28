@@ -5,7 +5,7 @@ import pytest
 from slugify import slugify
 
 try:
-    import playwright
+    import playwright  # noqa
 except ImportError:
     collect_ignore = ["e2e/"]
 
