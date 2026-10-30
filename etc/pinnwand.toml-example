@@ -11,6 +11,11 @@ database_uri = "sqlite:///:memory:"
 # Maximum paste size you want to allow.
 paste_size = 262144  # 256kB in bytes
 
+# Minimum entropy in bits for auto-scaled paste slugs. When set above zero,
+# slugs will not shrink below this size even on an empty instance, which makes
+# enumerating paste URLs impractical. Zero keeps the historical behaviour.
+# slug_minimum_bits = 64
+
 # Preferred lexers. This list of lexers will appear on top of the dropdown
 # on the website allowing you to preselect commonly used lexers. Note that the
 # names here have to be the identifiers used by pygments, not the human names.

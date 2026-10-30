@@ -110,6 +110,15 @@ def test_filename_clean(path: str, result: str) -> None:
     assert utility.filename_clean(path) == result
 
 
+def test_slug_minimum_bits(monkeypatch) -> None:
+    configuration = ConfigurationProvider.get_config()
+    monkeypatch.setattr(configuration, "_slug_minimum_bits", 0)
+    short = utility.slug_create()
+    monkeypatch.setattr(configuration, "_slug_minimum_bits", 128)
+    long = utility.slug_create()
+    assert len(long) > len(short)
+
+
 def test_slug_context() -> None:
     count = 512
 

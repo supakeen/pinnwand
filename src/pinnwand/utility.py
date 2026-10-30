@@ -12,6 +12,7 @@ from pygments.lexers import (
 )
 
 from pinnwand import logger
+from pinnwand.configuration import ConfigurationProvider
 from pinnwand.database import manager, models
 
 log = logger.get_logger(__name__)
@@ -89,6 +90,9 @@ def slug_create(
     if dont_use is None:
         dont_use = []
 
+    configuration = ConfigurationProvider.get_config()
+    slug_minimum_bits = configuration.slug_minimum_bits
+
     with manager.DatabaseManager.get_session() as session:
         if auto_scale:
             # We count our new paste as well
@@ -106,7 +110,9 @@ def slug_create(
             # available (e.g we increase the number of bytes at 127 instead of
             # 255). This ensures that the probing below can find an empty space
             # fast in case of collision.
-            necessary = math.ceil(math.log2(count * 2)) // 8 + 1
+            bits = math.ceil(math.log2(count * 2))
+            bits = max(bits, slug_minimum_bits)
+            necessary = bits // 8 + 1
         else:
             necessary = 16  # 16 bytes should do, right?
 
