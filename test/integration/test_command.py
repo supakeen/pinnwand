@@ -1,9 +1,12 @@
 import tempfile
 
 from click.testing import CliRunner
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 import pinnwand.command as command
 from pinnwand.configuration import Configuration, ConfigurationProvider
+from pinnwand.database import manager, models, utils
 
 
 def test_main():
@@ -87,3 +90,35 @@ def test_delete():
 
     result = runner.invoke(command.main, ["delete", "--paste", "unknown"])
     assert result.exit_code == 1
+
+
+def test_resyntax_uses_each_files_lexer(monkeypatch):
+    engine = create_engine("sqlite:///:memory:")
+    utils.create_tables(engine)
+    monkeypatch.setattr(manager.DatabaseManager, "_engine", engine)
+    monkeypatch.setattr(
+        manager.DatabaseManager, "_session_maker", sessionmaker(bind=engine)
+    )
+    monkeypatch.setattr(
+        "pinnwand.utility.guess_language", lambda *args: "python"
+    )
+
+    paste = models.Paste("PASTE")
+    paste.files = [
+        models.File("FIRST", "print(123)", "text"),
+        models.File("SECOND", "print(123)", "autodetect"),
+        models.File("THIRD", "print(123)", "text"),
+    ]
+    expected = [file.fmt for file in paste.files]
+    with manager.DatabaseManager.get_session() as session:
+        for file in paste.files:
+            file.fmt = "outdated"
+        session.add(paste)
+        session.commit()
+
+    result = CliRunner().invoke(command.main, ["resyntax"])
+    assert result.exit_code == 0, result.output
+    with manager.DatabaseManager.get_session() as session:
+        files = session.query(models.File).order_by(models.File.id).all()
+        assert [file.fmt for file in files] == expected
+    engine.dispose()

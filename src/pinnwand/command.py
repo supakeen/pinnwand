@@ -139,7 +139,8 @@ def resyntax() -> None:
         files = session.query(models.File).all()
 
         for file in files:
-            if file.lexer == "autodetect":
+            lexer = file.lexer
+            if lexer == "autodetect":
                 lexer = utility.guess_language(file.raw, file.filename)
                 log.debug(f"resyntax: Language guessed as {lexer}")
 
