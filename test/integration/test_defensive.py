@@ -36,6 +36,13 @@ def test_spamscore_http_scheme() -> None:
     assert score > 0
 
 
+@pytest.mark.parametrize(
+    "scheme", ["HTTP", "HtTpS", "WS", "WSS", "gRPC", "FTpS"]
+)
+def test_spamscore_case_insensitive_scheme(scheme: str) -> None:
+    assert defensive.spamscore(f"{scheme}://example.com/path") == 100
+
+
 def test_spamscore_https_scheme() -> None:
     text = "Visit https://secure.example.com for more info."
     score = defensive.spamscore(text)
