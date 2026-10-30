@@ -2,7 +2,7 @@ import asyncio
 import os
 from pathlib import Path
 import tempfile
-import tomli
+import tomllib
 from unittest.mock import patch, MagicMock
 from sqlalchemy import create_engine
 
@@ -21,7 +21,7 @@ config_path = os.path.join("test", "e2e", "pinnwand.toml")
 def temp_database_url() -> str:
     """Override the config's database_url with a temporary one."""
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
-        props = tomli.loads(Path(config_path).read_text())
+        props = tomllib.loads(Path(config_path).read_text())
         url = f"sqlite:///{temp.name}"
         props["database_uri"] = url
         with open(config_path, "wb") as config_file:

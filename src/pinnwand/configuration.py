@@ -1,15 +1,8 @@
 import ast
 import os
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
+import tomllib
 from dotenv import load_dotenv
-
-if TYPE_CHECKING:  # lie to mypy, see https://github.com/python/mypy/issues/1153
-    import tomllib as toml
-else:
-    try:
-        import tomllib as toml
-    except ImportError:
-        import tomli as toml
 
 
 class Configuration:
@@ -108,7 +101,7 @@ class Configuration:
         """Load configuration settings from a toml file."""
 
         with open(path, "rb") as file:
-            loaded_configuration = toml.load(file)
+            loaded_configuration = tomllib.load(file)
 
             for key, value in loaded_configuration.items():
                 setattr(self, f"_{key}", value)

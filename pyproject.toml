@@ -13,7 +13,6 @@ dependencies = [
     "docutils>=0.20.1",
     "pygments-better-html>=0.1.4",
     "token-bucket>=0.3.0",
-    "tomli>=2.0.1",
     "python-dotenv>=1.0.1",
     "sqlalchemy-utc>=0.14.0",
 ]
