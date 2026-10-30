@@ -39,6 +39,7 @@ class Configuration:
             },
         }
         self._spamscore = 50
+        self._slug_minimum_bits = 0
 
     # Define getters for each configuration parameter
     @property
@@ -96,6 +97,10 @@ class Configuration:
     @property
     def spamscore(self):
         return self._spamscore
+
+    @property
+    def slug_minimum_bits(self):
+        return self._slug_minimum_bits
 
     def load_config_file(self, path: Optional[str] = None) -> None:
         """Load configuration settings from a toml file."""
