@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:b801529a1151b85f6a5ee531d4b3b3d8b0aa52e6a8357be8e68d035e0b3a4a02"
+content_hash = "sha256:232f69f71006dec7c98c320499db0545520510f0a75824d9e65d1b1545a95e6d"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -1715,7 +1715,7 @@ name = "tomli"
 version = "2.4.1"
 requires_python = ">=3.8"
 summary = "A lil' TOML parser"
-groups = ["default", "dev"]
+groups = ["dev"]
 files = [
     {file = "tomli-2.4.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:f8f0fc26ec2cc2b965b7a3b87cd19c5c6b8c5e5f436b984e85f486d652285c30"},
     {file = "tomli-2.4.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:4ab97e64ccda8756376892c53a72bd1f964e519c77236368527f758fbc36a53a"},

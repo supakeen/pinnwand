@@ -16,7 +16,6 @@ Prerequisites
 * sqlalchemy
 * click
 * docutils
-* tomli
 * pygments-better-html
 * a database driver
 

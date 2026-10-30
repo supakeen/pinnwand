@@ -6,7 +6,7 @@ import sys
 import tempfile
 import time
 import pytest
-import tomli
+import tomllib
 from threading import Thread
 
 import tomli_w
@@ -71,7 +71,7 @@ def create_paste_page(page: Page) -> CreatePastePage:
 def database() -> Generator[None, None, None]:
     log.info("Setting up temp database")
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
-        props = tomli.loads(Path(config_path).read_text())
+        props = tomllib.loads(Path(config_path).read_text())
         props["database_uri"] = f"sqlite:///{temp.name}"
         props["expiries"] = {
             "1hour": 4,
@@ -91,5 +91,5 @@ def database() -> Generator[None, None, None]:
 def clear_db():
     log.info("Clearing temp database")
     TestDb(
-        tomli.loads(Path(config_path).read_text())["database_uri"]
+        tomllib.loads(Path(config_path).read_text())["database_uri"]
     ).clear_tables("paste", "file")

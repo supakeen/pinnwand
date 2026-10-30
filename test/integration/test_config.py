@@ -4,7 +4,7 @@ import tomli_w
 
 from pinnwand.configuration import Configuration
 import tempfile
-import tomli
+import tomllib
 import pytest
 
 
@@ -41,7 +41,7 @@ def test_env_variables_precedence(monkeypatch, temp_dotenv_file):
 def test_load_file_config():
     with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
 
-        props = tomli.load(temp)
+        props = tomllib.load(temp)
         url = "sqlite:///database.db"
         props["database_uri"] = url
 

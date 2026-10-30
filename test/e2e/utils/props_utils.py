@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from tomli import loads
+from tomllib import loads
 
 
 def load_props():
