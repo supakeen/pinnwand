@@ -329,6 +329,73 @@ class APIv1TestCase(tornado.testing.AsyncHTTPTestCase):
 
         assert response.code == 400
 
+    @unittest.mock.patch(
+        "pinnwand.defensive.should_be_ratelimited", return_value=False
+    )
+    def test_api_new_invalid_json_shapes(self, _ratelimit) -> None:
+        valid_file = {"lexer": "text", "content": "hello"}
+        bodies = [
+            [],
+            None,
+            {"expiry": [], "files": [valid_file]},
+            {"expiry": "1day", "files": {}},
+            {"expiry": "1day", "files": [None]},
+            {"expiry": "1day", "files": [{"lexer": [], "content": "hello"}]},
+            {"expiry": "1day", "files": [{"lexer": "text", "content": 12}]},
+            {"expiry": "1day", "files": [{**valid_file, "name": []}]},
+        ]
+        for body in bodies:
+            with self.subTest(body=body):
+                response = self.fetch(
+                    "/api/v1/paste", method="POST", body=json.dumps(body)
+                )
+                assert response.code == 400
+                assert json.loads(response.body)["code"] == 400
+
+        response = self.fetch("/api/v1/paste", method="POST", body=b"\xff")
+        assert response.code == 400
+
+    @unittest.mock.patch(
+        "pinnwand.defensive.should_be_ratelimited", return_value=False
+    )
+    def test_api_new_spam(self, _ratelimit) -> None:
+        response = self.fetch(
+            "/api/v1/paste",
+            method="POST",
+            body=json.dumps(
+                {
+                    "expiry": "1day",
+                    "files": [
+                        {"lexer": "text", "content": "https://example.com/"}
+                    ],
+                }
+            ),
+        )
+        assert response.code == 451
+        assert json.loads(response.body)["code"] == 451
+
+    @unittest.mock.patch(
+        "pinnwand.defensive.should_be_ratelimited", return_value=True
+    )
+    def test_api_rate_limit_error(self, _ratelimit) -> None:
+        response = self.fetch("/api/v1/lexer")
+        assert response.code == 429
+        assert json.loads(response.body)["code"] == 429
+
+    @unittest.mock.patch(
+        "pinnwand.defensive.should_be_ratelimited", return_value=False
+    )
+    @unittest.mock.patch(
+        "pinnwand.utility.list_languages",
+        side_effect=RuntimeError("secret detail"),
+    )
+    def test_api_unexpected_error_is_not_exposed(
+        self, _languages, _ratelimit
+    ) -> None:
+        response = self.fetch("/api/v1/lexer")
+        assert response.code == 500
+        assert json.loads(response.body)["message"] == "Internal Server Error"
+
     def test_api_new_no_files(self) -> None:
         response = self.fetch(
             "/api/v1/paste",
