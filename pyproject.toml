@@ -17,7 +17,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "sqlalchemy-utc>=0.14.0",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
@@ -76,7 +76,7 @@ exclude = '''
 pythonpath = ["src"]
 
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.11"
 platform = "linux"
 show_column_numbers = true
 follow_imports = "normal"
