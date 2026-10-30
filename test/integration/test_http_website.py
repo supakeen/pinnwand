@@ -3,10 +3,11 @@ import unittest.mock
 import tornado.testing
 import tornado.web
 import copy
+from datetime import datetime, timedelta, timezone
 
 from pinnwand.configuration import Configuration, ConfigurationProvider
 from pinnwand import app
-from pinnwand.database import manager, utils as database_utils
+from pinnwand.database import manager, models, utils as database_utils
 
 configuration: Configuration = ConfigurationProvider.get_config()
 
@@ -592,6 +593,24 @@ class DeprecatedWebsiteTestCase(tornado.testing.AsyncHTTPTestCase):
             method="GET",
         )
         assert response.code == 404
+
+    def test_website_repaste_expired_paste(self) -> None:
+        paste = models.Paste("EXPIRED", expiry=60)
+        paste.files.append(models.File("EXPIRED", "secret paste content"))
+        paste.exp_date = datetime.now(timezone.utc) - timedelta(seconds=1)
+        with manager.DatabaseManager.get_session() as session:
+            session.add(paste)
+            session.commit()
+
+        response = self.fetch("/repaste/EXPIRED")
+
+        assert response.code == 404
+        assert b"secret paste content" not in response.body
+        with manager.DatabaseManager.get_session() as session:
+            assert (
+                session.query(models.Paste).filter_by(slug="EXPIRED").first()
+                is None
+            )
 
     def test_website_repaste(self) -> None:
         response = self.fetch(

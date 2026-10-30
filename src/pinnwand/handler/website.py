@@ -277,6 +277,11 @@ class Repaste(Base):
             if not paste:
                 raise tornado.web.HTTPError(404)
 
+            if paste.exp_date < datetime.now(timezone.utc):
+                session.delete(paste)
+                session.commit()
+                raise tornado.web.HTTPError(404)
+
             lexers_available = utility.list_languages()
 
             await self.render(
