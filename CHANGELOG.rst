@@ -9,6 +9,15 @@ v1.7.0 (unreleased)
 * Added test cases for `defensive`.
 * Also catch numbers-in-domains.
 * Also catch uppercase-in-domains.
+* Require Python 3.11 or newer and test through Python 3.15.
+* Fix pressing Enter in a filename field removing a file instead of submitting
+  the paste (#345).
+* Update the Compose example to mount a configuration file, bind to localhost,
+  and document optional SQLite persistence. Add Docker setup instructions.
+* Replace the runtime ``tomli`` dependency with Python's built-in ``tomllib``
+  and remove the unused development dependency ``gitpython``.
+* Update dependencies and improve browser test coverage.
+* Avoid running CI twice for pull requests from repository branches.
 
 v1.6.1 (20260327)
 *******************
