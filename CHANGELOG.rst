@@ -14,6 +14,8 @@ v1.7.0 (unreleased)
   the paste (#345).
 * Prevent expired pastes from being accessed through the repaste page.
 * Fix canceling a file removal causing a later confirmation to remove it.
+* Fix ``resyntax`` failing or using the wrong lexer for explicitly selected
+  languages.
 * Update the Compose example to mount a configuration file, bind to localhost,
   and document optional SQLite persistence. Add Docker setup instructions.
 * Replace the runtime ``tomli`` dependency with Python's built-in ``tomllib``
