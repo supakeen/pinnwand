@@ -81,11 +81,11 @@ function addRemoveButtons() {
                 const popover = document.querySelector(".confirmation-popover");
                 popover.removeAttribute("hidden");
                 popover.querySelector(".confirm").focus();
-                popover.querySelector(".cancel").addEventListener("click", (event) => event.target.parentNode.parentNode.setAttribute("hidden", true));
-                popover.querySelector(".confirm").addEventListener("click", (event) => {
-                    event.target.parentNode.parentNode.setAttribute("hidden", true);
+                popover.querySelector(".cancel").onclick = () => popover.setAttribute("hidden", true);
+                popover.querySelector(".confirm").onclick = () => {
+                    popover.setAttribute("hidden", true);
                     removeSection(section);
-                });
+                };
             } else {
                 removeSection(section);
             }
