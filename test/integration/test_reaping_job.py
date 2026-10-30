@@ -1,7 +1,6 @@
 import asyncio
 import os
 from pathlib import Path
-import tempfile
 import tomllib
 from unittest.mock import patch, MagicMock
 from sqlalchemy import create_engine
@@ -18,27 +17,28 @@ config_path = os.path.join("test", "e2e", "pinnwand.toml")
 
 
 @pytest.fixture(scope="function")
-def temp_database_url() -> str:
-    """Override the config's database_url with a temporary one."""
-    with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
-        props = tomllib.loads(Path(config_path).read_text())
-        url = f"sqlite:///{temp.name}"
-        props["database_uri"] = url
-        with open(config_path, "wb") as config_file:
-            tomli_w.dump(props, config_file)
-
-        yield url
+def temp_config(tmp_path):
+    """Create a test configuration with its own temporary database."""
+    props = tomllib.loads(Path(config_path).read_text())
+    url = f"sqlite:///{tmp_path / 'pinnwand.db'}"
+    props["database_uri"] = url
+    path = tmp_path / "pinnwand.toml"
+    with path.open("wb") as config_file:
+        tomli_w.dump(props, config_file)
+    return path, url
 
 
 @patch("pinnwand.utility.reap")
 @pytest.mark.asyncio
 async def test_reaping_tasks_running_periodicity(
-    reap_utility_mock: MagicMock, temp_database_url
+    reap_utility_mock: MagicMock, temp_config
 ):
     """Test that the reaping task gets executed every period T."""
     runner = CliRunner()
 
-    runner.invoke(command.main, ["--configuration-path", config_path, "http"])
+    runner.invoke(
+        command.main, ["--configuration-path", str(temp_config[0]), "http"]
+    )
 
     await asyncio.sleep(5)
 
@@ -51,11 +51,11 @@ async def test_reaping_tasks_running_periodicity(
 @patch("pinnwand.database.manager.DatabaseManager.get_engine")
 @pytest.mark.asyncio
 async def test_pastes_reaped_on_startup(
-    get_engine_patch: MagicMock, temp_database_url
+    get_engine_patch: MagicMock, temp_config
 ):
     """Ensures that pastes are reaped correctly upon startup."""
 
-    engine = create_engine(temp_database_url)
+    engine = create_engine(temp_config[1])
     get_engine_patch.return_value = engine
 
     engine = manager.DatabaseManager.get_engine()
@@ -78,7 +78,9 @@ async def test_pastes_reaped_on_startup(
     await asyncio.sleep(2)
 
     runner = CliRunner()
-    runner.invoke(command.main, ["--configuration-path", config_path, "http"])
+    runner.invoke(
+        command.main, ["--configuration-path", str(temp_config[0]), "http"]
+    )
 
     with manager.DatabaseManager.get_session() as session:
         for slug in slugs:

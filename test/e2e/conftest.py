@@ -1,10 +1,7 @@
 import logging
-import os
 from pathlib import Path
 import subprocess
 import sys
-import tempfile
-import time
 import pytest
 import tomllib
 from threading import Thread
@@ -33,7 +30,7 @@ def application(database) -> Generator[None, None, None]:
             "-m",
             "pinnwand",
             "--configuration-path",
-            "test/e2e/pinnwand.toml",
+            str(database[0]),
             "http",
             "--port",
             str(PORT),
@@ -68,28 +65,25 @@ def create_paste_page(page: Page) -> CreatePastePage:
 
 
 @pytest.fixture(scope="session")
-def database() -> Generator[None, None, None]:
+def database(tmp_path_factory):
     log.info("Setting up temp database")
-    with tempfile.NamedTemporaryFile(suffix="", delete=False) as temp:
-        props = tomllib.loads(Path(config_path).read_text())
-        props["database_uri"] = f"sqlite:///{temp.name}"
-        props["expiries"] = {
-            "1hour": 4,
-            "1day": 4,
-        }  # It expires in 4 seconds instead of an hour
-        with open(config_path, "wb") as config_file:
-            tomli_w.dump(props, config_file)
-    yield
+    temp_dir = tmp_path_factory.mktemp("pinnwand-e2e")
+    temp_config = temp_dir / "pinnwand.toml"
+    database_url = f"sqlite:///{temp_dir / 'pinnwand.db'}"
+    props = tomllib.loads(Path(config_path).read_text())
+    props["database_uri"] = database_url
+    props["expiries"] = {
+        "1hour": 4,
+        "1day": 4,
+    }  # It expires in 4 seconds instead of an hour
+    with temp_config.open("wb") as config_file:
+        tomli_w.dump(props, config_file)
+    yield temp_config, database_url
     log.info("Tearing down temp database")
     close_all_sessions()
-    # Waiting for the connections to be closed
-    time.sleep(1)
-    os.remove(temp.name)
 
 
 @pytest.fixture
-def clear_db():
+def clear_db(database):
     log.info("Clearing temp database")
-    TestDb(
-        tomllib.loads(Path(config_path).read_text())["database_uri"]
-    ).clear_tables("paste", "file")
+    TestDb(database[1]).clear_tables("paste", "file")
