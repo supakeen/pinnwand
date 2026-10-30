@@ -12,6 +12,7 @@ v1.7.0 (unreleased)
 * Require Python 3.11 or newer and test through Python 3.15.
 * Fix pressing Enter in a filename field removing a file instead of submitting
   the paste (#345).
+* Prevent expired pastes from being accessed through the repaste page.
 * Update the Compose example to mount a configuration file, bind to localhost,
   and document optional SQLite persistence. Add Docker setup instructions.
 * Replace the runtime ``tomli`` dependency with Python's built-in ``tomllib``
