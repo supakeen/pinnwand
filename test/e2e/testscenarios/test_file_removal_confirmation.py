@@ -41,6 +41,30 @@ def test_cancel_removal(create_paste_page: CreatePastePage):
 
 
 @pytest.mark.e2e
+def test_cancel_then_confirm_another_removal(
+    create_paste_page: CreatePastePage,
+):
+    first_text = create_paste_page.paste_random_text(paste_number=0)
+    create_paste_page.click_add_another_file_button()
+    create_paste_page.paste_random_text(paste_number=1)
+    create_paste_page.click_add_another_file_button()
+    third_text = create_paste_page.paste_random_text(paste_number=2)
+
+    create_paste_page.click_remove_file_button(paste_number=0)
+    create_paste_page.removal_confirmation_modal.cancel()
+    create_paste_page.click_remove_file_button(paste_number=1)
+    create_paste_page.removal_confirmation_modal.confirm()
+
+    create_paste_page.should_have_paste_inputs(2)
+    create_paste_page.should_have_value_in_paste_input(
+        first_text, paste_number=0
+    )
+    create_paste_page.should_have_value_in_paste_input(
+        third_text, paste_number=1
+    )
+
+
+@pytest.mark.e2e
 def test_removal_of_empty_paste(create_paste_page: CreatePastePage):
     first_pasted_text = create_paste_page.paste_random_text(paste_number=0)
     create_paste_page.click_add_another_file_button()
