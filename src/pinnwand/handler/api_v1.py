@@ -14,8 +14,21 @@ log = logger.get_logger(__name__)
 
 class Base(tornado.web.RequestHandler):
     def write_error(self, status_code: int, **kwargs: Any) -> None:
-        _, exc, _ = kwargs["exc_info"]
-        self.write({"state": "error", "code": status_code, "message": str(exc)})
+        exc_info = kwargs.get("exc_info")
+        exc = exc_info[1] if exc_info else None
+        if isinstance(exc, error.RatelimitError):
+            status_code = 429
+            self.set_status(status_code)
+        elif isinstance(exc, error.SpamError):
+            status_code = 451
+            self.set_status(status_code)
+
+        message = (
+            (str(exc) or self._reason)
+            if exc and status_code < 500
+            else self._reason
+        )
+        self.write({"state": "error", "code": status_code, "message": message})
 
 
 class Lexer(Base):
@@ -48,14 +61,17 @@ class Paste(Base):
     async def post(self) -> None:
         try:
             data = tornado.escape.json_decode(self.request.body)
-        except json.decoder.JSONDecodeError:
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             raise tornado.web.HTTPError(400, "could not parse json body")
+
+        if not isinstance(data, dict):
+            raise tornado.web.HTTPError(400, "expected a JSON object")
 
         configuration: Configuration = ConfigurationProvider.get_config()
 
         expiry = data.get("expiry")
 
-        if expiry not in configuration.expiries:
+        if not isinstance(expiry, str) or expiry not in configuration.expiries:
             log.info("Paste.post: a paste was submitted with an invalid expiry")
             raise tornado.web.HTTPError(400, "invalid expiry")
 
@@ -63,7 +79,7 @@ class Paste(Base):
 
         files = data.get("files", [])
 
-        if not files:
+        if not isinstance(files, list) or not files:
             raise tornado.web.HTTPError(400, "no files provided")
 
         with manager.DatabaseManager.get_session() as session, utility.SlugContext(
@@ -76,15 +92,23 @@ class Paste(Base):
             )
 
             for file in files:
+                if not isinstance(file, dict):
+                    raise tornado.web.HTTPError(400, "invalid file")
                 lexer = file.get("lexer", "")
                 content = file.get("content")
                 filename = file.get("name")
 
-                if lexer not in utility.list_languages():
+                if (
+                    not isinstance(lexer, str)
+                    or lexer not in utility.list_languages()
+                ):
                     raise tornado.web.HTTPError(400, "invalid lexer")
 
-                if not content:
+                if not isinstance(content, str) or not content:
                     raise tornado.web.HTTPError(400, "invalid content (empty)")
+
+                if filename is not None and not isinstance(filename, str):
+                    raise tornado.web.HTTPError(400, "invalid filename")
 
                 try:
                     paste.files.append(

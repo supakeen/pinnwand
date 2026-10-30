@@ -16,6 +16,8 @@ v1.7.0 (unreleased)
 * Fix canceling a file removal causing a later confirmation to remove it.
 * Fix ``resyntax`` failing or using the wrong lexer for explicitly selected
   languages.
+* Return appropriate v1 API errors for malformed requests, rate limits, and
+  spam; avoid exposing internal error details.
 * Update the Compose example to mount a configuration file, bind to localhost,
   and document optional SQLite persistence. Add Docker setup instructions.
 * Replace the runtime ``tomli`` dependency with Python's built-in ``tomllib``
