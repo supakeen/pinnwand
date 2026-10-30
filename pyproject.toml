@@ -39,7 +39,6 @@ dev = [
     "pip-audit>=2.5.6",
     "pytest-playwright>=0.3.3",
     "pyperclip>=1.8.2",
-    "gitpython>=3.1.34",
     "urllib3>=2.0.7",
     "pytest-html>=4.1.1",
     "pytest-asyncio>=0.23.3",
