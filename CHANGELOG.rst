@@ -9,6 +9,7 @@ v1.7.0 (unreleased)
 * Added test cases for `defensive`.
 * Also catch numbers-in-domains.
 * Also catch uppercase-in-domains.
+* Also catch uppercase-in-schemas.
 * Require Python 3.11 or newer and test through Python 3.15.
 * Fix pressing Enter in a filename field removing a file instead of submitting
   the paste (#345).
