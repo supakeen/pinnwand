@@ -66,9 +66,11 @@ def spamscore(text: str) -> int:
     This will then give a value 0-100, which can be used with a configuration
     option to deny pastes over a certain percentage."""
 
-    match = re.compile(
-        r"(?i:(?:http|ws|grpc|ftp)s?)(?:.//[a-zA-Z0-9-]+\.[a-zA-Z]+/?[^\"\'\ \n\r\t\v]+)"
-    )
+    # Anything that follows a known scheme up to the next whitespace or quote
+    # is counted as part of the link. This deliberately does not try to
+    # validate the host so internationalized domain names, IP addresses,
+    # ports, and paths with non-ASCII characters are counted in full.
+    match = re.compile(r"(?i:(?:http|ws|grpc|ftp)s?)://[^\"\'\s]+")
 
     text_size = len(text)
     link_size = sum(len(link) for link in match.findall(text))
