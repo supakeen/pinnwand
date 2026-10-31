@@ -171,3 +171,24 @@ def test_spamscore_empty_string() -> None:
 def test_spamscore_whitespace_only() -> None:
     text = "    \n\t\n    "
     assert defensive.spamscore(text) == 0
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.xy.zz/forums/forum/חינוך-פיננסי/",
+        "https://פיננסי.co.il/path",
+        "https://bücher.example/katalog",
+        "http://192.168.1.1/admin",
+        "http://localhost:8000/paste",
+        "https://example.com:8443/a/b",
+    ],
+)
+def test_spamscore_matches_complete_url(url: str) -> None:
+    # The whole URL should be counted as a link, not just a part of it.
+    assert defensive.spamscore(url) == 100
+
+
+def test_spamscore_link_ends_at_quote() -> None:
+    text = "'https://example.com/page'"
+    assert defensive.spamscore(text) == int(24 / 26 * 100)

@@ -10,6 +10,8 @@ v1.7.0 (unreleased)
 * Also catch numbers-in-domains.
 * Also catch uppercase-in-domains.
 * Also catch uppercase-in-schemas.
+* Count the complete URL in ``defensive.spamscore``, including
+  internationalized domain names, IP addresses, and ports (#111).
 * Require Python 3.11 or newer and test through Python 3.15.
 * Fix pressing Enter in a filename field removing a file instead of submitting
   the paste (#345).
